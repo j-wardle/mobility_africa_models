@@ -3,3 +3,10 @@
 .RData
 .Ruserdata
 
+data
+archive
+draft
+*.sqlite
+.Renviron
+orderly_envir.yml
+.Rdata
