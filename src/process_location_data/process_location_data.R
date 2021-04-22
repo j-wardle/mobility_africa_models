@@ -13,11 +13,11 @@
 # PORTUGAL ----------------------------------------------------------------
 
 # Load population data and mobile phone id names
-adm2_populations <- read.delim("data/centroids_2006_2.txt") %>% 
+adm2_populations <- read.delim("task_data/centroids_2006_2.txt") %>% 
   filter(N0 == "Portugal") %>% 
   clean_names()
 
-id_names <- read.table("data/portugal_id_list.txt") %>% 
+id_names <- read.table("task_data/portugal_id_list.txt") %>% 
   rename(id = V1,
          name = V2)
 
@@ -49,39 +49,41 @@ portugal_location_data <- adm2_populations %>%
 # Save 2006 data for Portugal adm2 units
 saveRDS(portugal_location_data, "portugal_location_data.rds")
 
-# 
-# 
-# ## Create a cleaned lookup for identifying the adm1 unit that each adm2 belongs in
-# 
-# # First clean adm names in same way as before
-# adm2_populations$adm1 <- iconv(adm2_populations$adm1, from = "UTF-8", to = "ASCII//TRANSLIT")
-# adm2_populations$adm1 <- gsub(" ", "_", toupper(adm2_populations$adm1))
-# 
-# adm_lookup <- adm2_populations %>% 
-#   select(adm1, adm2)
-# 
-# saveRDS(adm_lookup, "data/adm_lookup.rds")
-# 
-# 
-# ## Create cleaned pop and coordinates of adm1 units
-# adm1_populations <- read.delim("data/adm1_centroids_fixed.tsv", encoding = 'UTF-8') %>% 
-#   filter(ADM0 == "Portugal") %>% 
-#   clean_names()
-# 
-# adm1_populations$adm1 <- iconv(adm1_populations$adm1, from = "UTF-8", to = "ASCII//TRANSLIT")
-# adm1_populations$adm1 <- gsub(" ", "_", toupper(adm1_populations$adm1))
-# 
-# portugal_adm1_location_data <- adm1_populations %>% 
-#   filter(!(adm1 %in% c("AZORES", "MADEIRA"))) %>% 
-#   select(adm1, pop, centroid_lon, centroid_lat) %>% 
-#   rename(location = adm1,
-#          population = pop,
-#          x = centroid_lon,
-#          y = centroid_lat) %>% 
-#   arrange(location)
-# 
-# saveRDS(portugal_adm1_location_data, "data/portugal_adm1_location_data.rds")
-# 
+
+
+## Create a cleaned lookup for identifying the adm1 unit that each adm2 belongs in
+
+# First clean adm names in same way as before
+adm2_populations$n1 <- iconv(adm2_populations$n1, to = "ASCII//TRANSLIT")
+adm2_populations$n1 <- gsub(" ", "_", toupper(adm2_populations$n1))
+
+portugal_adm_lookup <- adm2_populations %>%
+  select(n1, n2)
+
+saveRDS(portugal_adm_lookup, "portugal_adm_lookup.rds")
+
+
+## Create dataframe with cleaned population and coordinates of adm1 units
+
+adm1_populations <- read.delim("task_data/centroids_2006_1.txt") %>%
+  filter(N0 == "Portugal") %>%
+  clean_names()
+
+adm1_populations$n1 <- iconv(adm1_populations$n1, to = "ASCII//TRANSLIT")
+adm1_populations$n1 <- gsub(" ", "_", toupper(adm1_populations$n1))
+
+portugal_adm1_location_data <- adm1_populations %>%
+  filter(!(n1 %in% c("AZORES", "MADEIRA"))) %>%
+  select(n1, pop, pop_cent_lon, pop_cent_lat) %>%
+  rename(location = n1,
+         population = pop,
+         x = pop_cent_lon,
+         y = pop_cent_lat) %>%
+  arrange(location)
+
+saveRDS(portugal_adm1_location_data, "portugal_adm1_location_data.rds")
+
+ 
 # #########
 # ## FRANCE
 # #########

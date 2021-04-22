@@ -6,8 +6,9 @@ artefacts:
   - data:
       description: Location data for models
       filenames:
-        - portugal_location_data.rds  # add these in once script written
-#         # - latest_deaths_wide_no_filter.rds
+        - portugal_location_data.rds
+        - portugal_adm_lookup.rds
+        - portugal_adm1_location_data.rds
 
 packages:
   - dplyr
@@ -21,8 +22,9 @@ packages:
 
 
 resources:
-  - data/centroids_2006_2.txt
-  - data/centroids_2007_3.txt
-  - data/france_id_list.txt
-  - data/portugal_id_list.txt
+  - task_data/centroids_2006_2.txt
+  - task_data/centroids_2006_1.txt
+  - task_data/centroids_2007_3.txt
+  - task_data/france_id_list.txt
+  - task_data/portugal_id_list.txt
 
