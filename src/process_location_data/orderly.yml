@@ -1,13 +1,13 @@
 script: process_location_data.R
 
-parameters: week_ending
+# parameters: week_ending
 
 artefacts:
   - data:
-      description: Location data for models 
+      description: Location data for models
       filenames:
-        # - latest_model_input.rds  # add these in once script written
-        # - latest_deaths_wide_no_filter.rds
+        - portugal_location_data.rds  # add these in once script written
+#         # - latest_deaths_wide_no_filter.rds
 
 packages:
   - dplyr
@@ -16,5 +16,13 @@ packages:
   - ggplot2
 
 
-sources:
-  - R/utils.R
+# sources:
+#   - R/utils.R
+
+
+resources:
+  - data/centroids_2006_2.txt
+  - data/centroids_2007_3.txt
+  - data/france_id_list.txt
+  - data/portugal_id_list.txt
+
