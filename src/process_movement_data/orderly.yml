@@ -21,6 +21,8 @@ packages:
 resources: 
   - task_data/france/od_matrix_mobilephones.txt
   - task_data/france/selfloops.txt
+  - task_data/france/id_list.txt
   - task_data/portugal/od_matrix_mobilephones.txt
   - task_data/portugal/selfloops.txt
+  - task_data/portugal/id_list.txt
   # Message Jack to access these data files
