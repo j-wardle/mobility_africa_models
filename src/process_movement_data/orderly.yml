@@ -7,11 +7,9 @@ artefacts:
         - raw_matrix.rds
         - normalised_matrix.rds
         - normalised_matrix_eve.rds
-        # - portugal_adm_lookup.rds
-        # - portugal_adm1_location_data.rds
-        # - france_location_data.rds
-        # - france_adm_lookup.rds
-        # - france_adm2_location_data.rds
+        - scaled_matrix.rds
+        - normalised_scaled_matrix.rds
+        - normalised_scaled_matrix_eve.rds
 
 packages:
   - dplyr

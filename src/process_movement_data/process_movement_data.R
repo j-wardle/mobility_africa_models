@@ -4,6 +4,11 @@
 
 locations <- c("portugal", "france")
 
+
+
+# Load and prepare data ---------------------------------------------------
+
+
 ## Import raw commuting data
 ## Commuter data from https://doi.org/10.1371/journal.pcbi.1003716
 ## Non-commuter data provided by authors of the same study
@@ -76,6 +81,12 @@ all_users_wide <- map(locations, function(country) {
 })
 names(all_users_wide) <- locations
 
+
+
+# Movement matrices from raw data -----------------------------------------
+
+
+
 movement_matrix <- imap(all_users_wide, function(country, country_name) {
   
   out <- as.matrix(subset(country, select = -c(origin_name)))
@@ -117,22 +128,43 @@ saveRDS(eve_norm_movement, "normalised_matrix_eve.rds")
 
 
 
-## Since sampling rate in each patch was not equal, we should scale the data
+# Movement matrices from scaling the raw data -----------------------------
 
-pop <- locations$pop
-patch_scale_factor <- pop / rowSums(movement_matrix)
-scaled_matrix <- movement_matrix * patch_scale_factor
+## Since sampling rate across patches is not necessarily equal, we should scale the data
 
-saveRDS(scaled_matrix, "data/prtgl_scld_matrix.rds")
+scaled_matrix <- imap(movement_matrix, function(country_matrix, country_name) {
+  
+  pop <- location_data[[country_name]]$population
+  patch_scale_factor <- pop / rowSums(country_matrix)
+  scaled_matrix <- country_matrix * patch_scale_factor
+  
+})
+
+saveRDS(scaled_matrix, "scaled_matrix.rds")
 
 ## Convert to a matrix of probabilities
-norm_scaled_movement <- scaled_matrix / (rowSums(scaled_matrix))
-saveRDS(norm_scaled_movement, "data/prtgl_norm_scld_matrix.rds")
+
+norm_scaled_movement <- map(scaled_matrix, function(country) {
+  
+  country / (rowSums(country))
+  
+})
+
+saveRDS(norm_scaled_movement, "normalised_scaled_matrix.rds")
 
 ## Create corresponding 'evening' flows, ie return from work
-eve_scaled_matrix <- t(scaled_matrix)
-eve_norm_scaled_movement <- eve_scaled_matrix / (rowSums(eve_scaled_matrix))
-saveRDS(eve_norm_scaled_movement, "data/prtgl_eve_norm_scld_matrix.rds")
+
+eve_norm_scaled_movement <- map(scaled_matrix, function(country) {
+  
+  out <- t(country)
+  out <- out / (rowSums(out))
+  
+})
+
+saveRDS(eve_norm_scaled_movement, "normalised_scaled_matrix_eve.rds")
+
+
+
 
 
 ### Also aggregate movements from adm2 level to adm1
