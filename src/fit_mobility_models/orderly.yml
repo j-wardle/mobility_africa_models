@@ -1,0 +1,44 @@
+script: fit_mobility_models.R
+
+artefacts:
+  - data:
+      description: Predicted movement data for models
+      filenames:
+        # - raw_matrix.rds
+        # - normalised_matrix.rds
+        # - normalised_matrix_eve.rds
+        # - scaled_matrix.rds
+        # - normalised_scaled_matrix.rds
+        # - normalised_scaled_matrix_eve.rds
+        # - aggregated_scaled_matrix.rds
+        # - aggregated_norm_scaled_matrix.rds
+        # - aggregated_norm_scaled_matrix_eve.rds
+
+packages:
+  - dplyr
+  - ggplot2
+  - scales
+  - ggmuller
+
+sources:
+  - R/fit_functions.R  
+
+# depends:
+#   process_location_data:
+#     id: latest
+#     use:
+#       portugal_location_data.rds: portugal_location_data.rds
+#       portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
+#       portugal_adm_lookup.rds: portugal_adm_lookup.rds
+#       france_location_data.rds: france_location_data.rds
+#       france_adm2_location_data.rds: france_adm2_location_data.rds
+#       france_adm_lookup.rds: france_adm_lookup.rds
+      
+resources: 
+  # - task_data/france/od_matrix_mobilephones.txt
+  # - task_data/france/selfloops.txt
+  # - task_data/france/id_list.txt
+  # - task_data/portugal/od_matrix_mobilephones.txt
+  # - task_data/portugal/selfloops.txt
+  # - task_data/portugal/id_list.txt
+  # # Message Jack to access these data files
