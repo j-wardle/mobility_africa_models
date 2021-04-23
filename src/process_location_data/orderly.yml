@@ -1,7 +1,5 @@
 script: process_location_data.R
 
-# parameters: week_ending
-
 artefacts:
   - data:
       description: Location data for models
@@ -19,15 +17,10 @@ packages:
   - janitor
   - ggplot2
 
-
-# sources:
-#   - R/utils.R
-
-
 resources:
   - task_data/centroids_2006_2.txt
   - task_data/centroids_2006_1.txt
   - task_data/centroids_2007_3.txt
+  - task_data/centroids_2007_2.txt
   - task_data/france_id_list.txt
   - task_data/portugal_id_list.txt
-
