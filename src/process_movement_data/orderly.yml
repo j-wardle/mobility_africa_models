@@ -10,6 +10,9 @@ artefacts:
         - scaled_matrix.rds
         - normalised_scaled_matrix.rds
         - normalised_scaled_matrix_eve.rds
+        - aggregated_scaled_matrix.rds
+        - aggregated_norm_scaled_matrix.rds
+        - aggregated_norm_scaled_matrix_eve.rds
 
 packages:
   - dplyr

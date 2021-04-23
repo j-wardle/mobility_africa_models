@@ -12,6 +12,7 @@ locations <- c("portugal", "france")
 ## Import raw commuting data
 ## Commuter data from https://doi.org/10.1371/journal.pcbi.1003716
 ## Non-commuter data provided by authors of the same study
+## Message Jack to get access to commuter data
 
 # Load required datasets
 
@@ -166,254 +167,88 @@ saveRDS(eve_norm_scaled_movement, "normalised_scaled_matrix_eve.rds")
 
 
 
-
-### Also aggregate movements from adm2 level to adm1
-
-scaled_matrix <- readRDS("data/prtgl_scld_matrix.rds")
-adm_lookup <- readRDS("data/adm_lookup.rds")
-
-long_movement <- as.data.frame(scaled_matrix)
-long_movement$origin <- rownames(long_movement)
-
-long_movement <- long_movement %>% 
-  pivot_longer(cols = ABRANTES:VOUZELA,
-               names_to = "dest",
-               values_to = "flow") %>% 
-  select(origin, everything())
-
-adm1_movement <- left_join(long_movement, adm_lookup, by = c("origin" = "adm2")) %>%
-  rename(adm1_origin = adm1)
-adm1_movement <- left_join(adm1_movement, adm_lookup, by = c("dest" = "adm2")) %>%
-  rename(adm1_dest = adm1)
-
-adm1_movement <- adm1_movement %>% 
-  group_by(adm1_origin, adm1_dest) %>% 
-  summarise(adm1_flows = sum(flow))
-
-
-adm1_movement_wide <- pivot_wider(adm1_movement,
-                                  id_cols = adm1_origin,
-                                  names_from = adm1_dest,
-                                  values_from = adm1_flows) %>% 
-  select(adm1_origin, sort(names(.)))
-
-
-adm1_movement_matrix <- as.matrix(subset(adm1_movement_wide,
-                                         select = -c(adm1_origin)))
-
-rownames(adm1_movement_matrix) <- adm1_movement_wide$adm1_origin
-
-saveRDS(adm1_movement_matrix, "data/prtgl_adm1_scld_matrix.rds")
-
-
-## Convert to a matrix of probabilities
-norm_scaled_adm1_matrix <- adm1_movement_matrix / (rowSums(adm1_movement_matrix))
-saveRDS(norm_scaled_adm1_matrix, "data/prtgl_adm1_norm_scld_matrix.rds")
-
-## Create corresponding 'evening' flows, ie return from work
-eve_adm1_movement_matrix <- t(adm1_movement_matrix)
-eve_norm_scaled_adm1_matrix <- eve_adm1_movement_matrix / (rowSums(eve_adm1_movement_matrix))
-saveRDS(eve_norm_scaled_adm1_matrix, "data/prtgl_adm1_eve_norm_scld_matrix.rds")
+# Movement matrices for aggregated data -----------------------------------
 
 
 
+## Here we aggregate the Portugal data from adm2 to adm1, and France data from adm3 to adm2.
+
+adm_lookup <- map(locations, function(country) {
+  readRDS(paste0(country, "_adm_lookup.rds"))
+}
+)
+names(adm_lookup) <- locations
+
+# Smallest Prtgl unit is adm2, whereas smallest France unit is adm3.
+# Rename columns in adm lookup for consistency
+adm_lookup$portugal <- rename(adm_lookup$portugal,
+                              lrg_spatial_unit = n1,
+                              sml_spatial_unit = n2)
+adm_lookup$france <- rename(adm_lookup$france,
+                              lrg_spatial_unit = n2,
+                              sml_spatial_unit = n3)
+
+# Aggregate the movement data
+aggregated_movement <- imap(scaled_matrix, function(country_matrix, country_name) {
+  
+  long_movement <- as.data.frame(country_matrix)
+  long_movement$origin <- rownames(long_movement)
+  
+  long_movement <- long_movement %>% 
+    pivot_longer(cols = 1:(ncol(long_movement) - 1),
+                 names_to = "dest",
+                 values_to = "flow") %>% 
+    select(origin, everything())
+  
+  aggregated_movement <- left_join(long_movement, adm_lookup[[country_name]],
+                                   by = c("origin" = "sml_spatial_unit")) %>%
+    rename(aggregate_origin = lrg_spatial_unit)
+  aggregated_movement <- left_join(aggregated_movement, adm_lookup[[country_name]],
+                                   by = c("dest" = "sml_spatial_unit")) %>%
+    rename(aggregate_dest = lrg_spatial_unit)
+  
+  aggregated_movement <- aggregated_movement %>% 
+    group_by(aggregate_origin, aggregate_dest) %>% 
+    summarise(aggregate_flows = sum(flow)) %>% 
+    pivot_wider(id_cols = aggregate_origin,
+                names_from = aggregate_dest,
+                values_from = aggregate_flows) %>% 
+    select(aggregate_origin, sort(names(.)))
+  
+})
 
 
+aggregated_movement_matrix <- map(aggregated_movement, function(country) {
+  
+  out <- as.matrix(subset(country,
+                          select = -c(aggregate_origin)))
+  rownames(out) <- country$aggregate_origin
+  out
+  
+})
 
 
-
-#######################################
-## Some plots to explore distribution of data
-#######################################
-
-ggplot(as.data.frame(patch_scale_factor)) +
-  geom_histogram(aes(x = patch_scale_factor))
-
-
-ggplot(as.data.frame(diag(norm_scaled_movement))) +
-  geom_histogram(aes(x = `diag(norm_scaled_movement)`)) +
-  xlab("Probability of staying in patch")
-
-
-## Create dataframe with populations, scale_factors and non-commuting numbers
-
-exploring_data <- as.data.frame(cbind(patch_scale_factor, pop, diag(movement_matrix))) %>% 
-  rename(matrix_diag = V3)
-
-ggplot(exploring_data) +
-  geom_point(aes(x = pop, y = patch_scale_factor))
-
-ggplot(exploring_data) +
-  geom_point(aes(x = pop, y = patch_scale_factor)) +
-  xlim(c(0, 150000))
-
-## Look at patches where no raw data on numbers staying 
-exploring_data %>% 
-  filter(matrix_diag == 0) %>% 
-  ggplot() +
-  geom_histogram(aes(x = patch_scale_factor))
-
-exploring_data %>% 
-  filter(matrix_diag == 0) %>% 
-  ggplot() +
-  geom_histogram(aes(x = pop))
-
-
-
-
-##### FRANCE
-
-france_location_data <- readRDS("data/france_location_data.rds")
-
-# select france data
-
-commuters <- commuters[[2]]
-non_commuters <- non_commuters[[2]]
-id_names <- id_names[[2]]
-location_data <- france_location_data
-
-id_names$name <- iconv(id_names$name, from = "UTF-8", to = "ASCII//TRANSLIT")
-id_names$name <- gsub(" ", "_", toupper(id_names$name))
-
-# commuter data has an entry for people travelling from bordeaux to bordeaux. delete this
-
-commuters <- filter(commuters, !(origin == 109 & dest == 109))
-
-
-## Convert data to matrix
-all_users <- bind_rows(commuters, non_commuters) %>% 
-  left_join(id_names,
-            by = c("origin" = "id")) %>% 
-  rename(origin_name = name) %>% 
-  left_join(id_names,
-            by = c("dest" = "id")) %>% 
-  rename(dest_name = name) %>% 
-  arrange(origin_name, dest_name)
-
-all_users_wide <- pivot_wider(all_users,
-                              id_cols = origin_name,
-                              names_from = dest_name,
-                              values_from = commuters) %>% 
-  select(origin_name, sort(names(.)))
-
-movement_matrix <- as.matrix(subset(all_users_wide,
-                                    select = -c(origin_name)))
-
-rownames(movement_matrix) <- all_users_wide$origin_name
-
-movement_matrix <- movement_matrix[which(rownames(movement_matrix) %in% location_data[["location"]]),
-                                   which(colnames(movement_matrix) %in% location_data[["location"]])]
-
-movement_matrix[is.na(movement_matrix)] <- 0
-
-saveRDS(movement_matrix, "data/fra_raw_matrix.rds")
+saveRDS(aggregated_movement_matrix, "aggregated_scaled_matrix.rds")
 
 
 ## Convert to a matrix of probabilities
-norm_movement <- movement_matrix / (rowSums(movement_matrix))
-saveRDS(norm_movement, "data/fra_norm_matrix.rds")
+
+aggr_norm_scaled_movement <- map(aggregated_movement_matrix, function(country_matrix) {
+  
+  country_matrix / (rowSums(country_matrix))
+  
+})
+
+saveRDS(aggr_norm_scaled_movement, "aggregated_norm_scaled_matrix.rds")
 
 
 ## Create corresponding 'evening' flows, ie return from work
-eve_movement_matrix <- t(movement_matrix)
-eve_norm_movement <- eve_movement_matrix / (rowSums(eve_movement_matrix))
-saveRDS(eve_norm_movement, "data/fra_eve_norm_matrix.rds")
 
+aggr_norm_scaled_movement_eve <- map(aggregated_movement_matrix, function(country_matrix) {
+  
+  out <- t(country_matrix)
+  out <- out / rowSums(out)
+  
+})
 
-
-## Since sampling rate in each patch was not equal, we should scale the data
-
-pop <- location_data$pop
-patch_scale_factor <- pop / rowSums(movement_matrix)
-scaled_matrix <- movement_matrix * patch_scale_factor
-
-saveRDS(scaled_matrix, "data/fra_scld_matrix.rds")
-
-## Convert to a matrix of probabilities
-norm_scaled_movement <- scaled_matrix / (rowSums(scaled_matrix))
-saveRDS(norm_scaled_movement, "data/fra_norm_scld_matrix.rds")
-
-## Create corresponding 'evening' flows, ie return from work
-eve_scaled_matrix <- t(scaled_matrix)
-eve_norm_scaled_movement <- eve_scaled_matrix / (rowSums(eve_scaled_matrix))
-saveRDS(eve_norm_scaled_movement, "data/fra_eve_norm_scld_matrix.rds")
-
-
-#################################
-## Repeat for 2007 France data ##
-#################################
-
-france_location_data <- readRDS("data/france_location_data_2007.rds")
-
-# select france data
-
-commuters <- commuters[[2]]
-non_commuters <- non_commuters[[2]]
-id_names <- id_names[[2]]
-location_data <- france_location_data
-
-id_names$name <- iconv(id_names$name, from = "UTF-8", to = "ASCII//TRANSLIT")
-id_names$name <- gsub(" ", "_", toupper(id_names$name))
-
-# commuter data has an entry for people travelling from bordeaux to bordeaux. delete this
-
-commuters <- filter(commuters, !(origin == 109 & dest == 109))
-
-
-## Convert data to matrix
-all_users <- bind_rows(commuters, non_commuters) %>% 
-  left_join(id_names,
-            by = c("origin" = "id")) %>% 
-  rename(origin_name = name) %>% 
-  left_join(id_names,
-            by = c("dest" = "id")) %>% 
-  rename(dest_name = name) %>% 
-  arrange(origin_name, dest_name)
-
-all_users_wide <- pivot_wider(all_users,
-                              id_cols = origin_name,
-                              names_from = dest_name,
-                              values_from = commuters) %>% 
-  select(origin_name, sort(names(.)))
-
-movement_matrix <- as.matrix(subset(all_users_wide,
-                                    select = -c(origin_name)))
-
-rownames(movement_matrix) <- all_users_wide$origin_name
-
-movement_matrix <- movement_matrix[which(rownames(movement_matrix) %in% location_data[["location"]]),
-                                   which(colnames(movement_matrix) %in% location_data[["location"]])]
-
-movement_matrix[is.na(movement_matrix)] <- 0
-
-saveRDS(movement_matrix, "data/fra2007_raw_matrix.rds")
-
-
-## Convert to a matrix of probabilities
-norm_movement <- movement_matrix / (rowSums(movement_matrix))
-saveRDS(norm_movement, "data/fra2007_norm_matrix.rds")
-
-
-## Create corresponding 'evening' flows, ie return from work
-eve_movement_matrix <- t(movement_matrix)
-eve_norm_movement <- eve_movement_matrix / (rowSums(eve_movement_matrix))
-saveRDS(eve_norm_movement, "data/fra2007_eve_norm_matrix.rds")
-
-
-
-## Since sampling rate in each patch was not equal, we should scale the data
-
-pop <- location_data$population
-patch_scale_factor <- pop / rowSums(movement_matrix)
-scaled_matrix <- movement_matrix * patch_scale_factor
-
-saveRDS(scaled_matrix, "data/fra2007_scld_matrix.rds")
-
-## Convert to a matrix of probabilities
-norm_scaled_movement <- scaled_matrix / (rowSums(scaled_matrix))
-saveRDS(norm_scaled_movement, "data/fra2007_norm_scld_matrix.rds")
-
-## Create corresponding 'evening' flows, ie return from work
-eve_scaled_matrix <- t(scaled_matrix)
-eve_norm_scaled_movement <- eve_scaled_matrix / (rowSums(eve_scaled_matrix))
-saveRDS(eve_norm_scaled_movement, "data/fra2007_eve_norm_scld_matrix.rds")
+saveRDS(aggr_norm_scaled_movement_eve, "aggregated_norm_scaled_matrix_eve.rds")
