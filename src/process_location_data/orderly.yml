@@ -9,6 +9,9 @@ artefacts:
         - portugal_location_data.rds
         - portugal_adm_lookup.rds
         - portugal_adm1_location_data.rds
+        - france_location_data.rds
+        - france_adm_lookup.rds
+        - france_adm2_location_data.rds
 
 packages:
   - dplyr
