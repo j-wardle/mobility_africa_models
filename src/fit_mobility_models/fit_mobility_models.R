@@ -1,3 +1,13 @@
+portugal_location_data <- readRDS("portugal_location_data.rds")
+france_location_data <- readRDS("france_location_data.rds")
+
+scaled_matrix <- readRDS("scaled_matrix.rds")
+
+# Fit gravity model to Portugal data
+
+gravity_portugal <- fit_gravity_model(location_data = portugal_location_data,
+                                      movement_matrix = scaled_matrix[["portugal"]])
+
 
 ## Load and format Portugal data
 

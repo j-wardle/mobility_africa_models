@@ -21,20 +21,25 @@ packages:
   - ggmuller
 
 sources:
-  - R/fit_functions.R  
+  - R/fit_functions.R
+  - R/utilities.R
 
-# depends:
-#   process_location_data:
-#     id: latest
-#     use:
-#       portugal_location_data.rds: portugal_location_data.rds
-#       portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
-#       portugal_adm_lookup.rds: portugal_adm_lookup.rds
-#       france_location_data.rds: france_location_data.rds
-#       france_adm2_location_data.rds: france_adm2_location_data.rds
-#       france_adm_lookup.rds: france_adm_lookup.rds
+depends:
+  process_location_data:
+    id: latest
+    use:
+      portugal_location_data.rds: portugal_location_data.rds
+      # portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
+      # portugal_adm_lookup.rds: portugal_adm_lookup.rds
+      france_location_data.rds: france_location_data.rds
+      # france_adm2_location_data.rds: france_adm2_location_data.rds
+      # france_adm_lookup.rds: france_adm_lookup.rds
+  process_movement_data:
+    id: latest
+    use:
+      scaled_matrix.rds: scaled_matrix.rds
       
-resources: 
+# resources: 
   # - task_data/france/od_matrix_mobilephones.txt
   # - task_data/france/selfloops.txt
   # - task_data/france/id_list.txt
