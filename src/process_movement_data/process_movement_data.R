@@ -1,41 +1,59 @@
-## Load packages and function
-library(dplyr)
-library(tidyr)
-library(janitor)
-library(ggplot2)
-library(purrr)
+## Read in raw mobile phone commuting data
+## Tidy and convert to a form that is usable for models
+#########################################################
 
-locations <- c("portugal", "france", "spain")
+locations <- c("portugal", "france")
 
-
-## Import raw data for Portugal
+## Import raw commuting data
 ## Commuter data from https://doi.org/10.1371/journal.pcbi.1003716
-## Non-commuter data accessed from authors of the same study
+## Non-commuter data provided by authors of the same study
+
+# Load required datasets
+
 commuters <- map(locations, function(country) {
-  read.delim(paste0("data/mobile_data/", country, "/od_matrix_mobilephones.txt")) %>%
+  read.delim(paste0("task_data/", country, "/od_matrix_mobilephones.txt")) %>%
     clean_names()
 }
-) 
+)
+names(commuters) <- locations
 
 non_commuters <- map(locations, function(country) {
-  read.table(paste0("data/mobile_data/", country, "/selfloops.txt")) %>% 
+  read.table(paste0("task_data/", country, "/selfloops.txt")) %>% 
     rename(origin = V1,
            dest = V2,
            commuters = V3)
 }
 )
-
+names(non_commuters) <- locations
 
 id_names <- map(locations, function(country) {
-  read.table(paste0("data/mobile_data/", country, "/id_list.txt")) %>% 
+  read.table(paste0("task_data/", country, "/id_list.txt")) %>% 
     rename(id = V1,
            name = V2)
 }
 )
+names(id_names) <- locations
+
+location_data <- map(locations, function(country) {
+  readRDS(paste0(country, "_location_data.rds"))
+}
+)
+names(location_data) <- locations
 
 
+## Some initial tidying of the data
 
-locations <- readRDS("data/portugal_location_data.rds") # Portugal location data from weighted centroids
+# Re-fromat French id_names
+id_names[["france"]]$name <- iconv(id_names[["france"]]$name, from = "UTF-8", to = "ASCII//TRANSLIT")
+id_names[["france"]] <- gsub(" ", "_", toupper(id_names[["france"]]$name))
+
+# French commuter data has an entry for people travelling from Bordeaux to Bordeaux. Delete.
+commuters[["france"]] <- filter(commuters[["france"]], !(origin == 109 & dest == 109))
+
+
+## Now convert to matrices
+
+all_users
 
 ## Convert data to matrix
 all_users <- bind_rows(commuters, non_commuters) %>% 
