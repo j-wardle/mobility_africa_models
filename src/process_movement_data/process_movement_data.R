@@ -45,7 +45,7 @@ names(location_data) <- locations
 
 # Re-fromat French id_names
 id_names[["france"]]$name <- iconv(id_names[["france"]]$name, from = "UTF-8", to = "ASCII//TRANSLIT")
-id_names[["france"]] <- gsub(" ", "_", toupper(id_names[["france"]]$name))
+id_names[["france"]]$name <- gsub(" ", "_", toupper(id_names[["france"]]$name))
 
 # French commuter data has an entry for people travelling from Bordeaux to Bordeaux. Delete.
 commuters[["france"]] <- filter(commuters[["france"]], !(origin == 109 & dest == 109))
@@ -53,47 +53,67 @@ commuters[["france"]] <- filter(commuters[["france"]], !(origin == 109 & dest ==
 
 ## Now convert to matrices
 
-all_users
+all_users_wide <- map(locations, function(country) {
+  
+  out <- bind_rows(commuters[[country]], non_commuters[[country]]) %>% 
+    left_join(id_names[[country]],
+              by = c("origin" = "id")) %>% 
+    rename(origin_name = name) %>% 
+    left_join(id_names[[country]],
+              by = c("dest" = "id")) %>% 
+    rename(dest_name = name) %>% 
+    arrange(origin_name, dest_name)
+  
+  out <- pivot_wider(out,
+              id_cols = origin_name,
+              names_from = dest_name,
+              values_from = commuters,
+              values_fn = length) %>% 
+    select(origin_name, sort(names(.)))
+  
+  out
+  
+})
+names(all_users_wide) <- locations
 
-## Convert data to matrix
-all_users <- bind_rows(commuters, non_commuters) %>% 
-  left_join(id_names,
-            by = c("origin" = "id")) %>% 
-  rename(origin_name = name) %>% 
-  left_join(id_names,
-            by = c("dest" = "id")) %>% 
-  rename(dest_name = name) %>% 
-  arrange(origin_name, dest_name)
+movement_matrix <- imap(all_users_wide, function(country, country_name) {
+  
+  out <- as.matrix(subset(country, select = -c(origin_name)))
+  
+  rownames(out) <- country$origin_name
+  
+  out <- out[
+    which(rownames(out) %in% location_data[[country_name]][["location"]]),
+    which(colnames(out) %in% location_data[[country_name]][["location"]])]
+  
+  out[is.na(out)] <- 0
+  
+  out
+  
+})
 
-all_users_wide <- pivot_wider(all_users,
-                              id_cols = origin_name,
-                              names_from = dest_name,
-                              values_from = commuters,
-                              values_fn = length) %>% 
-  select(origin_name, sort(names(.)))
-
-movement_matrix <- as.matrix(subset(all_users_wide,
-                                    select = -c(origin_name)))
-
-rownames(movement_matrix) <- all_users_wide$origin_name
-
-movement_matrix <- movement_matrix[which(rownames(movement_matrix) %in% locations[["location"]]),
-                                   which(colnames(movement_matrix) %in% locations[["location"]])]
-
-movement_matrix[is.na(movement_matrix)] <- 0
-
-saveRDS(movement_matrix, "data/prtgl_raw_matrix.rds")
+saveRDS(movement_matrix, "raw_matrix.rds")
 
 
-## Convert to a matrix of probabilities
-norm_movement <- movement_matrix / (rowSums(movement_matrix))
-saveRDS(norm_movement, "data/prtgl_norm_matrix.rds")
+## Get matrix of probabilities
+norm_movement <- map(movement_matrix, function(country) {
+  
+  country / (rowSums(country))
+  
+})
+
+saveRDS(norm_movement, "normalised_matrix.rds")
 
 
 ## Create corresponding 'evening' flows, ie return from work
-eve_movement_matrix <- t(movement_matrix)
-eve_norm_movement <- eve_movement_matrix / (rowSums(eve_movement_matrix))
-saveRDS(eve_norm_movement, "data/prtgl_eve_norm_matrix.rds")
+eve_norm_movement <- map(movement_matrix, function(country) {
+  
+  out <- t(country)
+  out <- out / (rowSums(out))
+  
+})
+
+saveRDS(eve_norm_movement, "normalised_matrix_eve.rds")
 
 
 

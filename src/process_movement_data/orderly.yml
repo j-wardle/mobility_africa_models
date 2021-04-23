@@ -4,7 +4,9 @@ artefacts:
   - data:
       description: Movement data for models
       filenames:
-        # - portugal_location_data.rds
+        - raw_matrix.rds
+        - normalised_matrix.rds
+        - normalised_matrix_eve.rds
         # - portugal_adm_lookup.rds
         # - portugal_adm1_location_data.rds
         # - france_location_data.rds
