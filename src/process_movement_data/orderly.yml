@@ -18,6 +18,17 @@ packages:
   - ggplot2
   - purrr
   
+depends:
+  process_location_data:
+    id: latest
+    use:
+      portugal_location_data.rds: portugal_location_data.rds
+      portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
+      portugal_adm_lookup.rds: portugal_adm_lookup.rds
+      france_location_data.rds: france_location_data.rds
+      france_adm2_location_data.rds: france_adm2_location_data.rds
+      france_adm_lookup.rds: france_adm_lookup.rds
+      
 resources: 
   - task_data/france/od_matrix_mobilephones.txt
   - task_data/france/selfloops.txt
