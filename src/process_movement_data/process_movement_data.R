@@ -73,8 +73,7 @@ all_users_wide <- map(locations, function(country) {
   out <- pivot_wider(out,
               id_cols = origin_name,
               names_from = dest_name,
-              values_from = commuters,
-              values_fn = length) %>% 
+              values_from = commuters) %>% 
     select(origin_name, sort(names(.)))
   
   out
