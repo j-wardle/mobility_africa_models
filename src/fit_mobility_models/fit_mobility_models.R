@@ -1,42 +1,62 @@
-portugal_location_data <- readRDS("portugal_location_data.rds")
-france_location_data <- readRDS("france_location_data.rds")
 
+# Load data ---------------------------------------------------------------
+
+## Read in location data
+# Smallest adm units
+portugal_location_data <- readRDS("portugal_location_data.rds")
+portugal_location_data <- as.location_dataframe(portugal_location_data)
+france_location_data <- readRDS("france_location_data.rds")
+france_location_data <- as.location_dataframe(france_location_data)
+
+# Aggregated adm units
+portugal_adm1_location_data <- readRDS("portugal_adm1_location_data.rds")
+portugal_adm1_location_data <- as.location_dataframe(portugal_adm1_location_data)
+france_adm2_location_data <- readRDS("france_adm2_location_data.rds")
+france_adm2_location_data <- as.location_dataframe(france_adm2_location_data)
+
+## Read in scaled movement data
 scaled_matrix <- readRDS("scaled_matrix.rds")
 
-# Fit gravity model to Portugal data
-
-gravity_portugal <- fit_gravity_model(location_data = portugal_location_data,
-                                      movement_matrix = scaled_matrix[["portugal"]])
 
 
-## Load and format Portugal data
+# Fit gravity models ------------------------------------------------------
 
-location_data <- readRDS("data/portugal_location_data.rds")
-location_data <- as.location_dataframe(location_data)
+## Fit gravity model to Portugal data (adm2 :- the adm unit for which we have raw movement data)
 
-conn <- readRDS("data/prtgl_scld_matrix.rds")
-conn <- as.movement_matrix(conn)
-colnames(conn) = location_data$location
-rownames(conn) = location_data$location
+prtl_conn <- scaled_matrix[["portugal"]]
+prtl_conn <- as.movement_matrix(prtl_conn)
+colnames(prtl_conn) <-  portugal_location_data$location
+rownames(prtl_conn) <-  portugal_location_data$location
+
+gravity_portugal_adm2 <- movement(prtl_conn ~ portugal_location_data, flux_model = gravity())
+
+## Fit gravity model to France data (adm3 :- the adm unit for which we have raw movement data)
+
+fra_conn <- scaled_matrix[["france"]]
+fra_conn <- as.movement_matrix(fra_conn)
+colnames(fra_conn) <-  france_location_data$location
+rownames(fra_conn) <-  france_location_data$location
+
+gravity_france_adm3 <- movement(fra_conn ~ france_location_data, flux_model = gravity())
+
+## Save model coefficients
+
+models <- list(gravity_portugal_adm2,
+            gravity_france_adm3)
+names(models) <- c("gravity_portugal_adm2", "gravity_france_adm3")
+
+coefficients <- map_dfr(models, function(m) {
+  
+  data.frame(theta = m[["coefficients"]][[1]],
+             alpha = m[["coefficients"]][[2]],
+             beta = m[["coefficients"]][[3]],
+             gamma = m[["coefficients"]][[4]])
+  
+}, .id = "model")
 
 
-## Fit different movement models to data
 
-# gravity_portugal <- movement(conn ~ location_data, flux_model = gravity())
-# radiation_portugal <- movement(conn ~ location_data, flux_model = radiationWithSelection())
-# gravity_distance_portugal <- movement(conn ~ location_data, flux_model = gravityWithDistance())
-# u_selection_portugal <- movement(conn ~ location_data, flux_model = uniformSelection())
-
-# fit gravity model to 'morning data'
-gravity_portugal <- movement(conn ~ location_data, flux_model = gravity())
-
-# fit gravity model to 'evening data'
-conn_pm <- as.movement_matrix(t(conn))
-gravity_portugal_pm <- movement(conn_pm ~ location_data, flux_model = gravity())
-
-# compare coefficients
-gravity_portugal$coefficients
-gravity_portugal_pm$coefficients # should be same with alpha and beta swapped
+# Predict flows from gravity fits -----------------------------------------
 
 # generate predicted flows for each
 gravity_portugal_predict <- predict(gravity_portugal, location_data, flux_model = gravity(), symmetric = FALSE)
