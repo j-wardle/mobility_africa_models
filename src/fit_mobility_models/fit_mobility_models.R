@@ -113,6 +113,8 @@ prtl_aggr_conn <- prepare_movement_data(portugal_adm1_location_data,
 fra_aggr_conn <- prepare_movement_data(france_adm2_location_data,
                                        aggregated_scaled_matrix[["france"]])
 
+# now estimate the movement matrices
+
 method1_predictions <- imap(predicted_movements, function(prediction, name) {
   
   if(isTRUE(startsWith(name, "france"))) {
@@ -145,31 +147,72 @@ saveRDS(method1_predictions, "gravity_matrix1_normalised.rds")
 
 
 ## Method 2
-# Use national average of p_stay as diagonals
-# Use the same p_stay in all patches
+# Use national average of p_stay as matrix diagonals,
+# where p_stay is the probability a person does not commute from their patch.
+# Use the same p_stay across all patches for a given matrix
 
-p_stay <- diag(conn) / rowSums(conn)
-p_stay_avg <- mean(p_stay) # 0.296
+# first calculate average p_stay in different movement matrices
 
-conn_method2 <- (1 - p_stay_avg) * conn_predict / rowSums(conn_predict)
-diag(conn_method2) <- p_stay_avg
+fra_p_stay <- p_stay_average(fra_conn)
+fra_aggr_p_stay <- p_stay_average(fra_aggr_conn)
+prtl_p_stay <- p_stay_average(prtl_conn)
+prtl_aggr_p_stay <- p_stay_average(prtl_aggr_conn)
+
+# now estimate the movement matrices
+
+method2_predictions <- imap(predicted_movements, function(prediction, name) {
+  
+  if(isTRUE(startsWith(name, "france"))) {
+    
+    if(isTRUE(grepl("adm3", name))) {
+      p_stay_avg <- fra_p_stay
+    } else {
+      p_stay_avg <- fra_aggr_p_stay
+    }
+  }
+  
+  if(isTRUE(startsWith(name, "portugal"))) {
+    
+    if(isTRUE(grepl("adm2", name))) {
+      p_stay_avg <- prtl_p_stay
+    } else {
+      p_stay_avg <- prtl_aggr_p_stay
+    }
+  }
+  
+  conn_method2 <- (1 - p_stay_avg) * prediction / rowSums(prediction)
+  diag(conn_method2) <- p_stay_avg
+  conn_method2 <- as.movement_matrix(conn_method2)
+  
+  if (!(isTRUE(sum(rowSums(conn_method2)) == nrow(conn_method2)))) {
+    warning("Row sums of probability matrix do not equal 1")
+  }
+  
+  conn_method2
+})
+
+
+
 
 # set the numbers moving in am and pm
-conn_method2 <- conn_method2 * location_data$population
-conn_method2_pm <- t(conn_method2)
+conn_method2_numb <- conn_method2 * portugal_location_data$population
+
 
 # now rescale to probabilities
 conn_mthd2_prob <- conn_method2 / rowSums(conn_method2)
-conn_mthd2_pm_prob <- conn_method2_pm / rowSums(conn_method2_pm)
+
 
 # convert to movement matrix objects
 conn_mthd2_prob <- as.movement_matrix(conn_mthd2_prob)
-conn_mthd2_pm_prob <- as.movement_matrix(conn_mthd2_pm_prob)
+
 
 saveRDS(conn_mthd2_prob, "data/prtgl_gravity_matrix2.rds")
 saveRDS(conn_mthd2_pm_prob, "data/prtgl_gravity_matrix2_pm.rds")
 
 
+
+conn_method2_numbers <- conn_method2 * location_data$population
+conn_method2_numbers <- as.movement_matrix(round(conn_method2_numbers))
 
 # For comparison of the predictions from different methods, can create absolute movement numbers 
 # based on probabilities and population sizes.

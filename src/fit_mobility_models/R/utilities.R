@@ -8,3 +8,10 @@ prepare_movement_data <- function(location_data, movement_source) {
   conn
   
 }
+
+p_stay_average <- function(observed_movement) {
+  
+  out <- diag(observed_movement) / rowSums(observed_movement)
+  out <- mean(out)
+  
+}
