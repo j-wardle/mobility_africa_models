@@ -16,6 +16,7 @@ france_adm2_location_data <- as.location_dataframe(france_adm2_location_data)
 
 ## Read in scaled movement data
 scaled_matrix <- readRDS("scaled_matrix.rds")
+aggregated_scaled_matrix <- readRDS("aggregated_scaled_matrix.rds")
 
 
 
@@ -23,19 +24,15 @@ scaled_matrix <- readRDS("scaled_matrix.rds")
 
 ## Fit gravity model to Portugal data (adm2 :- the adm unit for which we have raw movement data)
 
-prtl_conn <- scaled_matrix[["portugal"]]
-prtl_conn <- as.movement_matrix(prtl_conn)
-colnames(prtl_conn) <-  portugal_location_data$location
-rownames(prtl_conn) <-  portugal_location_data$location
-
+prtl_conn <- prepare_movement_data(portugal_location_data,
+                                   scaled_matrix[["portugal"]])
+  
 gravity_portugal_adm2 <- movement(prtl_conn ~ portugal_location_data, flux_model = gravity())
 
 ## Fit gravity model to France data (adm3 :- the adm unit for which we have raw movement data)
 
-fra_conn <- scaled_matrix[["france"]]
-fra_conn <- as.movement_matrix(fra_conn)
-colnames(fra_conn) <-  france_location_data$location
-rownames(fra_conn) <-  france_location_data$location
+fra_conn <- prepare_movement_data(france_location_data,
+                                  scaled_matrix[["france"]])
 
 gravity_france_adm3 <- movement(fra_conn ~ france_location_data, flux_model = gravity())
 
@@ -101,30 +98,51 @@ predicted_movements <- map(ls(pattern = "_predict_adm"), function(prediction) {
 names(predicted_movements) <- ls(pattern = "_predict_adm")
 
 
-### For epidemic model we will three versions of the mobility matrix
-# One uses the raw commuting data
-# The others use predicted flows from gravity model. Gravity model does not predicting 'non-commuters'.
-# Therefore we infer diagonals in two different ways as follows.
+
+# Populate diagonals of predicted matrices --------------------------------
+# The gravity model does not predict numbers of 'non-commuters' (diagonals of the movement matrix)
+# We use two different methods to infer the size of these diagonals
 
 ## Method 1
-# Use raw observations along diagonals
+# Use observed data as diagonals then normalise so that the row sum is equal to the patch population
 
-conn_method1 <- conn_predict
-diag(conn_method1) <- diag(conn)
-conn_method1 <- round(conn_method1)
-conn_method1 <- as.movement_matrix(conn_method1)
-conn_method1_probability <- conn_method1 / rowSums(conn_method1)
-conn_method1_probability <- as.movement_matrix(conn_method1_probability)
+# first format the aggregated scaled data
 
-conn_mthd1_pm <- conn_predict_pm
-diag(conn_mthd1_pm) <- diag(conn)
-conn_mthd1_pm <- round(conn_mthd1_pm)
-conn_mthd1_pm <- as.movement_matrix(conn_mthd1_pm)
-conn_mthd1_pm_prob <- conn_mthd1_pm / rowSums(conn_mthd1_pm)
-conn_mthd1_pm_prob <- as.movement_matrix(conn_mthd1_pm_prob)
+prtl_aggr_conn <- prepare_movement_data(portugal_adm1_location_data,
+                                        aggregated_scaled_matrix[["portugal"]])
+fra_aggr_conn <- prepare_movement_data(france_adm2_location_data,
+                                       aggregated_scaled_matrix[["france"]])
 
-saveRDS(conn_method1_probability, "data/prtgl_gravity_matrix1.rds")
-saveRDS(conn_mthd1_pm_prob, "data/prtgl_gravity_matrix1_pm.rds")
+method1_predictions <- imap(predicted_movements, function(prediction, name) {
+  
+  if(isTRUE(startsWith(name, "france"))) {
+    
+    if(isTRUE(grepl("adm3", name))) {
+      observed_movement <- fra_conn
+    } else {
+      observed_movement <- fra_aggr_conn
+    }
+  }
+  
+  if(isTRUE(startsWith(name, "portugal"))) {
+    
+    if(isTRUE(grepl("adm2", name))) {
+      observed_movement <- prtl_conn
+    } else {
+      observed_movement <- prtl_aggr_conn
+    }
+  }
+  
+  conn_method1 <- prediction
+  diag(conn_method1) <- diag(observed_movement)
+  conn_method1 <- round(conn_method1)
+  conn_method1 <- as.movement_matrix(conn_method1)
+  conn_method1_probability <- conn_method1 / rowSums(conn_method1)
+  conn_method1_probability <- as.movement_matrix(conn_method1_probability)
+})
+
+saveRDS(method1_predictions, "gravity_matrix1_normalised.rds")
+
 
 ## Method 2
 # Use national average of p_stay as diagonals

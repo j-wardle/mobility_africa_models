@@ -1,9 +1,10 @@
 script: fit_mobility_models.R
 
 artefacts:
-  # - data:
-  #     description: Predicted movement data for models
-  #     filenames:
+  - data:
+      description: Predicted movement data for models
+      filenames:
+        - gravity_matrix1_normalised.rds
       
   - data:
       description: Gravity model coefficients
@@ -44,6 +45,7 @@ depends:
     id: latest
     use:
       scaled_matrix.rds: scaled_matrix.rds
+      aggregated_scaled_matrix.rds: aggregated_scaled_matrix.rds
       
 # resources: 
   # - task_data/france/od_matrix_mobilephones.txt

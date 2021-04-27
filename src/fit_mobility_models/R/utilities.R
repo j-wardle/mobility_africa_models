@@ -1,12 +1,10 @@
-fit_gravity_model <- function(location_data, movement_matrix) {
+prepare_movement_data <- function(location_data, movement_source) {
   
-  location_data <- as.location_dataframe(location_data)
-  
-  conn <- movement_matrix
+  conn <- movement_source
   conn <- as.movement_matrix(conn)
   colnames(conn) <-  location_data$location
   rownames(conn) <-  location_data$location
   
-  gravity_model <- movement(conn ~ location_data, flux_model = gravity())
+  conn
   
 }
