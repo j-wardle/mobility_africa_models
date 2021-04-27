@@ -58,14 +58,47 @@ coefficients <- map_dfr(models, function(m) {
 
 # Predict flows from gravity fits -----------------------------------------
 
-# generate predicted flows for each
-gravity_portugal_predict <- predict(gravity_portugal, location_data, flux_model = gravity(), symmetric = FALSE)
-conn_predict <- gravity_portugal_predict$movement_matrix
+## 1) Predict flows for the same spatial unit we fitted to (and in same countries)
 
-gravity_portugal_predict_pm <- predict(gravity_portugal_pm, location_data, flux_model = gravity(), symmetric = FALSE)
-conn_predict_pm <- gravity_portugal_predict_pm$movement_matrix
+portugal_predict_adm2 <- predict(gravity_portugal_adm2, portugal_location_data,
+                                 flux_model = gravity(), symmetric = FALSE)
 
-# note these predicted flow matrices are the transpose of each other
+france_predict_adm3 <- predict(gravity_france_adm3, france_location_data,
+                               flux_model = gravity(), symmetric = FALSE)
+
+## 2) Predict flows for the same spatial unit in the other country
+
+portugal_predict_adm2_alt <- predict(gravity_france_adm3, portugal_location_data,
+                                 flux_model = gravity(), symmetric = FALSE)
+
+france_predict_adm3_alt <- predict(gravity_portugal_adm2, france_location_data,
+                               flux_model = gravity(), symmetric = FALSE)
+
+## 3) Predict flows for the aggregated spatial units (for the same countries as we fitted to)
+
+portugal_predict_adm1 <- predict(gravity_portugal_adm2, portugal_adm1_location_data,
+                                 flux_model = gravity(), symmetric = FALSE)
+
+france_predict_adm2 <- predict(gravity_france_adm3, france_adm2_location_data,
+                               flux_model = gravity(), symmetric = FALSE)
+
+## 4) Predict flows for the aggregated spatial units (in the country we did not fit to)
+
+portugal_predict_adm1_alt <- predict(gravity_france_adm3, portugal_adm1_location_data,
+                                 flux_model = gravity(), symmetric = FALSE)
+
+france_predict_adm2_alt <- predict(gravity_portugal_adm2, france_adm2_location_data,
+                               flux_model = gravity(), symmetric = FALSE)
+
+## Collate  predicted flows
+
+predicted_movements <- map(ls(pattern = "_predict_adm"), function(prediction) {
+  
+  get(prediction)[["movement_matrix"]]
+  
+})
+
+names(predicted_movements) <- ls(pattern = "_predict_adm")
 
 
 ### For epidemic model we will three versions of the mobility matrix

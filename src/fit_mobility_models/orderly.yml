@@ -1,9 +1,14 @@
 script: fit_mobility_models.R
 
 artefacts:
+  # - data:
+  #     description: Predicted movement data for models
+  #     filenames:
+      
   - data:
-      description: Predicted movement data for models
+      description: Gravity model coefficients
       filenames:
+        - model_coefficients.rds
         # - raw_matrix.rds
         # - normalised_matrix.rds
         # - normalised_matrix_eve.rds
@@ -19,6 +24,7 @@ packages:
   - ggplot2
   - scales
   - ggmuller
+  - purrr
 
 sources:
   - R/fit_functions.R
@@ -29,10 +35,10 @@ depends:
     id: latest
     use:
       portugal_location_data.rds: portugal_location_data.rds
-      # portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
+      portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
       # portugal_adm_lookup.rds: portugal_adm_lookup.rds
       france_location_data.rds: france_location_data.rds
-      # france_adm2_location_data.rds: france_adm2_location_data.rds
+      france_adm2_location_data.rds: france_adm2_location_data.rds
       # france_adm_lookup.rds: france_adm_lookup.rds
   process_movement_data:
     id: latest
