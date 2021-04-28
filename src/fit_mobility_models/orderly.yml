@@ -13,15 +13,6 @@ artefacts:
       description: Gravity model coefficients
       filenames:
         - model_coefficients.rds
-        # - raw_matrix.rds
-        # - normalised_matrix.rds
-        # - normalised_matrix_eve.rds
-        # - scaled_matrix.rds
-        # - normalised_scaled_matrix.rds
-        # - normalised_scaled_matrix_eve.rds
-        # - aggregated_scaled_matrix.rds
-        # - aggregated_norm_scaled_matrix.rds
-        # - aggregated_norm_scaled_matrix_eve.rds
 
 packages:
   - dplyr
@@ -40,21 +31,10 @@ depends:
     use:
       portugal_location_data.rds: portugal_location_data.rds
       portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
-      # portugal_adm_lookup.rds: portugal_adm_lookup.rds
       france_location_data.rds: france_location_data.rds
       france_adm2_location_data.rds: france_adm2_location_data.rds
-      # france_adm_lookup.rds: france_adm_lookup.rds
   process_movement_data:
     id: latest
     use:
       scaled_matrix.rds: scaled_matrix.rds
       aggregated_scaled_matrix.rds: aggregated_scaled_matrix.rds
-      
-# resources: 
-  # - task_data/france/od_matrix_mobilephones.txt
-  # - task_data/france/selfloops.txt
-  # - task_data/france/id_list.txt
-  # - task_data/portugal/od_matrix_mobilephones.txt
-  # - task_data/portugal/selfloops.txt
-  # - task_data/portugal/id_list.txt
-  # # Message Jack to access these data files
