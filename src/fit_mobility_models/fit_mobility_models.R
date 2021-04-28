@@ -51,7 +51,7 @@ coefficients <- map_dfr(models, function(m) {
   
 }, .id = "model")
 
-
+saveRDS(coefficients, "model_coefficients.rds")
 
 # Predict flows from gravity fits -----------------------------------------
 
