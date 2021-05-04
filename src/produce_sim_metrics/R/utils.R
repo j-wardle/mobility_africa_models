@@ -67,3 +67,6 @@ time_to_first_infection <- function(results_data) {
   first_case
   
 }
+
+
+## TO DO: add additional functions to calculate other summaries

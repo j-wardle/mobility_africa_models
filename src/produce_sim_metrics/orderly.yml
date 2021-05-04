@@ -8,13 +8,11 @@ artefacts:
   - data:
       description: Simulation metrics
       filenames:
-        - sim_metrics.rds
+        - time_to_peak.rds
+        - first_case.rds
 
 packages:
   - dplyr
-  - purrr
-  - stringr
-  - tools
   
 depends:
   process_sim_outputs:
