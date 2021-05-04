@@ -2,140 +2,90 @@
 
 if (isTRUE(startsWith(filename, "prtl"))) {
 
-## Pull through filenames and read in results
-prtl_files <- list.files("~/cluster/mobility_africa_210428", pattern = "^prtl")
-prtl_files <- paste0("~/cluster/mobility_africa_210428/", prtl_files)
-
-prtl_results <- map(prtl_files, function(filename) {
+## Read in results
   
-  out <- readRDS(filename)
-  out <- rename(out, patch = home)
-  out$patch <- as.numeric(out$patch)
-  
-  out  
-  
-})
-
-names(prtl_results) <- file_path_sans_ext(
-  list.files("~/cluster/mobility_africa_210428", pattern = "^prtl")
-)
+prtl_results <- readRDS(paste0(folder, filename))
+prtl_results <- rename(prtl_results, patch = home)
+prtl_results$patch <- as.numeric(prtl_results$patch)
 
 ## Extract scenario info from filename (eg seed_name, movement type etc)
-prtl_results <- imap(prtl_results, function(scenario, name) {
-  
-  out <- vector("list")
-  out[["sim_results"]] <- scenario
-  out[["seed_name"]] <- word(name, -1, sep = fixed('_'))
-  out[["movement"]] <- sub("_[^_]+$", "", name)
-  out
-  
-})
+prtl_results_prcsd <- vector("list")
+prtl_results_prcsd[["sim_results"]] <- prtl_results
+prtl_results_prcsd[["seed_name"]] <- word(file_path_sans_ext(filename), -1, sep = fixed('_'))
+prtl_results_prcsd[["movement"]] <- sub("_[^_]+$", "", file_path_sans_ext(filename))
+
 
 ## Identify the numerical value of the seed location
-prtl_results_prcsd <- map(prtl_results, function(scenario) {
-  
-  # load appropriate location data
-  if (isTRUE((grepl("aggr", scenario[["movement"]], fixed=TRUE)))) {
+
+# load appropriate location data
+  if (isTRUE((grepl("aggr", prtl_results_prcsd[["movement"]], fixed=TRUE)))) {
     location_data <- readRDS("portugal_adm1_location_data.rds")
   } else {
     location_data <- readRDS("portugal_location_data.rds")
   }
   
   # look up seed location
-  if(scenario[["seed_name"]] == "mdd" &
-     isTRUE(grepl("aggr", scenario[["movement"]], fixed=TRUE))) {
+  if(prtl_results_prcsd[["seed_name"]] == "mdd" &
+     isTRUE(grepl("aggr", prtl_results_prcsd[["movement"]], fixed=TRUE))) {
     seed_location <- which(location_data[,"location"] == "BRAGANCA")
-  } else if (scenario[["seed_name"]] == "mdd") {
+  } else if (prtl_results_prcsd[["seed_name"]] == "mdd") {
     seed_location <- which(location_data[,"location"] == "MIRANDA_DO_DOURO")
   } else {
     seed_location <- which(location_data[,"location"] == "LISBOA")
   }
   
-  scenario[["seed_location"]] <- seed_location
-  scenario
+prtl_results_prcsd[["seed_location"]] <- seed_location
   
-})
 
 ## Define whether epidemic was successfully seeded
 
-prtl_results_prcsd <- map(prtl_results_prcsd, function(scenario) {
-  
-  scenario[["sim_results"]] <-  add_epidemic_status(scenario[["sim_results"]],
-                                                    seed_location = scenario[["seed_location"]])
-  scenario
-})
+prtl_results_prcsd[["sim_results"]] <-  add_epidemic_status(prtl_results_prcsd[["sim_results"]],
+                                                    seed_location = prtl_results_prcsd[["seed_location"]])
 
 ## Save the processed output
 
 saveRDS(prtl_results_prcsd, "results_prcsd.rds")
 
-} else if (country_name == "France") {
+} else if (isTRUE(startsWith(filename, "fra"))) {
 
-
-# FRANCE ------------------------------------------------------------------
-
-## Pull through filenames and read in results
-fra_files <- list.files("~/cluster/mobility_africa_210428", pattern = "^fra")
-fra_files <- paste0("~/cluster/mobility_africa_210428/", fra_files)
-
-fra_results <- map(fra_files, function(filename) {
+  ## Read in results
   
-  out <- readRDS(filename)
-  out <- rename(out, patch = home)
-  out$patch <- as.numeric(out$patch)
+  fra_results <- readRDS(paste0(folder, filename))
+  fra_results <- rename(fra_results, patch = home)
+  fra_results$patch <- as.numeric(fra_results$patch)
   
-  out  
+  ## Extract scenario info from filename (eg seed_name, movement type etc)
+  fra_results_prcsd <- vector("list")
+  fra_results_prcsd[["sim_results"]] <- fra_results
+  fra_results_prcsd[["seed_name"]] <- word(file_path_sans_ext(filename), -1, sep = fixed('_'))
+  fra_results_prcsd[["movement"]] <- sub("_[^_]+$", "", file_path_sans_ext(filename))
   
-})
-
-names(fra_results) <- file_path_sans_ext(
-  list.files("~/cluster/mobility_africa_210428", pattern = "^fra")
-)
-
-## Extract scenario info from filename (eg seed_name, movement type etc)
-fra_results <- imap(fra_results, function(scenario, name) {
   
-  out <- vector("list")
-  out[["sim_results"]] <- scenario
-  out[["seed_name"]] <- word(name, -1, sep = fixed('_'))
-  out[["movement"]] <- sub("_[^_]+$", "", name)
-  out
-  
-})
-
-## Identify the numerical value of the seed location
-fra_results_prcsd <- map(fra_results, function(scenario) {
+  ## Identify the numerical value of the seed location
   
   # load appropriate location data
-  if (isTRUE((grepl("aggr", scenario[["movement"]], fixed=TRUE)))) {
+  if (isTRUE((grepl("aggr", fra_results_prcsd[["movement"]], fixed=TRUE)))) {
     location_data <- readRDS("france_adm2_location_data.rds")
   } else {
     location_data <- readRDS("france_location_data.rds")
   }
   
   # look up seed location
-  if(scenario[["seed_name"]] == "bre" &
-     isTRUE(grepl("aggr", scenario[["movement"]], fixed=TRUE))) {
+  if(fra_results_prcsd[["seed_name"]] == "bre" &
+     isTRUE(grepl("aggr", fra_results_prcsd[["movement"]], fixed=TRUE))) {
     seed_location <- which(location_data[,"location"] == "FINISTERE")
-  } else if (scenario[["seed_name"]] == "bre") {
+  } else if (fra_results_prcsd[["seed_name"]] == "bre") {
     seed_location <- which(location_data[,"location"] == "BREST")
   } else {
     seed_location <- which(location_data[,"location"] == "PARIS")
   }
   
-  scenario[["seed_location"]] <- seed_location
-  scenario
+fra_results_prcsd[["seed_location"]] <- seed_location
   
-})
-
 ## Define whether epidemic was successfully seeded
 
-fra_results_prcsd <- map(fra_results_prcsd, function(scenario) {
-  
-  scenario[["sim_results"]] <-  add_epidemic_status(scenario[["sim_results"]],
-                                                    seed_location = scenario[["seed_location"]])
-  scenario
-})
+fra_results_prcsd[["sim_results"]] <-  add_epidemic_status(fra_results_prcsd[["sim_results"]],
+                                                    seed_location = fra_results_prcsd[["seed_location"]])
 
 ## Save the processed output
 

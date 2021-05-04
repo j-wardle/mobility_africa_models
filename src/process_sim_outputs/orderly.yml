@@ -1,10 +1,16 @@
 script: process_sim_outputs.R
 
+parameters:
+  - folder
+  - filename
+
 artefacts:
   - data:
       description: The processed simulation results
       filenames:
-        - prtl_results_prcsd.rds
+        - results_prcsd.rds
+        # - prtl_results_prcsd.rds
+        # - fra_results_prcsd.rds
         
 packages:
   - dplyr
@@ -20,6 +26,9 @@ depends:
       portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
       france_location_data.rds: france_location_data.rds
       france_adm2_location_data.rds: france_adm2_location_data.rds
+      
+sources:
+  - R/utils.R
       
 resources: 
   # - task_data/france/od_matrix_mobilephones.txt
