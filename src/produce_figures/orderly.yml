@@ -4,8 +4,8 @@ artefacts:
   - staticgraph:
       description: Figures of summary metrics
       filenames:
-        - peak_time_fig1.png
-        - time_to_first_case.png
+        - figures/peak_time_fig1.pdf
+        # - figures/time_to_first_case.png
         
 parameters:
   - folder
