@@ -18,10 +18,7 @@ x <- list(
       )
     )
   ),
-  parameters = c(
-    "folder",
-    "filename"
-  ),
+  parameters = "folder",
   packages = c("dplyr", "tidyr", "purrr", "tibble")
 )
 
