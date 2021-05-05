@@ -5,9 +5,9 @@ artefacts:
     filenames:
     - collated_time_to_peak.rds
     - collated_time_to_first_case.rds
-parameters:
-- folder
-- filename
+# parameters:
+# - folder
+# - filename
 packages:
 - dplyr
 - tidyr
