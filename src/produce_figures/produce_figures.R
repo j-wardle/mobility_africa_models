@@ -96,8 +96,29 @@ results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
 
 results <- rename(results, median = `0.5`)
 results$model <- as.factor(results$model)
+results$seed <- factor(results$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
 
-results3 <- results3 %>% 
-  group_by(country, patch) %>% 
-  mutate(time_diff = median - median[model == "mrnd"])
 
+# results3 <- results3 %>% 
+#   group_by(country, patch) %>% 
+#   mutate(time_diff = median - median[model == "mrnd"])
+
+
+
+
+model.labs <- c("Raw data", "Raw aggregated data")
+names(model.labs) <- c("raw", "raw_aggr")
+
+peak_time_fig1 <- 
+  results %>% 
+  filter(model == "raw" | model == "raw_aggr") %>%
+  ggplot() +
+  geom_point(aes(x = distance, y = median), size = 0.9) +
+  # ylim(c(-10, 10)) +
+  xlab("Distance from seed (km)") +
+  ylab("Time to peak (days)") +
+  theme_classic() +
+  facet_grid(seed ~ model,
+             labeller = labeller(model = model.labs))
+
+ggsave("figures/peak_time_fig1.png")
