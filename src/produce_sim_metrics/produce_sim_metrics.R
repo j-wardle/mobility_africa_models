@@ -8,7 +8,7 @@ peak_times <- time_to_peak(results_prcsd$sim_results)
 peak_times$model <- results_prcsd$movement
 peak_times$seed <- results_prcsd$seed_name
 
-saveRDS(time_to_peak, "time_to_peak.rds")
+saveRDS(peak_times, "time_to_peak.rds")
 
 # Time to first case
 
