@@ -6,16 +6,27 @@ artefacts:
       filenames:
         - time_to_peak.png
         - time_to_first_case.png
+        
+parameters:
+  - folder
 
 packages:
   - dplyr
   - tidyr
   - ggplot2
   - purrr
+  - stringr
   
 depends:
   collate_outputs:
-    id: latest
+    id: latest(parameter:folder == folder)
     use:
       collated_time_to_peak.rds: collated_time_to_peak.rds
       collated_time_to_first_case.rds: collated_time_to_first_case.rds
+  process_location_data:
+    id: latest
+    use:
+      portugal_location_data.rds: portugal_location_data.rds
+      portugal_aggr_location_data.rds: portugal_adm1_location_data.rds
+      france_location_data.rds: france_location_data.rds
+      france_aggr_location_data.rds: france_adm2_location_data.rds
