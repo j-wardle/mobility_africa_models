@@ -7,9 +7,9 @@ collated_time_to_first_case <- readRDS("collated_time_to_first_case.rds")
 
 ## Load location data
 portugal_location_data <- readRDS("portugal_location_data.rds")
-portugal_adm1_location_data <- readRDS("portugal_adm1_location_data.rds")
+portugal_aggr_location_data <- readRDS("portugal_aggr_location_data.rds")
 france_location_data<- readRDS("france_location_data.rds")
-france_adm2_location_data <- readRDS("france_adm2_location_data.rds")
+france_aggr_location_data <- readRDS("france_aggr_location_data.rds")
 
 ## Figure 1: time_to_peak with raw data
 
@@ -64,54 +64,40 @@ model_types <- rep(unique(collated_time_to_peak$model), each = 4)
 countries <- rep(rep(unique(collated_time_to_peak$country), each = 2), 10)
 seed <- rep(unique(collated_time_to_peak$seed), 10)
 
-# messed up collating the results too early
+# messed up by collating the results too early
 # re_split
-test <- pmap(list(model_types, countries, seed), function(m, c, s) {
+results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
   out <- filter(collated_time_to_peak, model == m & country == c & seed == s)
+  central_point <- s
   
   if(isTRUE((grepl("aggr", m, fixed = TRUE)))) {
     location_data <- readRDS(paste0(c, "_aggr_location_data.rds"))
+    
+    if(s == "BREST") central_point <- "FINISTERE"
+    if(s == "MIRANDA_DO_DOURO") central_point <- "BRAGANCA"
+    
   } else {
     location_data <- readRDS(paste0(c, "_location_data.rds"))
   }
   
+  location_data$seed_x <- location_data$x[location_data$location == central_point]
+  location_data$seed_y <- location_data$y[location_data$location == central_point]
   
+  location_data <- location_data %>%
+    rowwise() %>% 
+    mutate(distance = geosphere::distm(c(x, y), c(seed_x, seed_y)) / 1000
+    )
+  
+  out$distance <- location_data$distance
+  out
   
 })
 
+results <- rename(results, median = `0.5`)
+results$model <- as.factor(results$model)
 
-results <- map(test, function(x) {
-  
-  
-  
-})
+results3 <- results3 %>% 
+  group_by(country, patch) %>% 
+  mutate(time_diff = median - median[model == "mrnd"])
 
-
-# 
-# 
-# if(collated_time_to_peak$country == "fra") {
-#   
-#   if(isTRUE((grepl("aggr", collated_time_to_peak$model, fixed=TRUE)))) {
-#     
-#     collated_time_to_peak$patch_name <- test1
-#     
-#   } else {
-#     
-#     collated_time_to_peak$patch_name <- test2
-#     
-#   } 
-#   
-# } else if (collated_time_to_peak$country == "prtl") {
-#   
-#   if(isTRUE((grepl("aggr", collated_time_to_peak$model, fixed=TRUE)))) {
-#     
-#     collated_time_to_peak$patch_name <- test3
-#     
-#   } else {
-#     
-#     collated_time_to_peak$patch_name <- test4
-#     
-#   } 
-#   
-# }
