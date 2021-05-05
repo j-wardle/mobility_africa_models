@@ -1,8 +1,8 @@
-library(glue)
-library(purrr)
-
-folder <- "~/cluster/mobility_africa_210428/"
-files <- list.files(folder)
+# library(glue)
+# library(purrr)
+# 
+# folder <- "~/cluster/mobility_africa_210428/"
+# files <- list.files(folder)
 ## Move code above this line to workflow script when I make one
 
 ## Code to automatically generate the orderly.yml file containing all the model outputs we run
