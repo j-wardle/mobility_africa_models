@@ -1,0 +1,21 @@
+script: produce_figures.R
+
+artefacts:
+  - staticgraph:
+      description: Figures of summary metrics
+      filenames:
+        - time_to_peak.png
+        - time_to_first_case.png
+
+packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - purrr
+  
+depends:
+  collate_outputs:
+    id: latest
+    use:
+      collated_time_to_peak.rds: collated_time_to_peak.rds
+      collated_time_to_first_case.rds: collated_time_to_first_case.rds
