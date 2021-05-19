@@ -115,7 +115,7 @@ small_scatters <- map(adm_small_models, function(model_name) {
                        breaks = seq(150, 210, 10)) +
     scale_y_continuous(limits = c(150, 220),
                        breaks = seq(150, 210, 20)) +
-    ggtitle(model_name) +
+    ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
     facet_wrap(~seed, nrow = 2) +
@@ -124,9 +124,13 @@ small_scatters <- map(adm_small_models, function(model_name) {
   
 })
 
+
 p1 <- patchwork::wrap_plots(small_scatters)
 p1
+p1_wide <- patchwork::wrap_plots(small_scatters, nrow = 1)
+p1_wide
 ggsave("figures/peak_scatter_small.png", p1, scale = 2)
+ggsave("figures/peak_scatter_small_wide.png", p1_wide, scale = 1, width = 50, units = "cm")
 
 
 adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
@@ -240,9 +244,111 @@ p4
 ggsave("figures/first_case_scatter_big.png", p4, scale = 2)
 
 
+## Scenario 4 plots -----
+
+scen4_peaks <-
+  results %>% 
+    filter(model == "raw" | model == "g2_alt") %>%
+    pivot_wider(id_cols = c(patch, seed),
+                names_from = model,
+                values_from = median) %>%
+    ggplot() +
+    geom_point(aes(x = raw, y = g2_alt), size = 0.8) +
+    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+    xlab("Time to peak with observed mobility (days)") +
+    ylab("Time to peak with\npredicted mobility (days)") +
+    scale_x_continuous(limits = c(150, 220),
+                       breaks = seq(150, 210, 10)) +
+    scale_y_continuous(limits = c(150, 220),
+                       breaks = seq(150, 210, 20)) +
+    # ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
+    coord_fixed() +
+    theme_classic() +
+    facet_wrap(~seed, nrow = 2) +
+    theme(panel.border = element_rect(colour = "black", fill = NA),
+          axis.text = element_text(size = 7))
+
+ggsave("figures/peak_scatter_scen4.png", scen4_peaks, width = 20, units = "cm")
 
 
-## SPearman rank tests
+scen4_first <-
+  first_cases %>% 
+  filter(model == "raw" | model == "g2_alt") %>%
+  pivot_wider(id_cols = c(patch, seed),
+              names_from = model,
+              values_from = median) %>% 
+  ggplot() +
+  geom_point(aes(x = raw, y = g2_alt), size = 0.8) +
+  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+  xlab("Time to first case with observed mobility (days)") +
+  ylab("Time to first case with\npredicted mobility (days)") +
+  scale_x_continuous(limits = c(0, 115),
+                     breaks = seq(0, 125, 25)) +
+  scale_y_continuous(limits = c(0, 115),
+                     breaks = seq(0, 125, 25)) +
+  coord_fixed() +
+  # ggtitle(model_name) +
+  theme_classic() +
+  facet_wrap(~seed, nrow = 2) +
+  theme(panel.border = element_rect(colour = "black", fill = NA),
+        axis.text = element_text(size = 7))
+  
+ggsave("figures/first_case_scatter_scen4.png", scen4_first, width = 20, units = "cm")
+
+
+
+## Scenario 4 with aggregated data
+
+scen4big_first_case <-
+  first_cases %>% 
+  filter(model == "raw_aggr" | model == "g2_aggr_alt") %>%
+  pivot_wider(id_cols = c(patch, seed),
+              names_from = model,
+              values_from = median) %>% 
+  ggplot() +
+  geom_point(aes(x = raw_aggr, y = g2_aggr_alt), size = 0.8) +
+  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+  xlab("Time to first case with observed mobility (days)") +
+  ylab("Time to first case using\npredicted mobility (days)") +
+  scale_x_continuous(limits = c(0, 115),
+                     breaks = seq(0, 125, 25)) +
+  scale_y_continuous(limits = c(0, 115),
+                     breaks = seq(0, 125, 25)) +
+  coord_fixed() +
+  theme_classic() +
+  facet_wrap(~seed, nrow = 2) +
+  theme(panel.border = element_rect(colour = "black", fill = NA),
+        axis.text = element_text(size = 7))
+
+ggsave("figures/first_case_scatter_scen4big.png", scen4big_first_case, width = 20, units = "cm")
+
+
+
+scen4big_peaks <-
+  results %>% 
+  filter(model == "raw_aggr" | model == "g2_aggr_alt") %>%
+  pivot_wider(id_cols = c(patch, seed),
+              names_from = model,
+              values_from = median) %>%
+  ggplot() +
+  geom_point(aes(x = raw_aggr, y = g2_aggr_alt), size = 0.8) +
+  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+  xlab("Time to peak with observed mobility (days)") +
+  ylab("Time to peak with\npredicted mobility (days)") +
+  scale_x_continuous(limits = c(150, 240),
+                     breaks = seq(150, 230, 20)) +
+  scale_y_continuous(limits = c(150, 240),
+                     breaks = seq(150, 230, 20)) +
+  coord_fixed() +
+  theme_classic() +
+  facet_wrap(~seed, nrow = 2) +
+  theme(panel.border = element_rect(colour = "black", fill = NA),
+        axis.text = element_text(size = 7))
+
+ggsave("figures/peak_scatter_scen4big.png", scen4big_peaks, width = 20, units = "cm")
+
+
+## SPearman rank tests -------
 
 ##small models
 
@@ -351,6 +457,10 @@ spearman_peak_big <- spearman_peak_big %>%
 #             values_from = rho)
 
 write.csv(spearman_peak_big, "figures/spearman_peak_big.csv")
+
+
+
+
 
 
 
