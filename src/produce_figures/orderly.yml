@@ -16,6 +16,7 @@ packages:
   - ggplot2
   - purrr
   - stringr
+  - patchwork
   
 depends:
   collate_outputs:

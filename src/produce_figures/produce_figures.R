@@ -12,7 +12,7 @@ france_location_data<- readRDS("france_location_data.rds")
 france_aggr_location_data <- readRDS("france_aggr_location_data.rds")
 
 
-# TIME TO PEAK FIGURES ----------------------------------------------------
+# TIME TO PEAK PROCESSING ----------------------------------------------------
 
 # extract the country names and model type to be more clear
 # https://stackoverflow.com/questions/12297859/remove-all-text-before-colon
@@ -95,6 +95,10 @@ results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
 })
 
+results <- results %>% 
+  group_by(seed) %>% 
+  mutate(scaled_distance = distance / max(distance))
+
 results <- rename(results, median = `0.5`)
 results$model <- as.factor(results$model)
 results$seed <- factor(results$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
@@ -104,116 +108,8 @@ results$standardised_variation <- results$`95%CrI` / results$median
 adm_small_models <- unique(model_types)[!grepl("aggr", unique(model_types), fixed = TRUE)]
 adm_big_models <- unique(model_types)[grepl("aggr", unique(model_types), fixed = TRUE)]
 
-# ## Generate plots
-# 
-# # First plot the peaks observed from the raw data
-# 
-# model.labs <- c("Raw data", "Raw aggregated data")
-# names(model.labs) <- c("raw", "raw_aggr")
-# 
-# peak_time_fig1 <- 
-#   results %>% 
-#   filter(model == "raw" | model == "raw_aggr") %>%
-#   ggplot() +
-#   geom_point(aes(x = distance, y = median), size = 0.9) +
-#   # ylim(c(-10, 10)) +
-#   xlab("Distance from seed (km)") +
-#   ylab("Time to peak (days)") +
-#   theme_classic() +
-#   facet_grid(seed ~ model,
-#              labeller = labeller(model = model.labs)) +
-#   theme(panel.border = element_rect(colour = "black", fill = NA))
-# 
-# ggsave("figures/peak_time_fig1.pdf")
-# 
-# ## Now plot the differences in peak times for the mobility models
-# 
-# adm_small_models <- unique(model_types)[!grepl("aggr", unique(model_types), fixed = TRUE)]
-# adm_big_models <- unique(model_types)[grepl("aggr", unique(model_types), fixed = TRUE)]
-# 
-# plots_adm_small <- map(adm_small_models, function(m) {
-#   
-#   results %>% 
-#     filter(model == "raw" | model == m) %>%
-#     group_by(country, patch) %>% 
-#     mutate(time_diff = median - median[model == "raw"]) %>%
-#     filter(model == m) %>% 
-#     ggplot() +
-#     geom_point(aes(x = distance, y = time_diff), size = 0.9) +
-#     geom_hline(yintercept = 0, colour = "red", linetype = 2) +
-#     xlab("Distance from seed (km)") +
-#     ylab("peak from mobility model - peak from raw data (days)") +
-#     ggtitle(m) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 1) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA))
-#   
-# })
-# 
-# pdf("figures/small_models_peak_difference.pdf")
-# plots_adm_small
-# dev.off()
-# 
-# 
-# plots_adm_big <- map(adm_big_models, function(m) {
-#   
-#   results %>% 
-#     filter(model == "raw_aggr" | model == m) %>%
-#     group_by(country, patch) %>% 
-#     mutate(time_diff = median - median[model == "raw_aggr"]) %>%
-#     filter(model == m) %>% 
-#     ggplot() +
-#     geom_point(aes(x = distance, y = time_diff), size = 0.9) +
-#     geom_hline(yintercept = 0, colour = "red", linetype = 2) +
-#     xlab("Distance from seed (km)") +
-#     ylab("peak from mobility model - peak from raw data (days)") +
-#     ggtitle(m) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 1) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA))
-#   
-# })
-# 
-# pdf("figures/big_models_peak_difference.pdf")
-# plots_adm_big
-# dev.off()
-# 
-# 
-# 
-# ## Now plot time with raw data (x-axis) against time with model (y-axis)
-# 
-# plots_adm_small_scatter <- map(adm_small_models, function(m) {
-#   
-#   model_col <- as.character(m)
-#   
-#   results %>% 
-#     filter(model == "raw" | model == m) %>%
-#     pivot_wider(id_cols = c(patch, seed),
-#                 names_from = model,
-#                 values_from = median) %>% 
-#     # group_by(country, patch) %>% 
-#     # mutate(time_diff = median - median[model == "raw"]) %>%
-#     # filter(model == m) %>% 
-#     ggplot() +
-#     geom_point(aes(x = raw, y = model_col), size = 0.9) +
-#     geom_abline(yintercept = 0, colour = "red", linetype = 2) +
-#     xlab("Time to peak with raw data (days)") +
-#     ylab("Time to peak with mobility data (days)") +
-#     ggtitle(m) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 1) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA))
-#   
-# })
-# 
-# pdf("figures/small_models_peak_difference.pdf")
-# plots_adm_small
-# dev.off()
 
-
-
-# TIME TO FIRST CASE FIGURES ----------------------------------------------
-
+# TIME TO FIRST CASE PROCESSING ----------------------------------------------
 
 # extract the country names and model type to be more clear
 # https://stackoverflow.com/questions/12297859/remove-all-text-before-colon
@@ -275,84 +171,15 @@ first_cases <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
 })
 
+first_cases <- first_cases %>% 
+  group_by(seed) %>% 
+  mutate(scaled_distance = distance / max(distance))
+
 first_cases <- rename(first_cases, median = `0.5`)
 first_cases$model <- as.factor(first_cases$model)
 first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
 first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
 first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
-
-## Generate plots
-
-# First plot the peaks observed from the raw data
-
-# model.labs <- c("Raw data", "Raw aggregated data")
-# names(model.labs) <- c("raw", "raw_aggr")
-# 
-# first_cases_fig1 <- 
-#   first_cases %>% 
-#   filter(model == "raw" | model == "raw_aggr") %>%
-#   ggplot() +
-#   geom_point(aes(x = distance, y = median), size = 0.9) +
-#   # ylim(c(-10, 10)) +
-#   xlab("Distance from seed (km)") +
-#   ylab("Time to first case (days)") +
-#   theme_classic() +
-#   facet_grid(seed ~ model,
-#              labeller = labeller(model = model.labs)) +
-#   theme(panel.border = element_rect(colour = "black", fill = NA))
-# 
-# first_cases_fig1
-# ggsave("figures/first_case_fig1.pdf")
-# 
-# ## Now plot the differences in peak times for the mobility models
-# 
-# first_cases_adm_small <- map(adm_small_models, function(m) {
-#   
-#   first_cases %>% 
-#     filter(model == "raw" | model == m) %>%
-#     group_by(country, patch) %>% 
-#     mutate(time_diff = median - median[model == "raw"]) %>%
-#     filter(model == m) %>% 
-#     ggplot() +
-#     geom_point(aes(x = distance, y = time_diff), size = 0.9) +
-#     geom_hline(yintercept = 0, colour = "red", linetype = 2) +
-#     xlab("Distance from seed (km)") +
-#     ylab("first case from mobility model - first case from raw data (days)") +
-#     ggtitle(m) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 1) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA))
-#   
-# })
-# 
-# pdf("figures/small_models_first_case.pdf")
-# first_cases_adm_small
-# dev.off()
-# 
-# 
-# first_cases_adm_big <- map(adm_big_models, function(m) {
-#   
-#   first_cases %>% 
-#     filter(model == "raw_aggr" | model == m) %>%
-#     group_by(country, patch) %>% 
-#     mutate(time_diff = median - median[model == "raw_aggr"]) %>%
-#     filter(model == m) %>% 
-#     ggplot() +
-#     geom_point(aes(x = distance, y = time_diff), size = 0.9) +
-#     geom_hline(yintercept = 0, colour = "red", linetype = 2) +
-#     xlab("Distance from seed (km)") +
-#     ylab("first case from mobility model - first case from raw data (days)") +
-#     ggtitle(m) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 1) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA))
-#   
-# })
-# 
-# pdf("figures/big_models_first_case.pdf")
-# first_cases_adm_big
-# dev.off()
-
 
 
 
@@ -363,7 +190,9 @@ adm_small_models <- adm_small_models[adm_small_models != "raw"]
 
 results_small <- filter(results, model %in% adm_small_models | model == "raw")
 
-## TIME TO PEAK
+##################
+## TIME TO PEAK ##
+##################
 
 ## Scatter of small units
 
@@ -374,12 +203,12 @@ small_scatters <- map(adm_small_models, function(model_name) {
   
   results %>% 
     filter(model == "raw" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed, distance),
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
                 names_from = model,
                 values_from = median) %>%
     ggplot() +
-    geom_point(aes(x = raw, y = get(model_name), colour = distance), size = 0.8) +
-    scale_colour_viridis_c() +
+    geom_point(aes(x = raw, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Time to peak using\nobserved mobility (days)") +
     ylab("Time to peak using\npredicted mobility (days)") +
@@ -394,14 +223,15 @@ small_scatters <- map(adm_small_models, function(model_name) {
     theme(panel.border = element_rect(colour = "black", fill = NA),
           axis.text = element_text(size = 7),
           axis.text.x = element_text(angle = 45),
-          strip.text = element_text(size = 8))
+          strip.text = element_text(size = 8),
+          plot.title = element_text(hjust = 0.5))
   
 })
 
 
-p1 <- cowplot::plot_grid(plotlist = small_scatters, nrow = 2, ncol = 2)
+p1 <- wrap_plots(small_scatters) + plot_layout(guides = "collect")
 p1
-ggsave("figures/peak_scatter_small.png", p1, scale = 2)
+ggsave("figures/peak_scatter_small.png", p1, scale = 1.5)
 
 ## Scatter of small units, 95%CrI
 
@@ -409,12 +239,12 @@ small_scatters_cri <- map(adm_small_models, function(model_name) {
   
   results %>% 
     filter(model == "raw" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed, distance),
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
                 names_from = model,
                 values_from = `95%CrI`) %>%
     ggplot() +
-    geom_point(aes(x = raw, y = get(model_name), colour = distance), size = 0.8) +
-    scale_colour_viridis_c() +
+    geom_point(aes(x = raw, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Width of 95% CrI using\nobserved mobility (days)") +
     ylab("Width of 95% CrI using\npredicted mobility (days)") +
@@ -429,50 +259,18 @@ small_scatters_cri <- map(adm_small_models, function(model_name) {
     theme(panel.border = element_rect(colour = "black", fill = NA),
           axis.text = element_text(size = 7),
           axis.text.x = element_text(angle = 45),
-          strip.text = element_text(size = 8))
+          strip.text = element_text(size = 8),
+          plot.title = element_text(hjust = 0.5))
   
 })
 
-p2 <- cowplot::plot_grid(plotlist = small_scatters_cri, nrow = 2, ncol = 2)
+p2 <- wrap_plots(small_scatters_cri) + plot_layout(guides = "collect")
 p2
 ggsave("figures/peak_scatter_small_cri.png", p2, scale = 2)
 
-## Scatter of small units, standardised CrI
-
-small_scatters_cri_standardised <- map(adm_small_models, function(model_name) {
-  
-  results %>% 
-    filter(model == "raw" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed, distance),
-                names_from = model,
-                values_from = standardised_variation) %>%
-    ggplot() +
-    geom_point(aes(x = raw, y = get(model_name), colour = distance), size = 0.8) +
-    scale_colour_viridis_c() +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("95% CrI width / median\n(peak time using observed mobility)") +
-    ylab("95% CrI width / median\n(peak time using predicted mobility)") +
-    scale_x_continuous(limits = c(0.2, 0.7),
-                       breaks = seq(0.2, 0.7, 0.1)) +
-    scale_y_continuous(limits = c(0.2, 0.7),
-                       breaks = seq(0.2, 0.7, 0.1)) +
-    ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
-    coord_fixed() +
-    theme_classic() +
-    facet_wrap(~seed, nrow = 2) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7),
-          axis.text.x = element_text(angle = 45),
-          strip.text = element_text(size = 8))
-  
-})
-
-p3 <- cowplot::plot_grid(plotlist = small_scatters_cri_standardised, nrow = 2, ncol = 2)
-p3
-ggsave("figures/peak_scatter_small_cri_std.png", p3, scale = 2)
 
 
-
+## Scatters for aggregated spatial units
 
 adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
 
@@ -509,23 +307,29 @@ big_scatters <- map(adm_big_models, function(model_name) {
 p2 <- patchwork::wrap_plots(big_scatters)
 ggsave("figures/peak_scatter_big.png", p2, scale = 2)
 
-## Time to first case - scatter plots
+########################
+########################
+## Time to first case ##
+########################
+########################
 
 first_cases_small <- filter(first_cases, model %in% adm_small_models | model == "raw")
 
+## Scatter plot for small units
+
 min(first_cases_small$median) #1
 max(first_cases_small$median) #111
-
 
 first_cases_scatter_small <- map(adm_small_models, function(model_name) {
   
   first_cases %>% 
     filter(model == "raw" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed),
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
                 names_from = model,
                 values_from = median) %>% 
     ggplot() +
-    geom_point(aes(x = raw, y = get(model_name)), size = 0.8) +
+    geom_point(aes(x = raw, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Time to first case using observed mobility (days)") +
     ylab("Time to first case using\npredicted mobility (days)") +
@@ -534,17 +338,56 @@ first_cases_scatter_small <- map(adm_small_models, function(model_name) {
     scale_y_continuous(limits = c(0, 115),
                        breaks = seq(0, 125, 25)) +
     coord_fixed() +
-    ggtitle(model_name) +
+    ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     theme_classic() +
     facet_wrap(~seed, nrow = 2) +
     theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7))
+          axis.text = element_text(size = 7),
+          plot.title = element_text(hjust = 0.5))
   
 })
 
-p3 <- patchwork::wrap_plots(first_cases_scatter_small)
-p3
-ggsave("figures/first_case_scatter_small.png", p3, scale = 2)
+f1 <- wrap_plots(first_cases_scatter_small) + plot_layout(guides = "collect")
+f1
+ggsave("figures/first_case_scatter_small.png", f1, scale = 2)
+
+
+## Scatter plot for small units, 95%CrI
+
+first_cases_scatter_small_cri <- map(adm_small_models, function(model_name) {
+  
+  first_cases %>% 
+    filter(model == "raw" | model == model_name) %>%
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
+                names_from = model,
+                values_from = `95%CrI`) %>%
+    ggplot() +
+    geom_point(aes(x = raw, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
+    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+    xlab("Width of 95% CrI using\nobserved mobility (days)") +
+    ylab("Width of 95% CrI using\npredicted mobility (days)") +
+    scale_x_continuous(limits = c(0, 130),
+                       breaks = seq(0, 125, 25)) +
+    scale_y_continuous(limits = c(0, 130),
+                       breaks = seq(0, 125, 25)) +
+    ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
+    coord_fixed() +
+    theme_classic() +
+    facet_wrap(~seed, nrow = 2) +
+    theme(panel.border = element_rect(colour = "black", fill = NA),
+          axis.text = element_text(size = 7),
+          axis.text.x = element_text(angle = 45),
+          strip.text = element_text(size = 8),
+          plot.title = element_text(hjust = 0.5))
+  
+})
+
+f2 <- wrap_plots(first_cases_scatter_small_cri) + plot_layout(guides = "collect")
+f2
+ggsave("figures/first_case_scatter_small_cri.png", f2, scale = 2)
+
+
 
 
 ## First cases - big
@@ -584,109 +427,6 @@ p4 <- patchwork::wrap_plots(first_cases_scatter_big)
 p4
 ggsave("figures/first_case_scatter_big.png", p4, scale = 2)
 
-
-## Scenario 4 plots -----
-
-scen4_peaks <-
-  results %>% 
-  filter(model == "raw" | model == "g2_alt") %>%
-  pivot_wider(id_cols = c(patch, seed),
-              names_from = model,
-              values_from = median) %>%
-  ggplot() +
-  geom_point(aes(x = raw, y = g2_alt), size = 0.8) +
-  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to peak with observed mobility (days)") +
-  ylab("Time to peak with\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(150, 220),
-                     breaks = seq(150, 210, 10)) +
-  scale_y_continuous(limits = c(150, 220),
-                     breaks = seq(150, 210, 20)) +
-  # ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
-  coord_fixed() +
-  theme_classic() +
-  facet_wrap(~seed, nrow = 2) +
-  theme(panel.border = element_rect(colour = "black", fill = NA),
-        axis.text = element_text(size = 7))
-
-ggsave("figures/peak_scatter_scen4.png", scen4_peaks, width = 20, units = "cm")
-
-
-scen4_first <-
-  first_cases %>% 
-  filter(model == "raw" | model == "g2_alt") %>%
-  pivot_wider(id_cols = c(patch, seed),
-              names_from = model,
-              values_from = median) %>% 
-  ggplot() +
-  geom_point(aes(x = raw, y = g2_alt), size = 0.8) +
-  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to first case with observed mobility (days)") +
-  ylab("Time to first case with\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
-  scale_y_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
-  coord_fixed() +
-  # ggtitle(model_name) +
-  theme_classic() +
-  facet_wrap(~seed, nrow = 2) +
-  theme(panel.border = element_rect(colour = "black", fill = NA),
-        axis.text = element_text(size = 7))
-
-ggsave("figures/first_case_scatter_scen4.png", scen4_first, width = 20, units = "cm")
-
-
-
-## Scenario 4 with aggregated data
-
-scen4big_first_case <-
-  first_cases %>% 
-  filter(model == "raw_aggr" | model == "g2_aggr_alt") %>%
-  pivot_wider(id_cols = c(patch, seed),
-              names_from = model,
-              values_from = median) %>% 
-  ggplot() +
-  geom_point(aes(x = raw_aggr, y = g2_aggr_alt), size = 0.8) +
-  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to first case with observed mobility (days)") +
-  ylab("Time to first case using\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
-  scale_y_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
-  coord_fixed() +
-  theme_classic() +
-  facet_wrap(~seed, nrow = 2) +
-  theme(panel.border = element_rect(colour = "black", fill = NA),
-        axis.text = element_text(size = 7))
-
-ggsave("figures/first_case_scatter_scen4big.png", scen4big_first_case, width = 20, units = "cm")
-
-
-
-scen4big_peaks <-
-  results %>% 
-  filter(model == "raw_aggr" | model == "g2_aggr_alt") %>%
-  pivot_wider(id_cols = c(patch, seed),
-              names_from = model,
-              values_from = median) %>%
-  ggplot() +
-  geom_point(aes(x = raw_aggr, y = g2_aggr_alt), size = 0.8) +
-  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to peak with observed mobility (days)") +
-  ylab("Time to peak with\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(150, 240),
-                     breaks = seq(150, 230, 20)) +
-  scale_y_continuous(limits = c(150, 240),
-                     breaks = seq(150, 230, 20)) +
-  coord_fixed() +
-  theme_classic() +
-  facet_wrap(~seed, nrow = 2) +
-  theme(panel.border = element_rect(colour = "black", fill = NA),
-        axis.text = element_text(size = 7))
-
-ggsave("figures/peak_scatter_scen4big.png", scen4big_peaks, width = 20, units = "cm")
 
 
 ## SPearman rank tests -------
@@ -798,11 +538,3 @@ spearman_peak_big <- spearman_peak_big %>%
 #             values_from = rho)
 
 write.csv(spearman_peak_big, "figures/spearman_peak_big.csv")
-
-
-
-
-
-
-
-
