@@ -2,10 +2,19 @@ script: produce_figures.R
 
 artefacts:
   - staticgraph:
-      description: Figures of summary metrics
+      description: Figures of times to peak and first cases
       filenames:
-        - figures/peak_time_fig1.pdf
-        # - figures/time_to_first_case.png
+        - figures/peak_scatter_small.png
+        - figures/peak_scatter_small_cri.png
+        - figures/first_case_scatter_small.png
+        - figures/first_case_scatter_small_cri.png
+  - data:
+      description: Spearman rank test output
+      filenames:
+        - figures/spearman_first_case_small.csv
+        - figures/spearman_peak_small.csv
+        - figures/spearman_first_case_big.csv
+        - figures/spearman_peak_big.csv
         
 parameters:
   - folder

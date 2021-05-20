@@ -231,7 +231,7 @@ small_scatters <- map(adm_small_models, function(model_name) {
 
 p1 <- wrap_plots(small_scatters) + plot_layout(guides = "collect")
 p1
-ggsave("figures/peak_scatter_small.png", p1, scale = 1.5)
+ggsave("figures/peak_scatter_small.png", p1, scale = 2)
 
 ## Scatter of small units, 95%CrI
 
@@ -272,40 +272,40 @@ ggsave("figures/peak_scatter_small_cri.png", p2, scale = 2)
 
 ## Scatters for aggregated spatial units
 
-adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
-
-results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
-
-min(results_big$median) #159.5
-max(results_big$median) #233
-
-big_scatters <- map(adm_big_models, function(model_name) {
-  
-  results %>% 
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed),
-                names_from = model,
-                values_from = median) %>%
-    ggplot() +
-    geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to peak with observed mobility (days)") +
-    ylab("Time to peak with\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(150, 240),
-                       breaks = seq(150, 230, 20)) +
-    scale_y_continuous(limits = c(150, 240),
-                       breaks = seq(150, 230, 20)) +
-    ggtitle(model_name) +
-    coord_fixed() +
-    theme_classic() +
-    facet_wrap(~seed, nrow = 2) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7))
-  
-})
-
-p2 <- patchwork::wrap_plots(big_scatters)
-ggsave("figures/peak_scatter_big.png", p2, scale = 2)
+# adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
+# 
+# results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
+# 
+# min(results_big$median) #159.5
+# max(results_big$median) #233
+# 
+# big_scatters <- map(adm_big_models, function(model_name) {
+#   
+#   results %>% 
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed),
+#                 names_from = model,
+#                 values_from = median) %>%
+#     ggplot() +
+#     geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
+#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+#     xlab("Time to peak with observed mobility (days)") +
+#     ylab("Time to peak with\npredicted mobility (days)") +
+#     scale_x_continuous(limits = c(150, 240),
+#                        breaks = seq(150, 230, 20)) +
+#     scale_y_continuous(limits = c(150, 240),
+#                        breaks = seq(150, 230, 20)) +
+#     ggtitle(model_name) +
+#     coord_fixed() +
+#     theme_classic() +
+#     facet_wrap(~seed, nrow = 2) +
+#     theme(panel.border = element_rect(colour = "black", fill = NA),
+#           axis.text = element_text(size = 7))
+#   
+# })
+# 
+# p2 <- patchwork::wrap_plots(big_scatters)
+# ggsave("figures/peak_scatter_big.png", p2, scale = 2)
 
 ########################
 ########################
@@ -390,50 +390,50 @@ ggsave("figures/first_case_scatter_small_cri.png", f2, scale = 2)
 
 
 
-## First cases - big
+# ## First cases - big
+# 
+# first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
+# 
+# min(first_cases_big$median) #1
+# max(first_cases_big$median) #111
+# 
+# 
+# first_cases_scatter_big <- map(adm_big_models, function(model_name) {
+#   
+#   first_cases %>% 
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed),
+#                 names_from = model,
+#                 values_from = median) %>% 
+#     ggplot() +
+#     geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
+#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+#     xlab("Time to first case using observed mobility (days)") +
+#     ylab("Time to first case using\npredicted mobility (days)") +
+#     scale_x_continuous(limits = c(0, 115),
+#                        breaks = seq(0, 125, 25)) +
+#     scale_y_continuous(limits = c(0, 115),
+#                        breaks = seq(0, 125, 25)) +
+#     coord_fixed() +
+#     ggtitle(model_name) +
+#     theme_classic() +
+#     facet_wrap(~seed, nrow = 2) +
+#     theme(panel.border = element_rect(colour = "black", fill = NA),
+#           axis.text = element_text(size = 7))
+#   
+# })
+# 
+# p4 <- patchwork::wrap_plots(first_cases_scatter_big)
+# p4
+# ggsave("figures/first_case_scatter_big.png", p4, scale = 2)
 
-first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
-
-min(first_cases_big$median) #1
-max(first_cases_big$median) #111
 
 
-first_cases_scatter_big <- map(adm_big_models, function(model_name) {
-  
-  first_cases %>% 
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed),
-                names_from = model,
-                values_from = median) %>% 
-    ggplot() +
-    geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to first case using observed mobility (days)") +
-    ylab("Time to first case using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    coord_fixed() +
-    ggtitle(model_name) +
-    theme_classic() +
-    facet_wrap(~seed, nrow = 2) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7))
-  
-})
+## SPEARMAN RANK TESTS -------
 
-p4 <- patchwork::wrap_plots(first_cases_scatter_big)
-p4
-ggsave("figures/first_case_scatter_big.png", p4, scale = 2)
+## Models at small spatial scale
 
-
-
-## SPearman rank tests -------
-
-##small models
-
-## first case
+## Time to first case
 
 names(adm_small_models) <- adm_small_models
 spearman_first_cases_small <- map_dfr(adm_small_models, function(model_name) {
@@ -460,7 +460,8 @@ spearman_first_cases_small <- spearman_first_cases_small %>%
 
 write.csv(spearman_first_cases_small, "figures/spearman_first_case_small.csv")
 
-## peak time
+## Time to epidemic peak
+
 spearman_peak_small <- map_dfr(adm_small_models, function(model_name) {
   
   results %>% 
@@ -485,9 +486,9 @@ spearman_peak_small <- spearman_peak_small %>%
 
 write.csv(spearman_peak_small, "figures/spearman_peak_small.csv")
 
-## big models
+## Models at aggregated spatial scale
 
-##first case
+## Time to first case
 
 names(adm_big_models) <- adm_big_models
 spearman_first_cases_big <- map_dfr(adm_big_models, function(model_name) {
@@ -514,7 +515,8 @@ spearman_first_cases_big <- spearman_first_cases_big %>%
 
 write.csv(spearman_first_cases_big, "figures/spearman_first_case_big.csv")
 
-## peak time
+## Time to epidemic peak
+
 spearman_peak_big <- map_dfr(adm_big_models, function(model_name) {
   
   results %>% 
