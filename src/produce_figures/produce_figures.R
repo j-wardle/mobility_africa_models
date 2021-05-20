@@ -231,7 +231,8 @@ small_scatters <- map(adm_small_models, function(model_name) {
 
 p1 <- wrap_plots(small_scatters) + plot_layout(guides = "collect")
 p1
-ggsave("figures/peak_scatter_small.png", p1, scale = 2)
+ggsave("figures/peak_scatter_small.png", p1,
+       width = 10, height = 8.65, units = "in")
 
 ## Scatter of small units, 95%CrI
 
@@ -266,7 +267,8 @@ small_scatters_cri <- map(adm_small_models, function(model_name) {
 
 p2 <- wrap_plots(small_scatters_cri) + plot_layout(guides = "collect")
 p2
-ggsave("figures/peak_scatter_small_cri.png", p2, scale = 2)
+ggsave("figures/peak_scatter_small_cri.png", p2,
+       width = 10, height = 8.65, units = "in")
 
 
 
@@ -349,7 +351,9 @@ first_cases_scatter_small <- map(adm_small_models, function(model_name) {
 
 f1 <- wrap_plots(first_cases_scatter_small) + plot_layout(guides = "collect")
 f1
-ggsave("figures/first_case_scatter_small.png", f1, scale = 2)
+# ggsave("figures/first_case_scatter_small.png", f1, scale = 2)
+ggsave("figures/first_case_scatter_small.png", f1,
+       width = 10, height = 8.65, units = "in")
 
 
 ## Scatter plot for small units, 95%CrI
@@ -385,7 +389,8 @@ first_cases_scatter_small_cri <- map(adm_small_models, function(model_name) {
 
 f2 <- wrap_plots(first_cases_scatter_small_cri) + plot_layout(guides = "collect")
 f2
-ggsave("figures/first_case_scatter_small_cri.png", f2, scale = 2)
+ggsave("figures/first_case_scatter_small_cri.png", f2,
+       width = 10, height = 8.65, units = "in")
 
 
 
