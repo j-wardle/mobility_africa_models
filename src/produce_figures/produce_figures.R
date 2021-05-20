@@ -545,3 +545,37 @@ spearman_peak_big <- spearman_peak_big %>%
 #             values_from = rho)
 
 write.csv(spearman_peak_big, "figures/spearman_peak_big.csv")
+
+
+
+# COMPARING FIRST 20 PATCHES ----------------------------------------------
+seed_names <- seed[1:4]
+names(seed_names) <- seed[1:4]
+
+initial_patches_obs <- map(seed_names, function(x) {
+  first_cases %>% 
+    filter(model == "raw" & seed == x & patch_name != x) %>% 
+    slice_min(median, n = 30) %>% 
+    arrange(median)
+})
+
+# for each model, for each seed, how many of the first 20 are in initial_patches_obs
+names(adm_small_models) <- adm_small_models
+
+initial_matches <- map(adm_small_models, function(x) {
+  
+  map(seed_names, function(y) {
+    
+    initial_model <- first_cases %>% 
+      filter(model == x & seed == y & patch_name != y) %>% 
+      slice_min(median, n = 30) %>% 
+      arrange(median)
+    
+    length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
+    
+  })
+  
+  
+})
+
+  
