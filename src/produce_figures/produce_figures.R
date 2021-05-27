@@ -274,40 +274,47 @@ ggsave("figures/peak_scatter_small_cri.png", p2,
 
 ## Scatters for aggregated spatial units
 
-# adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
-# 
-# results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
-# 
-# min(results_big$median) #159.5
-# max(results_big$median) #233
-# 
-# big_scatters <- map(adm_big_models, function(model_name) {
-#   
-#   results %>% 
-#     filter(model == "raw_aggr" | model == model_name) %>%
-#     pivot_wider(id_cols = c(patch, seed),
-#                 names_from = model,
-#                 values_from = median) %>%
-#     ggplot() +
-#     geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
-#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-#     xlab("Time to peak with observed mobility (days)") +
-#     ylab("Time to peak with\npredicted mobility (days)") +
-#     scale_x_continuous(limits = c(150, 240),
-#                        breaks = seq(150, 230, 20)) +
-#     scale_y_continuous(limits = c(150, 240),
-#                        breaks = seq(150, 230, 20)) +
-#     ggtitle(model_name) +
-#     coord_fixed() +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 2) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA),
-#           axis.text = element_text(size = 7))
-#   
-# })
-# 
-# p2 <- patchwork::wrap_plots(big_scatters)
-# ggsave("figures/peak_scatter_big.png", p2, scale = 2)
+adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
+
+results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
+
+min(results_big$median) #159.5
+max(results_big$median) #233
+
+big_scatters <- map(adm_big_models, function(model_name) {
+  
+  results %>% 
+    filter(model == "raw_aggr" | model == model_name) %>%
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
+                names_from = model,
+                values_from = median) %>%
+    ggplot() +
+    geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
+    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+    xlab("Time to peak using\nobserved mobility (days)") +
+    ylab("Time to peak using\npredicted mobility (days)") +
+    scale_x_continuous(limits = c(150, 240),
+                       breaks = seq(150, 230, 10)) +
+    scale_y_continuous(limits = c(150, 240),
+                       breaks = seq(150, 230, 20)) +
+    ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
+    coord_fixed() +
+    theme_classic() +
+    facet_wrap(~seed, nrow = 2) +
+    theme(panel.border = element_rect(colour = "black", fill = NA),
+          axis.text = element_text(size = 7),
+          axis.text.x = element_text(angle = 45),
+          strip.text = element_text(size = 8),
+          plot.title = element_text(hjust = 0.5))
+  
+})
+
+
+p2 <- wrap_plots(big_scatters) + plot_layout(guides = "collect")
+p2
+ggsave("figures/peak_scatter_big.png", p2,
+       width = 10, height = 8.65, units = "in")
 
 ########################
 ########################
@@ -395,42 +402,45 @@ ggsave("figures/first_case_scatter_small_cri.png", f2,
 
 
 
-# ## First cases - big
-# 
-# first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
-# 
-# min(first_cases_big$median) #1
-# max(first_cases_big$median) #111
-# 
-# 
-# first_cases_scatter_big <- map(adm_big_models, function(model_name) {
-#   
-#   first_cases %>% 
-#     filter(model == "raw_aggr" | model == model_name) %>%
-#     pivot_wider(id_cols = c(patch, seed),
-#                 names_from = model,
-#                 values_from = median) %>% 
-#     ggplot() +
-#     geom_point(aes(x = raw_aggr, y = get(model_name)), size = 0.8) +
-#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-#     xlab("Time to first case using observed mobility (days)") +
-#     ylab("Time to first case using\npredicted mobility (days)") +
-#     scale_x_continuous(limits = c(0, 115),
-#                        breaks = seq(0, 125, 25)) +
-#     scale_y_continuous(limits = c(0, 115),
-#                        breaks = seq(0, 125, 25)) +
-#     coord_fixed() +
-#     ggtitle(model_name) +
-#     theme_classic() +
-#     facet_wrap(~seed, nrow = 2) +
-#     theme(panel.border = element_rect(colour = "black", fill = NA),
-#           axis.text = element_text(size = 7))
-#   
-# })
-# 
-# p4 <- patchwork::wrap_plots(first_cases_scatter_big)
-# p4
-# ggsave("figures/first_case_scatter_big.png", p4, scale = 2)
+## First cases - big
+
+first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
+
+min(first_cases_big$median) #1
+max(first_cases_big$median) #111
+
+
+first_cases_scatter_big <- map(adm_big_models, function(model_name) {
+
+  first_cases %>%
+    filter(model == "raw_aggr" | model == model_name) %>%
+    pivot_wider(id_cols = c(patch, seed, scaled_distance),
+                names_from = model,
+                values_from = median) %>%
+    ggplot() +
+    geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
+    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+    xlab("Time to first case using observed mobility (days)") +
+    ylab("Time to first case using\npredicted mobility (days)") +
+    scale_x_continuous(limits = c(0, 115),
+                       breaks = seq(0, 125, 25)) +
+    scale_y_continuous(limits = c(0, 115),
+                       breaks = seq(0, 125, 25)) +
+    coord_fixed() +
+    ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
+    theme_classic() +
+    facet_wrap(~seed, nrow = 2) +
+    theme(panel.border = element_rect(colour = "black", fill = NA),
+          axis.text = element_text(size = 7),
+          plot.title = element_text(hjust = 0.5))
+
+})
+
+p4 <- wrap_plots(first_cases_scatter_big) + plot_layout(guides = "collect")
+p4
+ggsave("figures/first_case_scatter_big.png", p4,
+       width = 10, height = 8.65, units = "in")
 
 
 
@@ -606,12 +616,16 @@ ggsave("figures/first_patches.png", m1, scale = 0.5)
 
 
 
+# MOBILITY SCATTER PLOTS --------------------------------------------------
+
 ## Mobility figures
 obs_mob <- readRDS("scaled_matrix.rds")
 pred_mob1 <- readRDS("gravity_matrix1_numbers.rds")
 pred_mob2 <- readRDS("gravity_matrix2_numbers.rds")
 
 palette <- ggpubr::get_palette("lancet", 5)
+
+## FRANCE ##
 
 france_mob <- obs_mob[["france"]]
 diag(france_mob) <- 0
@@ -649,31 +663,7 @@ france_predictions <- map(france_pred, function(mod) {
 france_predictions <- bind_rows(france_predictions, .id = "scenario")
 france_predictions$country <- "FRANCE"
 
-france_pred_plots <- imap(france_predictions, function(mod, mod_name) {
-  
-  ggplot(mod) +
-  geom_point(aes(x = observed, y = predicted), size = 0.8, shape = 1, alpha = 0.3, colour = palette[1]) +
-  geom_abline(intercept = 0, slope = 1, colour = "red") +
-  coord_fixed() +
-  xlab("Observed movement") +
-  ylab("Predicted movement") +
-  ggtitle(mod_name) +
-  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  theme_classic()
-  
-
-})
-
-# g1 <- wrap_plots(france_pred_plots, nrow = 2)
-# g1
-# ggsave("figures/predicted_mob_france.png", g1,
-#        width = 10, height = 8.65, units = "in")
-
-
-
+## PORTUGAL ##
 
 prt_mob <- obs_mob[["portugal"]]
 diag(prt_mob) <- 0
@@ -711,36 +701,8 @@ prt_predictions <- map(prt_pred, function(mod) {
 prt_predictions <- bind_rows(prt_predictions, .id = "scenario")
 prt_predictions$country <- "PORTUGAL"
 
-prt_pred_plots <- imap(prt_predictions, function(mod, mod_name) {
-  
-  ggplot(mod) +
-    geom_point(aes(x = observed, y = predicted),
-               size = 0.8, shape = 1, alpha = 0.3, colour = palette[5]) +
-    geom_abline(intercept = 0, slope = 1, colour = "red") +
-    coord_fixed() +
-    xlab("Observed movement") +
-    ylab("Predicted movement") +
-    scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                  labels = trans_format("log10", math_format(10^.x))) +
-    scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                  labels = trans_format("log10", math_format(10^.x))) +
-    theme_classic()
-  
-})
 
-# g2 <- wrap_plots(prt_pred_plots, nrow = 2)
-# g2
-# ggsave("figures/predicted_mob_portugal.png", g2,
-#        width = 10, height = 8.65, units = "in")
-
-
-pred_plots <- c(france_pred_plots, prt_pred_plots)
-g3 <- wrap_plots(pred_plots, nrow = 2)
-g3
-
-ggsave("figures/predicted_mob_bothcountry.png", g3,
-       width = 10, height = 8.65, units = "in")
-
+## JOINT PLOT ##
 
 combined_preds <- bind_rows(france_predictions, prt_predictions)
 
@@ -856,7 +818,7 @@ aggr_predictions <- bind_rows(france_aggr_predictions, prt_aggr_predictions)
 
 comb_aggr_plot <- ggplot(aggr_predictions) +
   geom_point(aes(x = observed, y = predicted, colour = country),
-             size = 0.8, shape = 1, alpha = 0.2) +
+             size = 0.8, shape = 1, alpha = 0.5) +
   scale_colour_manual(values = c(palette[1], palette[5])) +
   geom_abline(intercept = 0, slope = 1, colour = "red") +
   coord_fixed() +
