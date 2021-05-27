@@ -878,3 +878,10 @@ ggsave("figures/predicted_mob_comb.png", comb_aggr_plot, scale  = 2)#,
 #width = 10, height = 8.65, units = "in"
 
 aggr_predictions$diff <- aggr_predictions$predicted - aggr_predictions$observed
+
+aggr_predictions <- aggr_predictions %>% 
+  mutate(overestimate = ifelse(predicted > observed, 1, 0))
+
+aggr_predictions %>% 
+  group_by(country, scenario) %>% 
+  summarise(propn = sum(overestimate) / n())
