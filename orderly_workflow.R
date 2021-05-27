@@ -1,7 +1,7 @@
 library(glue)
 library(purrr)
 
-folder <- "~/cluster/mobility_africa_210504/" # this is where simulation results are saved
+folder <- "~/cluster/mobility_africa_210512/" # this is where simulation results are saved
 files <- list.files(folder)
 
 walk(
