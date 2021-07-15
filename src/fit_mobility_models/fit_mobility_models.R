@@ -135,18 +135,24 @@ method1_predictions <- imap(predicted_movements, function(prediction, name) {
     }
   }
   
-  conn_method1 <- prediction
-  diag(conn_method1) <- diag(observed_movement)
-  conn_method1 <- round(conn_method1)
-  conn_method1 <- as.movement_matrix(conn_method1)
-  conn_method1_probability <- conn_method1 / rowSums(conn_method1)
-  conn_method1_probability <- as.movement_matrix(conn_method1_probability)
+  p_stay <- diag(observed_movement) / rowSums(observed_movement)
   
-  if (!(isTRUE(sum(rowSums(conn_method1_probability)) == nrow(conn_method1_probability)))) {
+  # conn_method1 <- prediction
+  # diag(conn_method1) <-
+  # conn_method1 <- round(conn_method1)
+  # conn_method1 <- as.movement_matrix(conn_method1)
+  # conn_method1_probability <- conn_method1 / rowSums(conn_method1)
+  # conn_method1_probability <- as.movement_matrix(conn_method1_probability)
+  
+  conn_method1 <- (1 - p_stay) * prediction / rowSums(prediction)
+  diag(conn_method1) <- p_stay
+  conn_method1 <- as.movement_matrix(conn_method1)
+  
+  if (!(isTRUE(sum(rowSums(conn_method1)) == nrow(conn_method1)))) {
     warning("Row sums of probability matrix do not equal 1")
   }
   
-  conn_method1_probability
+  conn_method1
 })
 
 saveRDS(method1_predictions, "gravity_matrix1_normalised.rds")

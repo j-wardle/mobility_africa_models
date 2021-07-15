@@ -199,6 +199,8 @@ aggregated_movement <- imap(scaled_matrix, function(country_matrix, country_name
                  values_to = "flow") %>% 
     select(origin, everything())
   
+  adm_lookup[[country_name]] <- distinct(adm_lookup[[country_name]])
+  
   aggregated_movement <- left_join(long_movement, adm_lookup[[country_name]],
                                    by = c("origin" = "sml_spatial_unit")) %>%
     rename(aggregate_origin = lrg_spatial_unit)
@@ -206,14 +208,14 @@ aggregated_movement <- imap(scaled_matrix, function(country_matrix, country_name
                                    by = c("dest" = "sml_spatial_unit")) %>%
     rename(aggregate_dest = lrg_spatial_unit)
   
-  aggregated_movement <- aggregated_movement %>% 
-    group_by(aggregate_origin, aggregate_dest) %>% 
-    summarise(aggregate_flows = sum(flow)) %>% 
+  aggregated_movement <- aggregated_movement %>%
+    group_by(aggregate_origin, aggregate_dest) %>%
+    summarise(aggregate_flows = sum(flow)) %>%
     pivot_wider(id_cols = aggregate_origin,
                 names_from = aggregate_dest,
-                values_from = aggregate_flows) %>% 
+                values_from = aggregate_flows) %>%
     select(aggregate_origin, sort(names(.)))
-  
+
 })
 
 
