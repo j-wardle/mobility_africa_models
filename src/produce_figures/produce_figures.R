@@ -726,7 +726,7 @@ combined_plot <- ggplot(combined_preds) +
         strip.text = element_text(size = 16))
 combined_plot
 
-ggsave("figures/predicted_mob_comb.png", combined_plot, scale  = 2)#,
+ggsave("figures/predicted_mob.png", combined_plot, scale  = 2)#,
        #width = 10, height = 8.65, units = "in"
 
 combined_preds <- combined_preds %>% 
@@ -735,6 +735,42 @@ combined_preds <- combined_preds %>%
 combined_preds %>% 
   group_by(country, scenario) %>% 
   summarise(propn = sum(overestimate) / n())
+
+## Overlay summary stats on the scatter plot
+
+summary_overlay <- combined_preds %>% 
+  mutate(obs_bins = findInterval(observed, c(0, 1, 10, 10e2, 10e3, 10e4, 10e5))) 
+
+summary_overlay <- summary_overlay %>% 
+  group_by(country, scenario, obs_bins)
+
+## Scatter plot with added boxplots summarising pred values in each bin
+
+plot_with_bins <- 
+  ggplot(summary_overlay, aes(observed, predicted)) +
+  geom_point(aes(colour = country),
+             size = 0.8, shape = 1, alpha = 0.2) +
+  scale_colour_manual(values = c(palette[1], palette[5])) +
+  geom_abline(intercept = 0, slope = 1, colour = "red") +
+  geom_boxplot(aes(group = cut(observed,
+                               breaks = c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5), #set bins for boxplot
+                               include.lowest = TRUE),
+                   alpha = 0.8), outlier.alpha = 0.1) +
+  coord_fixed() +
+  xlab("Observed movement") +
+  ylab("Predicted movement") +
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  facet_grid(country ~ scenario) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
+
+ggsave("figures/predicted_mob_comb_box.png", plot_with_bins, scale  = 2)
 
 
 ## Aggregated scale
@@ -836,7 +872,7 @@ comb_aggr_plot <- ggplot(aggr_predictions) +
         strip.text = element_text(size = 16))
 comb_aggr_plot
 
-ggsave("figures/predicted_mob_comb.png", comb_aggr_plot, scale  = 2)#,
+ggsave("figures/predicted_mob_aggr.png", comb_aggr_plot, scale  = 2)#,
 #width = 10, height = 8.65, units = "in"
 
 aggr_predictions$diff <- aggr_predictions$predicted - aggr_predictions$observed
@@ -847,3 +883,32 @@ aggr_predictions <- aggr_predictions %>%
 aggr_predictions %>% 
   group_by(country, scenario) %>% 
   summarise(propn = sum(overestimate) / n())
+
+
+## Scatter plot with added boxplots summarising pred values in each bin
+
+aggr_plot_with_box <-
+  ggplot(aggr_predictions, aes(observed, predicted)) +
+  geom_point(aes(colour = country),
+             size = 0.8, shape = 1, alpha = 0.2) +
+  scale_colour_manual(values = c(palette[1], palette[5])) +
+  geom_abline(intercept = 0, slope = 1, colour = "red") +
+  geom_boxplot(aes(group = cut(observed,
+                               breaks = c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5), #set bins for boxplot
+                               include.lowest = TRUE),
+                   alpha = 0.8), outlier.alpha = 0.1) +
+  coord_fixed() +
+  xlab("Observed movement") +
+  ylab("Predicted movement") +
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  facet_grid(country ~ scenario) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
+
+ggsave("figures/predicted_mob_comb_box_aggr.png", aggr_plot_with_box, scale  = 2)
