@@ -257,21 +257,22 @@ saveRDS(alt_aggr_coefficients, "alt_aggr_model_coefficients.rds")
 
 # Predict flows from gravity fits -----------------------------------------
 
-## 1) Predict flows for the same spatial unit we fitted to (and in same countries)
-
-portugal_predict_adm1_aggr2 <- predict(gravity_portugal_adm1, portugal_adm1_location_data,
-                                 flux_model = gravity(), symmetric = FALSE)
-
-france_predict_adm2_aggr2 <- predict(gravity_france_adm2, france_adm2_location_data,
-                               flux_model = gravity(), symmetric = FALSE)
-
-## 2) Predict flows for the same spatial unit in the other country
-
-portugal_predict_adm1_aggr2_alt <- predict(gravity_france_adm2, portugal_adm1_location_data,
-                                     flux_model = gravity(), symmetric = FALSE)
-
-france_predict_adm2_aggr2_alt <- predict(gravity_portugal_adm1, france_adm2_location_data,
-                                   flux_model = gravity(), symmetric = FALSE)
+# skip these lo res predictions for now.
+# ## 1) Predict flows for the same spatial unit we fitted to (and in same countries)
+# 
+# portugal_predict_adm1_aggr2 <- predict(gravity_portugal_adm1, portugal_adm1_location_data,
+#                                  flux_model = gravity(), symmetric = FALSE)
+# 
+# france_predict_adm2_aggr2 <- predict(gravity_france_adm2, france_adm2_location_data,
+#                                flux_model = gravity(), symmetric = FALSE)
+# 
+# ## 2) Predict flows for the same spatial unit in the other country
+# 
+# portugal_predict_adm1_aggr2_alt <- predict(gravity_france_adm2, portugal_adm1_location_data,
+#                                      flux_model = gravity(), symmetric = FALSE)
+# 
+# france_predict_adm2_aggr2_alt <- predict(gravity_portugal_adm1, france_adm2_location_data,
+#                                    flux_model = gravity(), symmetric = FALSE)
 
 ## 3) Predict flows for the higher res spatial units (for the same countries as we fitted to)
 
@@ -308,16 +309,11 @@ names(predicted_movements_lo_res_fit) <- ls(pattern = c("aggr2"))
 ## Method 1
 # Use observed data as diagonals then normalise so that the row sum is equal to the patch population
 
-# first format the aggregated scaled data
-
-prtl_aggr_conn <- prepare_movement_data(portugal_adm1_location_data,
-                                        aggregated_scaled_matrix[["portugal"]])
-fra_aggr_conn <- prepare_movement_data(france_adm2_location_data,
-                                       aggregated_scaled_matrix[["france"]])
+# Use the formatted lo res data from above (prtl_conn and fra_conn)
 
 # now estimate the movement matrices
 
-method1_predictions <- imap(predicted_movements, function(prediction, name) {
+lo_res_fit_predictions_mthd1 <- imap(predicted_movements_lo_res_fit, function(prediction, name) {
   
   if(isTRUE(startsWith(name, "france"))) {
     
@@ -357,7 +353,7 @@ method1_predictions <- imap(predicted_movements, function(prediction, name) {
   conn_method1
 })
 
-saveRDS(method1_predictions, "gravity_matrix1_normalised.rds")
+saveRDS(lo_res_fit_predictions_mthd1, "lo_res_gravity_matrix1_normalised.rds")
 
 
 ## Method 2
@@ -374,7 +370,7 @@ prtl_aggr_p_stay <- p_stay_average(prtl_aggr_conn)
 
 # now estimate the movement matrices
 
-method2_predictions <- imap(predicted_movements, function(prediction, name) {
+lo_res_fit_predictions_mthd2 <- imap(predicted_movements_lo_res_fit, function(prediction, name) {
   
   if(isTRUE(startsWith(name, "france"))) {
     
@@ -405,14 +401,14 @@ method2_predictions <- imap(predicted_movements, function(prediction, name) {
   conn_method2
 })
 
-saveRDS(method2_predictions, "gravity_matrix2_normalised.rds")
+saveRDS(lo_res_fit_predictions_mthd2, "lo_res_gravity_matrix2_normalised.rds")
 
 
 # For comparison of the predictions from different methods, can get the absolute movement numbers 
 # based on probability matrices and population sizes.
 
-method1_numbers <- prob_predictions_to_numbers(method1_predictions)
-method2_numbers <- prob_predictions_to_numbers(method2_predictions)
+lo_res_fit_mthd1_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd1)
+lo_res_fit_mthd2_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd2)
 
-saveRDS(method1_numbers, "gravity_matrix1_numbers.rds")
-saveRDS(method2_numbers, "gravity_matrix2_numbers.rds")
+saveRDS(method1_numbers, "lo_res_gravity_matrix1_numbers.rds")
+saveRDS(method2_numbers, "lo_res_gravity_matrix2_numbers.rds")
