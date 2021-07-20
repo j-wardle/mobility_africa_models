@@ -8,9 +8,10 @@ artefacts:
         - figures/peak_scatter_small_cri.png
         - figures/first_case_scatter_small.png
         - figures/first_case_scatter_small_cri.png
-        - figures/predicted_mob_bothcountry.png
-        - figures/predicted_mob_bothcountry_aggr.png
+        - figures/predicted_mob.png
+        - figures/predicted_mob_aggr.png
         - figures/predicted_mob_comb_box.png
+        - figures/predicted_mob_comb_box_aggr.png
   - data:
       description: Spearman rank test output
       filenames:
