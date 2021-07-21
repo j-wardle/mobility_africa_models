@@ -620,8 +620,10 @@ ggsave("figures/first_patches.png", m1, scale = 0.5)
 
 ## Mobility figures
 obs_mob <- readRDS("scaled_matrix.rds")
-pred_mob1 <- readRDS("gravity_matrix1_numbers.rds")
-pred_mob2 <- readRDS("gravity_matrix2_numbers.rds")
+# pred_mob1 <- readRDS("gravity_matrix1_numbers.rds")
+# pred_mob2 <- readRDS("gravity_matrix2_numbers.rds")
+pred_mob1 <- readRDS("lo_res_gravity_matrix1_numbers.rds")
+pred_mob2 <- readRDS("lo_res_gravity_matrix2_numbers.rds")
 
 palette <- ggpubr::get_palette("lancet", 5)
 

@@ -53,5 +53,7 @@ depends:
   fit_mobility_models:
     id: latest
     use:
-      gravity_matrix1_numbers.rds: gravity_matrix1_numbers.rds
-      gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+      # gravity_matrix1_numbers.rds: gravity_matrix1_numbers.rds
+      # gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+      lo_res_gravity_matrix1_numbers.rds: lo_res_gravity_matrix1_numbers.rds
+      lo_res_gravity_matrix2_numbers.rds: lo_res_gravity_matrix2_numbers.rds
