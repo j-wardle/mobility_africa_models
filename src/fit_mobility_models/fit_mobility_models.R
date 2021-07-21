@@ -410,5 +410,5 @@ saveRDS(lo_res_fit_predictions_mthd2, "lo_res_gravity_matrix2_normalised.rds")
 lo_res_fit_mthd1_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd1)
 lo_res_fit_mthd2_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd2)
 
-saveRDS(method1_numbers, "lo_res_gravity_matrix1_numbers.rds")
-saveRDS(method2_numbers, "lo_res_gravity_matrix2_numbers.rds")
+saveRDS(lo_res_fit_mthd1_numbers, "lo_res_gravity_matrix1_numbers.rds")
+saveRDS(lo_res_fit_mthd2_numbers, "lo_res_gravity_matrix2_numbers.rds")
