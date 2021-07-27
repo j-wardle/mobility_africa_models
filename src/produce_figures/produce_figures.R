@@ -741,23 +741,33 @@ combined_preds %>%
 ## Overlay summary stats on the scatter plot
 
 summary_overlay <- combined_preds %>% 
-  mutate(obs_bins = findInterval(observed, c(0, 1, 10, 10e2, 10e3, 10e4, 10e5))) 
+  mutate(obs_bins = findInterval(observed, c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5))) 
 
 summary_overlay <- summary_overlay %>% 
-  group_by(country, scenario, obs_bins)
+  group_by(country, scenario, obs_bins) %>% 
+  mutate(bin_median = median(observed),
+         bin_pred_mid = median(predicted),
+         bin_pred_lo = quantile(predicted, 0.025),
+         bin_pred_hi = quantile(predicted, 0.975),
+         group_count = row_number())
 
 ## Scatter plot with added boxplots summarising pred values in each bin
 
-plot_with_bins <- 
+bin_divides <- c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5)
+
+plot_with_bins <-
   ggplot(summary_overlay, aes(observed, predicted)) +
   geom_point(aes(colour = country),
              size = 0.8, shape = 1, alpha = 0.2) +
   scale_colour_manual(values = c(palette[1], palette[5])) +
   geom_abline(intercept = 0, slope = 1, colour = "red") +
-  geom_boxplot(aes(group = cut(observed,
-                               breaks = c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5), #set bins for boxplot
-                               include.lowest = TRUE),
-                   alpha = 0.8), outlier.alpha = 0.1) +
+  geom_vline(xintercept = bin_divides, colour = "grey", linetype = 2) +
+  geom_errorbar(data = . %>% filter(group_count == 1),
+                aes(x = bin_median, ymin = bin_pred_lo, ymax = bin_pred_hi),
+                width = 0.5, size = 1) +
+  geom_point(data = . %>% filter(group_count == 1),
+             aes(x = bin_median, y = bin_pred_mid),
+             size = 1.5) +
   coord_fixed() +
   xlab("Observed movement") +
   ylab("Predicted movement") +
