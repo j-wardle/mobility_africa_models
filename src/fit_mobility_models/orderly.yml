@@ -8,6 +8,11 @@ artefacts:
         - gravity_matrix2_normalised.rds
         - gravity_matrix1_numbers.rds
         - gravity_matrix2_numbers.rds
+        - lo_res_gravity_matrix1_normalised.rds
+        - lo_res_gravity_matrix2_normalised.rds
+        - lo_res_gravity_matrix1_numbers.rds
+        - lo_res_gravity_matrix2_numbers.rds
+        
       
   - data:
       description: Gravity model coefficients

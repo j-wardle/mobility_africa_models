@@ -22,6 +22,7 @@ artefacts:
         
 parameters:
   - folder
+  - spatial_res
 
 packages:
   - dplyr
@@ -55,3 +56,5 @@ depends:
     use:
       gravity_matrix1_numbers.rds: gravity_matrix1_numbers.rds
       gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+      lo_res_gravity_matrix1_numbers.rds: lo_res_gravity_matrix1_numbers.rds
+      lo_res_gravity_matrix2_numbers.rds: lo_res_gravity_matrix2_numbers.rds
