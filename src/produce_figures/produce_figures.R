@@ -792,140 +792,144 @@ ggsave("figures/predicted_mob_comb_box.png", plot_with_bins, scale  = 2)
 
 ## Aggregated scale
 
-obs_mob_aggr <- readRDS("aggregated_scaled_matrix.rds")
-
-france_aggr <- obs_mob_aggr[["france"]]
-diag(france_aggr) <- 0
-france_aggr <- as.data.frame(france_aggr)
-france_aggr$origin <- rownames(france_aggr)
-
-france_aggr <- france_aggr %>%
-  pivot_longer(cols = !origin,
-               names_to = "destination",
-               values_to = "observed")
-
-france_pred1_aggr <- pred_mob1[grepl("france", names(pred_mob1)) & grepl("adm2", names(pred_mob1))]
-france_pred2_aggr <- pred_mob2[grepl("france", names(pred_mob2)) & grepl("adm2", names(pred_mob2))]
-
-france_pred_aggr <- c(france_pred1_aggr, france_pred2_aggr)
-names(france_pred_aggr) <- c("Scenario 5", "Scenario 6", "Scenario 7", "Scenario 8")
-
-france_aggr_predictions <- map(france_pred_aggr, function(mod) {
+if (spatial_res == "high") {
   
-  diag(mod) <- 0
-  mod <- as.data.frame(mod)
-  mod$origin <- rownames(mod)
+  obs_mob_aggr <- readRDS("aggregated_scaled_matrix.rds")
   
-  mod <- mod %>% 
+  france_aggr <- obs_mob_aggr[["france"]]
+  diag(france_aggr) <- 0
+  france_aggr <- as.data.frame(france_aggr)
+  france_aggr$origin <- rownames(france_aggr)
+  
+  france_aggr <- france_aggr %>%
     pivot_longer(cols = !origin,
                  names_to = "destination",
-                 values_to = "predicted")
+                 values_to = "observed")
   
-  mod$observed <- round(france_aggr$observed)
+  france_pred1_aggr <- pred_mob1[grepl("france", names(pred_mob1)) & grepl("adm2", names(pred_mob1))]
+  france_pred2_aggr <- pred_mob2[grepl("france", names(pred_mob2)) & grepl("adm2", names(pred_mob2))]
   
-  mod
+  france_pred_aggr <- c(france_pred1_aggr, france_pred2_aggr)
+  names(france_pred_aggr) <- c("Scenario 5", "Scenario 6", "Scenario 7", "Scenario 8")
   
-})  
-
-prt_aggr <- obs_mob_aggr[["portugal"]]
-diag(prt_aggr) <- 0
-prt_aggr <- as.data.frame(prt_aggr)
-prt_aggr$origin <- rownames(prt_aggr)
-
-prt_aggr <- prt_aggr %>%
-  pivot_longer(cols = !origin,
-               names_to = "destination",
-               values_to = "observed")
-
-prt_pred1_aggr <- pred_mob1[grepl("portugal", names(pred_mob1)) & grepl("adm1", names(pred_mob1))]
-prt_pred2_aggr <- pred_mob2[grepl("portugal", names(pred_mob2)) & grepl("adm1", names(pred_mob2))]
-
-prt_pred_aggr <- c(prt_pred1_aggr, prt_pred2_aggr)
-names(prt_pred_aggr) <- c("Scenario 5", "Scenario 6", "Scenario 7", "Scenario 8")
-
-prt_aggr_predictions <- map(prt_pred_aggr, function(mod) {
+  france_aggr_predictions <- map(france_pred_aggr, function(mod) {
+    
+    diag(mod) <- 0
+    mod <- as.data.frame(mod)
+    mod$origin <- rownames(mod)
+    
+    mod <- mod %>% 
+      pivot_longer(cols = !origin,
+                   names_to = "destination",
+                   values_to = "predicted")
+    
+    mod$observed <- round(france_aggr$observed)
+    
+    mod
+    
+  })  
   
-  diag(mod) <- 0
-  mod <- as.data.frame(mod)
-  mod$origin <- rownames(mod)
+  prt_aggr <- obs_mob_aggr[["portugal"]]
+  diag(prt_aggr) <- 0
+  prt_aggr <- as.data.frame(prt_aggr)
+  prt_aggr$origin <- rownames(prt_aggr)
   
-  mod <- mod %>% 
+  prt_aggr <- prt_aggr %>%
     pivot_longer(cols = !origin,
                  names_to = "destination",
-                 values_to = "predicted")
+                 values_to = "observed")
   
-  mod$observed <- round(prt_aggr$observed)
+  prt_pred1_aggr <- pred_mob1[grepl("portugal", names(pred_mob1)) & grepl("adm1", names(pred_mob1))]
+  prt_pred2_aggr <- pred_mob2[grepl("portugal", names(pred_mob2)) & grepl("adm1", names(pred_mob2))]
   
-  mod
+  prt_pred_aggr <- c(prt_pred1_aggr, prt_pred2_aggr)
+  names(prt_pred_aggr) <- c("Scenario 5", "Scenario 6", "Scenario 7", "Scenario 8")
   
-})  
-
-
-france_aggr_predictions <- bind_rows(france_aggr_predictions, .id = "scenario")
-france_aggr_predictions$country <- "FRANCE"
-
-prt_aggr_predictions <- bind_rows(prt_aggr_predictions, .id = "scenario")
-prt_aggr_predictions$country <- "PORTUGAL"
-
-aggr_predictions <- bind_rows(france_aggr_predictions, prt_aggr_predictions)
-
-comb_aggr_plot <- ggplot(aggr_predictions) +
-  geom_point(aes(x = observed, y = predicted, colour = country),
-             size = 0.8, shape = 1, alpha = 0.5) +
-  scale_colour_manual(values = c(palette[1], palette[5])) +
-  geom_abline(intercept = 0, slope = 1, colour = "red") +
-  coord_fixed() +
-  xlab("Observed movement") +
-  ylab("Predicted movement") +
-  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  facet_grid(country ~ scenario) +
-  theme_classic() +
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
-comb_aggr_plot
-
-ggsave("figures/predicted_mob_aggr.png", comb_aggr_plot, scale  = 2)#,
-#width = 10, height = 8.65, units = "in"
-
-aggr_predictions$diff <- aggr_predictions$predicted - aggr_predictions$observed
-
-aggr_predictions <- aggr_predictions %>% 
-  mutate(overestimate = ifelse(predicted > observed, 1, 0))
-
-aggr_predictions %>% 
-  group_by(country, scenario) %>% 
-  summarise(propn = sum(overestimate) / n())
-
-
-## Scatter plot with added boxplots summarising pred values in each bin
-
-aggr_plot_with_box <-
-  ggplot(aggr_predictions, aes(observed, predicted)) +
-  geom_point(aes(colour = country),
-             size = 0.8, shape = 1, alpha = 0.2) +
-  scale_colour_manual(values = c(palette[1], palette[5])) +
-  geom_abline(intercept = 0, slope = 1, colour = "red") +
-  geom_boxplot(aes(group = cut(observed,
-                               breaks = c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5), #set bins for boxplot
-                               include.lowest = TRUE),
-                   alpha = 0.8), outlier.alpha = 0.1) +
-  coord_fixed() +
-  xlab("Observed movement") +
-  ylab("Predicted movement") +
-  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                labels = trans_format("log10", math_format(10^.x))) +
-  facet_grid(country ~ scenario) +
-  theme_classic() +
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
-
-ggsave("figures/predicted_mob_comb_box_aggr.png", aggr_plot_with_box, scale  = 2)
+  prt_aggr_predictions <- map(prt_pred_aggr, function(mod) {
+    
+    diag(mod) <- 0
+    mod <- as.data.frame(mod)
+    mod$origin <- rownames(mod)
+    
+    mod <- mod %>% 
+      pivot_longer(cols = !origin,
+                   names_to = "destination",
+                   values_to = "predicted")
+    
+    mod$observed <- round(prt_aggr$observed)
+    
+    mod
+    
+  })  
+  
+  
+  france_aggr_predictions <- bind_rows(france_aggr_predictions, .id = "scenario")
+  france_aggr_predictions$country <- "FRANCE"
+  
+  prt_aggr_predictions <- bind_rows(prt_aggr_predictions, .id = "scenario")
+  prt_aggr_predictions$country <- "PORTUGAL"
+  
+  aggr_predictions <- bind_rows(france_aggr_predictions, prt_aggr_predictions)
+  
+  comb_aggr_plot <- ggplot(aggr_predictions) +
+    geom_point(aes(x = observed, y = predicted, colour = country),
+               size = 0.8, shape = 1, alpha = 0.5) +
+    scale_colour_manual(values = c(palette[1], palette[5])) +
+    geom_abline(intercept = 0, slope = 1, colour = "red") +
+    coord_fixed() +
+    xlab("Observed movement") +
+    ylab("Predicted movement") +
+    scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    facet_grid(country ~ scenario) +
+    theme_classic() +
+    theme(legend.position = "none",
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16))
+  comb_aggr_plot
+  
+  ggsave("figures/predicted_mob_aggr.png", comb_aggr_plot, scale  = 2)#,
+  #width = 10, height = 8.65, units = "in"
+  
+  aggr_predictions$diff <- aggr_predictions$predicted - aggr_predictions$observed
+  
+  aggr_predictions <- aggr_predictions %>% 
+    mutate(overestimate = ifelse(predicted > observed, 1, 0))
+  
+  aggr_predictions %>% 
+    group_by(country, scenario) %>% 
+    summarise(propn = sum(overestimate) / n())
+  
+  
+  ## Scatter plot with added boxplots summarising pred values in each bin
+  
+  aggr_plot_with_box <-
+    ggplot(aggr_predictions, aes(observed, predicted)) +
+    geom_point(aes(colour = country),
+               size = 0.8, shape = 1, alpha = 0.5) +
+    scale_colour_manual(values = c(palette[1], palette[5])) +
+    geom_abline(intercept = 0, slope = 1, colour = "red") +
+    geom_boxplot(aes(group = cut(observed,
+                                 breaks = c(0, 1, 10, 10e1, 10e2, 10e3, 10e4, 10e5), #set bins for boxplot
+                                 include.lowest = TRUE),
+                     alpha = 0.8), outlier.alpha = 0.1) +
+    coord_fixed() +
+    xlab("Observed movement") +
+    ylab("Predicted movement") +
+    scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    facet_grid(country ~ scenario) +
+    theme_classic() +
+    theme(legend.position = "none",
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16))
+  
+  ggsave("figures/predicted_mob_comb_box_aggr.png", aggr_plot_with_box, scale  = 2)
+  
+}
