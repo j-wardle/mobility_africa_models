@@ -375,18 +375,18 @@ lo_res_fit_predictions_mthd2 <- imap(predicted_movements_lo_res_fit, function(pr
   if(isTRUE(startsWith(name, "france"))) {
     
     if(isTRUE(grepl("alt", name))) {
-      p_stay_avg <- prtl_p_stay
+      p_stay_avg <- prtl_aggr_p_stay
     } else {
-      p_stay_avg <- fra_p_stay
+      p_stay_avg <- fra_aggr_p_stay
     }
   }
   
   if(isTRUE(startsWith(name, "portugal"))) {
     
     if(isTRUE(grepl("alt", name))) {
-      p_stay_avg <- fra_p_stay
+      p_stay_avg <- fra_aggr_p_stay
     } else {
-      p_stay_avg <- prtl_p_stay
+      p_stay_avg <- prtl_aggr_p_stay
     }
   }
   
