@@ -28,29 +28,25 @@ collated_time_to_peak$model <- as.character(collated_time_to_peak$model)
 collated_time_to_peak <- collated_time_to_peak %>% 
   arrange(country, model)
 
-collated_time_to_peak %>% 
-  group_by(country, model) %>% 
-  summarise(n = n()/2) # check number of entries per grouping
+## Create a vector of the appropriate location names
+# NOTE: this code may need amending if there are additional
+# aggregated files included
 
-# create a vector of the appropriate location names
-# TO DO: come up with a better, non-manual way of doing this
+# first find the number of models per country
+french_models <- length(unique(
+  collated_time_to_peak$model[collated_time_to_peak$country == "fra"]))
+
+portugal_models <- length(unique(
+  collated_time_to_peak$model[collated_time_to_peak$country == "prtl"]))
+
+# then assign location names based on the number of models we have
 location_names <- c(
-  rep(france_location_data$location, 2),
-  # rep(france_aggr_location_data$location, 4),
-  rep(france_location_data$location, 4),
-  # rep(france_aggr_location_data$location, 4),
-  rep(france_location_data$location, 4),
-  # rep(france_aggr_location_data$location, 2),
-  rep(portugal_location_data$location, 2),
-  # rep(portugal_aggr_location_data$location, 4),
-  rep(portugal_location_data$location, 4),
-  # rep(portugal_aggr_location_data$location, 4),
-  rep(portugal_location_data$location, 4) #,
-  # rep(portugal_aggr_location_data$location, 2)
-)
+  rep(france_location_data$location, french_models * 2), # multiply by 2 because 2 seeding locations
+  rep(portugal_location_data$location, portugal_models * 2))
 
 collated_time_to_peak$patch_name <- location_names
 
+# tidy up value names
 collated_time_to_peak <- collated_time_to_peak %>% 
   mutate(seed = replace(seed, seed == "bre", "BREST"),
          seed = replace(seed, seed == "prs", "PARIS"),
@@ -60,13 +56,25 @@ collated_time_to_peak <- collated_time_to_peak %>%
          country = replace(country, country == "prtl", "portugal"),)
 
 
-## extract different model names
-model_types <- rep(unique(collated_time_to_peak$model), each = 4)
-countries <- rep(rep(unique(collated_time_to_peak$country), each = 2), 5) # final arg 10 when we have aggr
-seed <- rep(unique(collated_time_to_peak$seed), 5) # final arg 10 when we have aggr
+## Add distance from seed to dataframe
 
-# messed up by collating the results too early
-# re_split data: TO DO - better way to do this
+# First identify the combination of values to loop over
+different_seeds <- length(unique(collated_time_to_peak$seed))
+different_models <- length(unique(collated_time_to_peak$model))
+different_countries <- length(unique(collated_time_to_peak$country))
+seeds_per_country <- different_seeds / different_countries
+
+
+model_types <- rep(unique(collated_time_to_peak$model),
+                   each = different_seeds)
+countries <- rep(rep(unique(collated_time_to_peak$country),
+                     each = seeds_per_country),
+                 different_models) # final arg 10 when we have aggr
+seed <- rep(unique(collated_time_to_peak$seed),
+            different_models) # final arg 10 when we have aggr
+
+# Re-split the data to assign the distances
+# NOTE: probably a better way to do this (i.e before collating task) but runs quickly
 results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
   out <- filter(collated_time_to_peak, model == m & country == c & seed == s)
@@ -95,13 +103,17 @@ results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
 })
 
+# create a scaled_distance so that we can compare
+# relative distances of seeds in different countries
+
 results <- results %>% 
   group_by(seed) %>% 
   mutate(scaled_distance = distance / max(distance))
 
 results <- rename(results, median = `0.5`)
 results$model <- as.factor(results$model)
-results$seed <- factor(results$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+results$seed <- factor(results$seed, levels = c("BREST", "PARIS",
+                                                "MIRANDA_DO_DOURO", "LISBOA"))
 results$`95%CrI` <- results$`0.975` - results$`0.025`
 results$standardised_variation <- results$`95%CrI` / results$median
 
