@@ -12,227 +12,107 @@ packages:
 - purrr
 - tibble
 depends:
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g1_aggr_alt_bre.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_fra_g1_aggr_alt_bre.rds.rds: time_to_peak.rds
-#       first_case_fra_g1_aggr_alt_bre.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g1_aggr_alt_prs.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_fra_g1_aggr_alt_prs.rds.rds: time_to_peak.rds
-#       first_case_fra_g1_aggr_alt_prs.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g1_aggr_bre.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_g1_aggr_bre.rds.rds: time_to_peak.rds
-#       first_case_fra_g1_aggr_bre.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g1_aggr_prs.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_g1_aggr_prs.rds.rds: time_to_peak.rds
-#       first_case_fra_g1_aggr_prs.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g1_alt_bre.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g1_alt_bre.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g1_alt_bre.rds.rds: time_to_peak.rds
       first_case_fra_g1_alt_bre.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g1_alt_prs.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g1_alt_prs.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g1_alt_prs.rds.rds: time_to_peak.rds
       first_case_fra_g1_alt_prs.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g1_bre.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g1_bre.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g1_bre.rds.rds: time_to_peak.rds
       first_case_fra_g1_bre.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g1_prs.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g1_prs.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g1_prs.rds.rds: time_to_peak.rds
       first_case_fra_g1_prs.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g2_aggr_alt_bre.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_fra_g2_aggr_alt_bre.rds.rds: time_to_peak.rds
-#       first_case_fra_g2_aggr_alt_bre.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g2_aggr_alt_prs.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_fra_g2_aggr_alt_prs.rds.rds: time_to_peak.rds
-#       first_case_fra_g2_aggr_alt_prs.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g2_aggr_bre.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_g2_aggr_bre.rds.rds: time_to_peak.rds
-#       first_case_fra_g2_aggr_bre.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_g2_aggr_prs.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_g2_aggr_prs.rds.rds: time_to_peak.rds
-#       first_case_fra_g2_aggr_prs.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g2_alt_bre.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g2_alt_bre.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g2_alt_bre.rds.rds: time_to_peak.rds
       first_case_fra_g2_alt_bre.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g2_alt_prs.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g2_alt_prs.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g2_alt_prs.rds.rds: time_to_peak.rds
       first_case_fra_g2_alt_prs.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g2_bre.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g2_bre.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g2_bre.rds.rds: time_to_peak.rds
       first_case_fra_g2_bre.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_g2_prs.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_g2_prs.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_g2_prs.rds.rds: time_to_peak.rds
       first_case_fra_g2_prs.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_raw_aggr_bre.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_raw_aggr_bre.rds.rds: time_to_peak.rds
-#       first_case_fra_raw_aggr_bre.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "fra_raw_aggr_prs.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_fra_raw_aggr_prs.rds.rds: time_to_peak.rds
-#       first_case_fra_raw_aggr_prs.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_raw_bre.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_raw_bre.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_raw_bre.rds.rds: time_to_peak.rds
       first_case_fra_raw_bre.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "fra_raw_prs.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "fra_raw_prs.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_fra_raw_prs.rds.rds: time_to_peak.rds
       first_case_fra_raw_prs.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g1_aggr_alt_lsbn.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_prtl_g1_aggr_alt_lsbn.rds.rds: time_to_peak.rds
-#       first_case_prtl_g1_aggr_alt_lsbn.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g1_aggr_alt_mdd.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_prtl_g1_aggr_alt_mdd.rds.rds: time_to_peak.rds
-#       first_case_prtl_g1_aggr_alt_mdd.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g1_aggr_lsbn.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_prtl_g1_aggr_lsbn.rds.rds: time_to_peak.rds
-#       first_case_prtl_g1_aggr_lsbn.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g1_aggr_mdd.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_prtl_g1_aggr_mdd.rds.rds: time_to_peak.rds
-#       first_case_prtl_g1_aggr_mdd.rds.rds: first_case.rds
 - produce_sim_metrics:
     id: latest(parameter:filename == "prtl_g1_alt_lsbn.rds" && parameter:folder ==
-      folder)
+      "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g1_alt_lsbn.rds.rds: time_to_peak.rds
       first_case_prtl_g1_alt_lsbn.rds.rds: first_case.rds
 - produce_sim_metrics:
     id: latest(parameter:filename == "prtl_g1_alt_mdd.rds" && parameter:folder ==
-      folder)
+      "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g1_alt_mdd.rds.rds: time_to_peak.rds
       first_case_prtl_g1_alt_mdd.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_g1_lsbn.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_g1_lsbn.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g1_lsbn.rds.rds: time_to_peak.rds
       first_case_prtl_g1_lsbn.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_g1_mdd.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_g1_mdd.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g1_mdd.rds.rds: time_to_peak.rds
       first_case_prtl_g1_mdd.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g2_aggr_alt_lsbn.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_prtl_g2_aggr_alt_lsbn.rds.rds: time_to_peak.rds
-#       first_case_prtl_g2_aggr_alt_lsbn.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g2_aggr_alt_mdd.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_prtl_g2_aggr_alt_mdd.rds.rds: time_to_peak.rds
-#       first_case_prtl_g2_aggr_alt_mdd.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g2_aggr_lsbn.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_prtl_g2_aggr_lsbn.rds.rds: time_to_peak.rds
-#       first_case_prtl_g2_aggr_lsbn.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_g2_aggr_mdd.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_prtl_g2_aggr_mdd.rds.rds: time_to_peak.rds
-#       first_case_prtl_g2_aggr_mdd.rds.rds: first_case.rds
 - produce_sim_metrics:
     id: latest(parameter:filename == "prtl_g2_alt_lsbn.rds" && parameter:folder ==
-      folder)
+      "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g2_alt_lsbn.rds.rds: time_to_peak.rds
       first_case_prtl_g2_alt_lsbn.rds.rds: first_case.rds
 - produce_sim_metrics:
     id: latest(parameter:filename == "prtl_g2_alt_mdd.rds" && parameter:folder ==
-      folder)
+      "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g2_alt_mdd.rds.rds: time_to_peak.rds
       first_case_prtl_g2_alt_mdd.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_g2_lsbn.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_g2_lsbn.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g2_lsbn.rds.rds: time_to_peak.rds
       first_case_prtl_g2_lsbn.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_g2_mdd.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_g2_mdd.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_g2_mdd.rds.rds: time_to_peak.rds
       first_case_prtl_g2_mdd.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_raw_aggr_lsbn.rds" && parameter:folder
-#       == folder)
-#     use:
-#       time_to_peak_prtl_raw_aggr_lsbn.rds.rds: time_to_peak.rds
-#       first_case_prtl_raw_aggr_lsbn.rds.rds: first_case.rds
-# - produce_sim_metrics:
-#     id: latest(parameter:filename == "prtl_raw_aggr_mdd.rds" && parameter:folder ==
-#       folder)
-#     use:
-#       time_to_peak_prtl_raw_aggr_mdd.rds.rds: time_to_peak.rds
-#       first_case_prtl_raw_aggr_mdd.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_raw_lsbn.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_raw_lsbn.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_raw_lsbn.rds.rds: time_to_peak.rds
       first_case_prtl_raw_lsbn.rds.rds: first_case.rds
 - produce_sim_metrics:
-    id: latest(parameter:filename == "prtl_raw_mdd.rds" && parameter:folder == folder)
+    id: latest(parameter:filename == "prtl_raw_mdd.rds" && parameter:folder == "~/cluster/mobility_africa_210721/")
     use:
       time_to_peak_prtl_raw_mdd.rds.rds: time_to_peak.rds
       first_case_prtl_raw_mdd.rds.rds: first_case.rds
