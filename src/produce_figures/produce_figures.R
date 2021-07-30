@@ -224,10 +224,10 @@ small_scatters <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Time to peak using\nobserved mobility (days)") +
     ylab("Time to peak using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(150, 220),
-                       breaks = seq(150, 210, 10)) +
-    scale_y_continuous(limits = c(150, 220),
-                       breaks = seq(150, 210, 20)) +
+    scale_x_continuous(limits = c(90, 210),
+                       breaks = seq(90, 210, 20)) +
+    scale_y_continuous(limits = c(90, 210),
+                       breaks = seq(90, 210, 20)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -261,10 +261,10 @@ small_scatters_cri <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Width of 95% CrI using\nobserved mobility (days)") +
     ylab("Width of 95% CrI using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(40, 110),
-                       breaks = seq(50, 100, 10)) +
-    scale_y_continuous(limits = c(40, 110),
-                       breaks = seq(50, 100, 10)) +
+    scale_x_continuous(limits = c(20, 60),
+                       breaks = seq(20, 60, 10)) +
+    scale_y_continuous(limits = c(20, 60),
+                       breaks = seq(20, 60, 10)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -391,10 +391,10 @@ first_cases_scatter_small_cri <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Width of 95% CrI using\nobserved mobility (days)") +
     ylab("Width of 95% CrI using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 130),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 130),
-                       breaks = seq(0, 125, 25)) +
+    scale_x_continuous(limits = c(0, 90),
+                       breaks = seq(0, 90, 20)) +
+    scale_y_continuous(limits = c(0, 90),
+                       breaks = seq(0, 90, 20)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -518,7 +518,7 @@ write.csv(spearman_peak_small, "figures/spearman_peak_small.csv")
 ## Models at aggregated spatial scale
 
 ## Time to first case
- # temporarily hide ###
+ # temporarily hide ####
 # names(adm_big_models) <- adm_big_models
 # spearman_first_cases_big <- map_dfr(adm_big_models, function(model_name) {
 #   
@@ -597,9 +597,9 @@ initial_matches <- map_dfr(adm_small_models, function(x) {
     
     length(initial_model$patch_name)
     
-    # match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
+    match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
    
-    # match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
+    match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
      
   }, .id = "seed")
   
