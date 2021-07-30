@@ -36,11 +36,24 @@ fra_conn <- prepare_movement_data(france_location_data,
 
 gravity_france_adm3 <- movement(fra_conn ~ france_location_data, flux_model = gravity())
 
+## Fit radiation model to Portugal data (adm2)
+
+radiation_portugal_adm2 <- movement(prtl_conn ~ portugal_location_data,
+                                    flux_model = radiationWithSelection())
+
+## Fit radiation model to France data (adm3)
+
+radiation_france_adm3 <- movement(fra_conn ~ france_location_data,
+                                  flux_model = radiationWithSelection())
+
 ## Save model coefficients
 
 models <- list(gravity_portugal_adm2,
-            gravity_france_adm3)
-names(models) <- c("gravity_portugal_adm2", "gravity_france_adm3")
+            gravity_france_adm3,
+            radiation_portugal_adm2,
+            radiation_france_adm3)
+names(models) <- c("gravity_portugal_adm2", "gravity_france_adm3",
+                   "radiation_france_adm2", "radiation_france_adm3")
 
 coefficients <- map_dfr(models, function(m) {
   
