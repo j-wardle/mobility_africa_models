@@ -4,15 +4,8 @@ artefacts:
   - staticgraph:
       description: Figures of times to first cases
       filenames:
-        - figures/peak_scatter_small.png
-        - figures/peak_scatter_small_cri.png
-        - figures/first_case_scatter_small.png
-        - figures/first_case_scatter_small_cri.png
-        - figures/predicted_mob.png
-        - figures/predicted_mob_aggr.png
-        - figures/predicted_mob_comb_box.png
-        - figures/predicted_mob_comb_box_aggr.png
-
+        - figures/france_first_cases_scatter.png
+        
 parameters:
   - spatial_res
   - scenario_number
