@@ -78,7 +78,7 @@ peak <- left_join(peak, location_data,
   rename(seed_x = x,
          seed_y = y)
 
-## Caluclate distances from seed to patch
+## Calculate distances from seed to patch
 
 peak <- peak %>% 
   rowwise() %>%
@@ -102,7 +102,7 @@ peak$standardised_variation <- peak$`95%CrI` / peak$median
 ###x-axis : time to first case with observed mobility data
 ### y-axis : time to first case with predicted mobility data
 
-peak_scatter <-
+# peak_scatter <-
   peak %>% 
   pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
               names_from = model,
@@ -111,14 +111,14 @@ peak_scatter <-
   geom_point(aes(x = raw, y = g2_alt, colour = scaled_distance), size = 0.8) +
   scale_colour_viridis_c(name = "Scaled\ndistance") +
   geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to first case using observed mobility (days)") +
-  ylab("Time to first case using\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
-  scale_y_continuous(limits = c(0, 115),
-                     breaks = seq(0, 125, 25)) +
+  xlab("Time to peak using observed mobility (days)") +
+  ylab("Time to peak using\npredicted mobility (days)") +
+  scale_x_continuous(limits = c(120, 220),
+                     breaks = seq(120, 220, 20)) +
+  scale_y_continuous(limits = c(120, 220),
+                     breaks = seq(120, 220, 20)) +
   coord_fixed() +
-  theme_classic() +
+  theme_minimal() +
   facet_grid(pathogen ~ seed) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
         axis.text = element_text(size = 7),
