@@ -102,7 +102,7 @@ peak$standardised_variation <- peak$`95%CrI` / peak$median
 ###x-axis : time to first case with observed mobility data
 ### y-axis : time to first case with predicted mobility data
 
-# peak_scatter <-
+peak_scatter <-
   peak %>% 
   pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
               names_from = model,
@@ -118,7 +118,7 @@ peak$standardised_variation <- peak$`95%CrI` / peak$median
   scale_y_continuous(limits = c(120, 220),
                      breaks = seq(120, 220, 20)) +
   coord_fixed() +
-  theme_minimal() +
+  theme_classic() +
   facet_grid(pathogen ~ seed) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
         axis.text = element_text(size = 7),
