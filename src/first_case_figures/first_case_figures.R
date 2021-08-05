@@ -1,0 +1,128 @@
+## Create folder to save figures
+dir.create("figures")
+
+## Load metric data
+
+time_to_first_case_path1 <- readRDS("collated_time_to_first_case_path1.rds")
+time_to_first_case_path2 <- readRDS("collated_time_to_first_case_path2.rds")
+
+time_to_first_case <- bind_rows(time_to_first_case_path1, time_to_first_case_path2,
+                                .id = "pathogen")
+
+## Load location data
+portugal_location_data <- readRDS("portugal_location_data.rds")
+france_location_data<- readRDS("france_location_data.rds")
+
+
+# TIME TO FIRST CASE PROCESSING ----------------------------------------------
+
+# extract the country names and model type to be more clear
+# https://stackoverflow.com/questions/12297859/remove-all-text-before-colon
+
+time_to_first_case <- time_to_first_case %>% 
+  mutate(country = word(model, 1, sep ="\\_"),
+         model = regmatches(model,
+                            gregexpr("(?<=_).*", model, perl=TRUE)
+         )
+  )
+
+time_to_first_case$model <- as.character(time_to_first_case$model)
+time_to_first_case <- time_to_first_case %>% 
+  arrange(country, model)
+
+time_to_first_case <- time_to_first_case %>% 
+  mutate(seed = replace(seed, seed == "bre", "BREST"),
+         seed = replace(seed, seed == "prs", "PARIS"),
+         seed = replace(seed, seed == "mdd", "MIRANDA_DO_DOURO"),
+         seed = replace(seed, seed == "lsbn", "LISBOA"),
+         country = replace(country, country == "fra", "france"),
+         country = replace(country, country == "prtl", "portugal"),)
+
+
+if (scenario_number == 4) {
+  
+  time_to_first_case <- time_to_first_case %>% 
+    filter(model == "raw" | model == "g2_alt")
+  
+}
+
+
+# for now, filter so that we only show france and brest
+
+time_to_first_case <- time_to_first_case %>% 
+  filter(seed == "BREST" | seed == "PARIS")
+
+
+# add location names
+
+location_names <- rep(france_location_data$location, 8)
+
+time_to_first_case$patch_name <- location_names
+
+
+# Join location coordinates for patch and relevant seed location
+
+france_location_data$country <- "FRANCE"
+portugal_location_data$country <- "PORTUGAL"
+location_data <- bind_rows(france_location_data, portugal_location_data)
+
+first_cases <- left_join(time_to_first_case, location_data,
+                         by = c("patch_name" = "location")) %>% 
+  select(-population) %>% 
+  rename(patch_x = x,
+         patch_y = y)
+
+first_cases <- left_join(first_cases, location_data,
+                         by = c("seed" = "location")) %>% 
+  select(-population) %>% 
+  rename(seed_x = x,
+         seed_y = y)
+
+## Caluclate distances from seed to patch
+
+first_cases <- first_cases %>% 
+  rowwise() %>%
+  mutate(distance = geosphere::distm(c(patch_x, patch_y), c(seed_x, seed_y)) / 1000
+  )
+
+first_cases <- first_cases %>%
+  group_by(seed) %>%
+  mutate(scaled_distance = distance / max(distance))
+
+## Tidy variable names
+
+first_cases <- rename(first_cases, median = `0.5`)
+first_cases$model <- as.factor(first_cases$model)
+first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
+first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
+
+
+### Create scatter plot
+###x-axis : time to first case with observed mobility data
+### y-axis : time to first case with predicted mobility data
+
+first_cases_scatter <-
+  first_cases %>% 
+    pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
+                names_from = model,
+                values_from = median) %>% 
+    ggplot() +
+    geom_point(aes(x = raw, y = g2_alt, colour = scaled_distance), size = 0.8) +
+    scale_colour_viridis_c(name = "Scaled\ndistance") +
+    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+    xlab("Time to first case using observed mobility (days)") +
+    ylab("Time to first case using\npredicted mobility (days)") +
+    scale_x_continuous(limits = c(0, 115),
+                       breaks = seq(0, 125, 25)) +
+    scale_y_continuous(limits = c(0, 115),
+                       breaks = seq(0, 125, 25)) +
+    coord_fixed() +
+    theme_classic() +
+    facet_grid(pathogen ~ seed) +
+    theme(panel.border = element_rect(colour = "black", fill = NA),
+          axis.text = element_text(size = 7),
+          plot.title = element_text(hjust = 0.5))
+
+ggsave("figures/france_first_cases_scatter.png", first_cases_scatter,
+       width = 10, height = 8.65, units = "in")
