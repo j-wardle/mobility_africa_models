@@ -1,19 +1,24 @@
-compare_patches <- function(first_cases_data, simulation1, simulation2, seed, n) {
+compare_patches <- function(first_cases_data, simulation1, simulation2, seed_name, n) {
   
   sim1_patches <- first_cases_data %>% 
-    filter(model == simulation1 & seed == seed & patch_name != seed) %>% 
+    filter(model == simulation1 & seed == seed_name & patch_name != seed_name) %>% 
     slice_min(median, n = n) %>%
     arrange(median)
   
-  sim2_patches <- first_cases_data %>% 
-    filter(model == simulation2 & seed == seed & patch_name != seed) %>% 
+  sim2_patches <- first_cases_data %>%
+    filter(model == simulation2 & seed == seed_name & patch_name != seed_name) %>%
     slice_min(median, n = n) %>%
     arrange(median)
+
+  match_numb <- length(sim2_patches$patch_name[sim2_patches$patch_name %in% sim1_patches$patch_name])
+
+  match_prop <- match_numb / length(sim1_patches$patch_name)
+
+  out <- data.frame(n = n,
+                    match_prop = match_prop,
+                    match_numb = match_numb
+  )
   
-  match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
-  
-  match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
-  
-  match_prop
+  out
   
 }
