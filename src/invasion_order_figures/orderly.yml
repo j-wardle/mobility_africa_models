@@ -25,11 +25,11 @@ depends:
   - collate_outputs:
       id: latest(parameter:folder == pathogen1_folder)
       use:
-        collated_time_to_peak_path1.rds: collated_time_to_peak.rds
+        collated_time_to_first_case_path1.rds: collated_time_to_first_case.rds
   - collate_outputs:
       id: latest(parameter:folder == pathogen2_folder)
       use:
-        collated_time_to_peak_path2.rds: collated_time_to_peak.rds
+        collated_time_to_first_case_path2.rds: collated_time_to_first_case.rds
   - process_location_data:
       id: latest
       use:
