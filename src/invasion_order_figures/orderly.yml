@@ -1,0 +1,37 @@
+script: invasion_order_figures.R
+
+artefacts:
+  - staticgraph:
+      description: Figures of success in predicting invasion order
+      filenames:
+        - figures/france_invasion_order.png
+        
+parameters:
+  - spatial_res
+  - scenario_number
+  - pathogen1_folder
+  - pathogen2_folder
+
+packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - purrr
+  - stringr
+  - patchwork
+  - scales
+  
+depends:
+  - collate_outputs:
+      id: latest(parameter:folder == pathogen1_folder)
+      use:
+        collated_time_to_peak_path1.rds: collated_time_to_peak.rds
+  - collate_outputs:
+      id: latest(parameter:folder == pathogen2_folder)
+      use:
+        collated_time_to_peak_path2.rds: collated_time_to_peak.rds
+  - process_location_data:
+      id: latest
+      use:
+        portugal_location_data.rds: portugal_location_data.rds
+        france_location_data.rds: france_location_data.rds
