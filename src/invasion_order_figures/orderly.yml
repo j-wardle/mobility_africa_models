@@ -21,6 +21,9 @@ packages:
   - patchwork
   - scales
   
+sources:
+  - R/utils.R
+  
 depends:
   - collate_outputs:
       id: latest(parameter:folder == pathogen1_folder)
