@@ -5,6 +5,7 @@ artefacts:
       description: Figures of success in predicting invasion order
       filenames:
         - figures/france_invasion_order.png
+        - figures/france_invasion_order.rds
         
 parameters:
   - spatial_res

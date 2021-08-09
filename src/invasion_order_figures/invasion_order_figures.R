@@ -75,13 +75,12 @@ total_patches <- length(unique(first_cases$patch_name))
 
 # compare patch predictions at each increment
 
-test_seq <- 1:10
-
 path1_first_cases <- first_cases %>% 
   ungroup() %>% 
   filter(pathogen == 1)
 
-test <- map(1:10, function(patch_order) {
+# Pathogen 1, Paris
+path1_order_prs <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path1_first_cases,
                   simulation1 = "raw",
@@ -89,64 +88,83 @@ test <- map(1:10, function(patch_order) {
                   seed_name = "PARIS",
                   n = patch_order)
   
-})
+}, .id = "invasion_order")
 
 
+path1_order_prs$pathogen <- 1
+path1_order_prs$seed <- "PARIS"
 
-
-
-# COMPARING FIRST 20 PATCHES ----------------------------------------------
-seed_names <- seed[1:4]
-names(seed_names) <- seed[1:4]
-
-initial_patches_obs <- map(seed_names, function(x) {
-  first_cases %>% 
-    filter(model == "raw" & seed == x & patch_name != x) %>% 
-    slice_min(median, n = 20) %>% 
-    arrange(median)
-})
-
-# for each model, for each seed, how many of the first 20 are in initial_patches_obs
-names(adm_small_models) <- adm_small_models
-
-initial_matches <- map_dfr(adm_small_models, function(x) {
+# Pathogen1, Brest
+path1_order_bre <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
-  map_dfr(seed_names, function(y) {
-    
-    initial_model <- first_cases %>% 
-      filter(model == x & seed == y & patch_name != y) %>% 
-      slice_min(median, n = 20) %>%
-      arrange(median)
-    
-    length(initial_model$patch_name)
-    
-    # match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
-    
-    # match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
-    
-  }, .id = "seed")
+  compare_patches(path1_first_cases,
+                  simulation1 = "raw",
+                  simulation2 = "g2_alt",
+                  seed_name = "BREST",
+                  n = patch_order)
   
+}, .id = "invasion_order")
+
+path1_order_bre$pathogen <- 1
+path1_order_bre$seed <- "BREST"
+
+## PATHOGEN 2
+path2_first_cases <- first_cases %>% 
+  ungroup() %>% 
+  filter(pathogen == 2)
+
+# Pathogen 2, Paris
+path2_order_prs <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
   
-}, .id = "model")
+  compare_patches(path2_first_cases,
+                  simulation1 = "raw",
+                  simulation2 = "g2_alt",
+                  seed_name = "PARIS",
+                  n = patch_order)
+  
+}, .id = "invasion_order")
 
-initial_matches <- initial_matches %>% 
-  pivot_longer(cols = "BREST":"MIRANDA_DO_DOURO",
-               names_to = "seed",
-               values_to = "prop")
 
-initial_matches$seed <- factor(initial_matches$seed,
-                               levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO")
-)
+path2_order_prs$pathogen <- 2
+path2_order_prs$seed <- "PARIS"
 
-m1 <- ggplot(initial_matches, aes(x = seed, y = prop)) +
-  geom_bar(aes(fill = model), position = "dodge", stat = "identity") +
-  scale_fill_viridis_d(name = "Scenario",
-                       labels = c("1", "2", "3", "4")) +
-  scale_y_continuous(limits = c(0, 1),
-                     breaks = seq(0, 1, 0.2)) +
-  xlab("Seed location") +
+# Pathogen 2, Brest
+path2_order_bre <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
+  
+  compare_patches(path2_first_cases,
+                  simulation1 = "raw",
+                  simulation2 = "g2_alt",
+                  seed_name = "BREST",
+                  n = patch_order)
+  
+}, .id = "invasion_order")
+
+path2_order_bre$pathogen <- 2
+path2_order_bre$seed <- "BREST"
+
+
+# Join the different dataframes
+
+order_success <- bind_rows(path1_order_prs,
+                           path1_order_bre,
+                           path2_order_prs,
+                           path2_order_bre)
+
+order_success$pathogen <- as.factor(order_success$pathogen)
+
+# Plot the order prediction success data
+
+order_success_plot <- 
+  ggplot(order_success) +
+  geom_line(aes(x = n, y = match_prop, colour = seed, linetype = pathogen)) +
+  xlab("Number of patches infected") +
   ylab("Proportion") +
-  theme_classic()
-m1
+  labs(colour = "Seed location",
+       linetype = "Pathogen") +
+  theme_minimal()
 
-ggsave("figures/first_patches.png", m1, scale = 0.5)
+# Save plot image file
+ggsave("figures/france_invasion_order.png", order_success_plot, scale = 0.5)
+
+# Save ggplot object for use in creating panel
+saveRDS(order_success_plot, file = "figures/france_invasion_order.rds")
