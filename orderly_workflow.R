@@ -38,3 +38,12 @@ orderly::orderly_run("collate_outputs",
 orderly::orderly_run("produce_figures",
                      parameters = list(folder = folder),
                      use_draft = "newer")
+
+
+orderly::orderly_run("peak_figures",
+             parameters = list(spatial_res = "high",
+                               scenario_number = 4,
+                               pathogen1_folder = "~/cluster/mobility_africa_210512/",
+                               pathogen2_folder  = "~/cluster/mobility_africa_210728/"
+             ),
+             use_draft = "newer")
