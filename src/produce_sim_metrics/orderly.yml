@@ -10,6 +10,7 @@ artefacts:
       filenames:
         - time_to_peak.rds
         - first_case.rds
+        - firstcase_allsims.rds
 
 packages:
   - dplyr
