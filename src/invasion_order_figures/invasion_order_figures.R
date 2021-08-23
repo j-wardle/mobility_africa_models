@@ -44,11 +44,20 @@ time_to_first_case <- time_to_first_case %>%
 
 if (scenario_number == 4) {
   
-  time_to_first_case <- time_to_first_case %>% 
-    filter(model == "raw" | model == "g2_alt")
+  model1 <- "raw"
+  model2 <- "g2_alt"
   
 }
 
+if (scenario_number == 1) {
+  
+  model1 <- "raw"
+  model2 <- "g1"
+  
+}
+
+time_to_first_case <- time_to_first_case %>% 
+  filter(model == model1 | model == model2)
 
 # for now, filter so that we only show france and brest
 
@@ -86,8 +95,8 @@ path1_first_cases <- first_cases %>%
 path1_order_prs <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path1_first_cases,
-                  simulation1 = "raw",
-                  simulation2 = "g2_alt",
+                  simulation1 = model1,
+                  simulation2 = model2,
                   seed_name = "PARIS",
                   n = patch_order)
   
@@ -101,8 +110,8 @@ path1_order_prs$seed <- "PARIS"
 path1_order_bre <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path1_first_cases,
-                  simulation1 = "raw",
-                  simulation2 = "g2_alt",
+                  simulation1 = model1,
+                  simulation2 = model2,
                   seed_name = "BREST",
                   n = patch_order)
   
@@ -120,8 +129,8 @@ path2_first_cases <- first_cases %>%
 path2_order_prs <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path2_first_cases,
-                  simulation1 = "raw",
-                  simulation2 = "g2_alt",
+                  simulation1 = model1,
+                  simulation2 = model2,
                   seed_name = "PARIS",
                   n = patch_order)
   
@@ -135,8 +144,8 @@ path2_order_prs$seed <- "PARIS"
 path2_order_bre <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path2_first_cases,
-                  simulation1 = "raw",
-                  simulation2 = "g2_alt",
+                  simulation1 = model1,
+                  simulation2 = model2,
                   seed_name = "BREST",
                   n = patch_order)
   

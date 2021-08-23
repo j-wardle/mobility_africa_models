@@ -218,7 +218,7 @@ france_plot_with_bins <-
 
 france_plot_with_bins
 
-ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins, scale  = 2)
+ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins) #, scale  = 2)
 
 
 ## PORTUGAL
@@ -252,4 +252,4 @@ portugal_plot_with_bins <-
 
   portugal_plot_with_bins
 
-ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins, scale  = 2)
+ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
