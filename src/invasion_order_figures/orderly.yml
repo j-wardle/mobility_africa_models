@@ -4,10 +4,10 @@ artefacts:
   - staticgraph:
       description: Figures of success in predicting invasion order
       filenames:
-        - figures/france_invasion_order.png
-        - figures/france_invasion_order.rds
+        - figures/order_success.rds
         
 parameters:
+  - country
   - spatial_res
   - scenario_number
   - pathogen1_folder
@@ -21,6 +21,7 @@ packages:
   - stringr
   - patchwork
   - scales
+  - glue
   
 sources:
   - R/utils.R
