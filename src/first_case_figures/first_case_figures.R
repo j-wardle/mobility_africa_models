@@ -41,24 +41,51 @@ time_to_first_case <- time_to_first_case %>%
 
 if (scenario_number == 4) {
   
-  time_to_first_case <- time_to_first_case %>% 
-    filter(model == "raw" | model == "g2_alt")
+  model1 <- "raw"
+  model2 <- "g2_alt"
   
 }
 
+if (scenario_number == 1) {
+  
+  model1 <- "raw"
+  model2 <- "g1"
+  
+}
 
-# for now, filter so that we only show france and brest
+if (scenario_number == 3) {
+  
+  model1 <- "raw"
+  model2 <- "g2"
+  
+}
+
+time_to_first_case <- time_to_first_case %>% 
+  filter(model == model1 | model == model2)
+
+
+# Filter based on country
+
+if (country == "france") {
 
 time_to_first_case <- time_to_first_case %>% 
   filter(seed == "BREST" | seed == "PARIS")
 
+location_names <- rep(france_location_data$location, 8)
+
+}
+
+if (country == "portugal") {
+  
+  time_to_first_case <- time_to_first_case %>% 
+    filter(seed == "MIRANDA_DO_DOURO" | seed == "LISBOA")
+  
+  location_names <- rep(portugal_location_data$location, 8)
+}
 
 # add location names
 
-location_names <- rep(france_location_data$location, 8)
-
 time_to_first_case$patch_name <- location_names
-
 
 # Join location coordinates for patch and relevant seed location
 
@@ -107,8 +134,9 @@ first_cases_scatter <-
     pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
                 names_from = model,
                 values_from = median) %>% 
+    filter(pathogen == 1) %>% 
     ggplot() +
-    geom_point(aes(x = raw, y = g2_alt, colour = scaled_distance), size = 0.8) +
+    geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
     scale_colour_viridis_c(name = "Scaled\ndistance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Time to first case using observed mobility (days)") +
@@ -119,10 +147,11 @@ first_cases_scatter <-
                        breaks = seq(0, 125, 25)) +
     coord_fixed() +
     theme_classic() +
-    facet_grid(pathogen ~ seed) +
+    # facet_grid(pathogen ~ seed) +
+    facet_wrap(~ seed) +
     theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7),
+          # axis.text = element_text(size = 7),
           plot.title = element_text(hjust = 0.5))
 
-ggsave("figures/france_first_cases_scatter.png", first_cases_scatter,
-       width = 10, height = 8.65, units = "in")
+ggsave("figures/france_first_cases_scatter.png", first_cases_scatter)#,
+       # width = 10, height = 8.65, units = "in")

@@ -2,14 +2,16 @@ compare_patches <- function(first_cases_data, simulation1, simulation2, seed_nam
   
   sim1_patches <- first_cases_data %>% 
     filter(model == simulation1 & seed == seed_name & patch_name != seed_name) %>% 
-    arrange(median, `95%CrI`) %>% 
+    # arrange(median, `95%CrI`) %>%
+    arrange(mean) %>% 
     slice_head(n = n)
     # slice_min(median, n = n) %>%
     # arrange(median)
   
   sim2_patches <- first_cases_data %>%
     filter(model == simulation2 & seed == seed_name & patch_name != seed_name) %>%
-    arrange(median, `95%CrI`) %>% 
+    # arrange(median, `95%CrI`) %>%
+    arrange(mean) %>% 
     slice_head(n = n)
     # slice_min(median, n = n) %>%
     # arrange(median)

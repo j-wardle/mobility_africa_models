@@ -55,14 +55,15 @@ time_to_first_infection <- function(results_data) {
     group_by(patch) %>% 
     summarise(time_of_case = quantile(time,
                                       c(0.025, 0.5, 0.975)),
-              q = c(0.025, 0.5, 0.975))
+              q = c(0.025, 0.5, 0.975),
+              mean = mean(time))
   
   first_case <- first_case %>%
     mutate(time_of_case = round(time_of_case, 1)) %>% 
-    tidyr::pivot_wider(id_cols = patch,
+    tidyr::pivot_wider(id_cols = c(patch, mean),
                        names_from = q,
                        values_from = time_of_case) %>% 
-    select(patch, `0.5`, `0.025`, `0.975`)
+    select(patch, mean, `0.5`, `0.025`, `0.975`)
   
   first_case
   

@@ -14,7 +14,8 @@ x <- list(
       description = "Collated summary metrics for all locations",
       filenames = c(
         "collated_time_to_peak.rds",
-        "collated_time_to_first_case.rds"
+        "collated_time_to_first_case.rds",
+        "collated_first_case_all_sims.rds"
       )
     )
   ),
@@ -34,7 +35,8 @@ d1 <- map2(
         id = query,
         use =  list(
           "time_to_peak.rds",
-          "first_case.rds"
+          "first_case.rds",
+          "firstcase_allsims.rds"
         )
       )
     )
