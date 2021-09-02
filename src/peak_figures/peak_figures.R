@@ -53,6 +53,13 @@ if (scenario_number == 1) {
   
 }
 
+if (scenario_number == 3) {
+  
+  model1 <- "raw"
+  model2 <- "g2"
+  
+}
+
 time_to_peak <- time_to_peak %>% 
   filter(model == model1 | model == model2)
 
