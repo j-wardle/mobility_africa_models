@@ -66,15 +66,32 @@ if (scenario_number == 3) {
 time_to_first_case <- time_to_first_case %>% 
   filter(model == model1 | model == model2)
 
-# for now, filter so that we only show france and brest
+# Filter based on country
 
-time_to_first_case <- time_to_first_case %>% 
-  filter(seed == "BREST" | seed == "PARIS")
+if (country == "france") {
+  
+  time_to_first_case <- time_to_first_case %>% 
+    filter(seed == "BREST" | seed == "PARIS")
+  
+  location_names <- rep(france_location_data$location, 8)
+  
+  seed1 <- "PARIS"
+  seed2 <- "BREST"
+  
+}
 
+if (country == "portugal") {
+  
+  time_to_first_case <- time_to_first_case %>% 
+    filter(seed == "MIRANDA_DO_DOURO" | seed == "LISBOA")
+  
+  location_names <- rep(portugal_location_data$location, 8)
+  
+  seed1 <- "LISBOA"
+  seed2 <- "MIRANDA_DO_DOURO"
+}
 
 # add location names
-
-location_names <- rep(france_location_data$location, 8)
 
 time_to_first_case$patch_name <- location_names
 
@@ -99,67 +116,67 @@ path1_first_cases <- first_cases %>%
   filter(pathogen == 1)
 
 # Pathogen 1, Paris
-path1_order_prs <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
+path1_order_capital <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path1_first_cases,
                   simulation1 = model1,
                   simulation2 = model2,
-                  seed_name = "PARIS",
+                  seed_name = seed1,
                   n = patch_order)
   
 }, .id = "invasion_order")
 
 
-path1_order_prs$pathogen <- 1
-path1_order_prs$seed <- "PARIS"
+path1_order_capital$pathogen <- 1
+path1_order_capital$seed <- seed1
 
 # Pathogen1, Brest
-path1_order_bre <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
+path1_order_rural <- map_dfr(1:(length(unique(path1_first_cases$patch)) - 1), function(patch_order) {
   
   compare_patches(path1_first_cases,
                   simulation1 = model1,
                   simulation2 = model2,
-                  seed_name = "BREST",
+                  seed_name = seed2,
                   n = patch_order)
   
 }, .id = "invasion_order")
 
-path1_order_bre$pathogen <- 1
-path1_order_bre$seed <- "BREST"
+path1_order_rural$pathogen <- 1
+path1_order_rural$seed <- seed2
 
-## PATHOGEN 2
-path2_first_cases <- first_cases %>% 
-  ungroup() %>% 
-  filter(pathogen == 2)
-
-# Pathogen 2, Paris
-path2_order_prs <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
-  
-  compare_patches(path2_first_cases,
-                  simulation1 = model1,
-                  simulation2 = model2,
-                  seed_name = "PARIS",
-                  n = patch_order)
-  
-}, .id = "invasion_order")
-
-
-path2_order_prs$pathogen <- 2
-path2_order_prs$seed <- "PARIS"
-
-# Pathogen 2, Brest
-path2_order_bre <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
-  
-  compare_patches(path2_first_cases,
-                  simulation1 = model1,
-                  simulation2 = model2,
-                  seed_name = "BREST",
-                  n = patch_order)
-  
-}, .id = "invasion_order")
-
-path2_order_bre$pathogen <- 2
-path2_order_bre$seed <- "BREST"
+# ## PATHOGEN 2
+# path2_first_cases <- first_cases %>% 
+#   ungroup() %>% 
+#   filter(pathogen == 2)
+# 
+# # Pathogen 2, Paris
+# path2_order_prs <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
+#   
+#   compare_patches(path2_first_cases,
+#                   simulation1 = model1,
+#                   simulation2 = model2,
+#                   seed_name = "PARIS",
+#                   n = patch_order)
+#   
+# }, .id = "invasion_order")
+# 
+# 
+# path2_order_prs$pathogen <- 2
+# path2_order_prs$seed <- "PARIS"
+# 
+# # Pathogen 2, Brest
+# path2_order_bre <- map_dfr(1:(length(unique(path2_first_cases$patch)) - 1), function(patch_order) {
+#   
+#   compare_patches(path2_first_cases,
+#                   simulation1 = model1,
+#                   simulation2 = model2,
+#                   seed_name = "BREST",
+#                   n = patch_order)
+#   
+# }, .id = "invasion_order")
+# 
+# path2_order_bre$pathogen <- 2
+# path2_order_bre$seed <- "BREST"
 
 
 # Join the different dataframes
@@ -170,8 +187,8 @@ path2_order_bre$seed <- "BREST"
 #                            path2_order_prs,
 #                            path2_order_bre)
 
-order_success <- bind_rows(path1_order_prs,
-                           path1_order_bre)
+order_success <- bind_rows(path1_order_capital,
+                           path1_order_rural)
 
 order_success$pathogen <- as.factor(order_success$pathogen)
 
@@ -192,11 +209,13 @@ order_success_plot <-
   theme_minimal()
 
 # Save plot image file
-ggsave("figures/france_invasion_order.png", order_success_plot) #, scale = 0.5)
+prefix <- country
+ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot) #, scale = 0.5)
 
 # Save ggplot object for use in creating panel
-saveRDS(order_success_plot, file = "figures/france_invasion_order.rds")
+saveRDS(order_success_plot, file = glue("figures/{prefix}_invasion_order.rds"))
 
+saveRDS(order_success, file = "figures/order_success.rds")
 
 
 

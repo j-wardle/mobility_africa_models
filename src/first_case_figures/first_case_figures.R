@@ -64,18 +64,28 @@ time_to_first_case <- time_to_first_case %>%
   filter(model == model1 | model == model2)
 
 
-# for now, filter so that we only show france and brest
+# Filter based on country
+
+if (country == "france") {
 
 time_to_first_case <- time_to_first_case %>% 
   filter(seed == "BREST" | seed == "PARIS")
 
+location_names <- rep(france_location_data$location, 8)
+
+}
+
+if (country == "portugal") {
+  
+  time_to_first_case <- time_to_first_case %>% 
+    filter(seed == "MIRANDA_DO_DOURO" | seed == "LISBOA")
+  
+  location_names <- rep(portugal_location_data$location, 8)
+}
 
 # add location names
 
-location_names <- rep(france_location_data$location, 8)
-
 time_to_first_case$patch_name <- location_names
-
 
 # Join location coordinates for patch and relevant seed location
 

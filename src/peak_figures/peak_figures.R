@@ -64,15 +64,27 @@ time_to_peak <- time_to_peak %>%
   filter(model == model1 | model == model2)
 
 
-# for now, filter so that we only show france and brest
+# Filter based on country
 
-time_to_peak <- time_to_peak %>% 
-  filter(seed == "BREST" | seed == "PARIS")
+if (country == "france") {
+  
+  time_to_peak <- time_to_peak %>% 
+    filter(seed == "BREST" | seed == "PARIS")
+  
+  location_names <- rep(france_location_data$location, 8)
+  
+}
+
+if (country == "portugal") {
+  
+  time_to_peak <- time_to_peak %>% 
+    filter(seed == "MIRANDA_DO_DOURO" | seed == "LISBOA")
+  
+  location_names <- rep(portugal_location_data$location, 8)
+}
 
 
 # add location names
-
-location_names <- rep(france_location_data$location, 8)
 
 time_to_peak$patch_name <- location_names
 

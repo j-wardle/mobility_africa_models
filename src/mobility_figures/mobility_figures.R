@@ -194,7 +194,7 @@ france_plot_with_bins <-
   filter(country == "FRANCE") %>% 
   ggplot(aes(observed, predicted)) +
   geom_point(size = 0.8, shape = 1, alpha = 0.2, colour = palette[1]) +
-  geom_abline(intercept = 0, slope = 1, colour = "red") +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
   geom_vline(xintercept = bin_divides, colour = "grey", linetype = 2) +
   geom_errorbar(data = . %>% filter(group_count == 1),
                 aes(x = bin_median, ymin = bin_pred_lo, ymax = bin_pred_hi),
@@ -228,7 +228,7 @@ portugal_plot_with_bins <-
   filter(country == "PORTUGAL") %>% 
   ggplot(aes(observed, predicted)) +
   geom_point(size = 0.8, shape = 1, alpha = 0.2, colour = palette[5]) +
-  geom_abline(intercept = 0, slope = 1, colour = "red") +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
   geom_vline(xintercept = bin_divides, colour = "grey", linetype = 2) +
   geom_errorbar(data = . %>% filter(group_count == 1),
                 aes(x = bin_median, ymin = bin_pred_lo, ymax = bin_pred_hi),
