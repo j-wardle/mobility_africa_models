@@ -12,12 +12,15 @@ artefacts:
         - lo_res_gravity_matrix2_normalised.rds
         - lo_res_gravity_matrix1_numbers.rds
         - lo_res_gravity_matrix2_numbers.rds
+        - radiation_matrix2_normalised.rds
+        - radiation_matrix2_numbers.rds
         
       
   - data:
-      description: Gravity model coefficients
+      description: Movement model coefficients
       filenames:
-        - model_coefficients.rds
+        - gravity_coefficients.rds
+        - radiation_coefficients.rds
 
 packages:
   - dplyr
