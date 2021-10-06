@@ -9,6 +9,11 @@ collated_time_to_first_case_path1 <- readRDS("~/mobility_africa/mobility_africa_
 france_location_data <- readRDS("~/mobility_africa/mobility_africa_models/draft/first_case_figures/20210902-182612-9463a800/france_location_data.rds")
 portugal_location_data <- readRDS("~/mobility_africa/mobility_africa_models/draft/first_case_figures/20210902-182612-9463a800/portugal_location_data.rds")
 
+# Load in the gravity movement and raw movement predictions
+gravity_move <- readRDS("~/mobility_africa/mobility_africa_models/draft/fit_mobility_models/20210903-103232-3984890f/gravity_matrix2_numbers.rds")
+observed_move <- readRDS("~/mobility_africa/mobility_africa_models/draft/fit_mobility_models/20210903-103232-3984890f/scaled_matrix.rds")
+
+
 setwd("C:/Users/jw2519/Documents/mobility_africa/data_for_centroids/France/")
 france_spdf <- readOGR(dsn = "gadm36_FRA_3.shp", use_iconv = TRUE, encoding = "UTF-8")
 summary(france_spdf)
@@ -36,6 +41,23 @@ fra_scen4 <- fra_scen4 %>%
   group_by(seed) %>% 
   mutate(rel_diff = diff / max(mean),
          last_spread = max(mean))
+
+# add info on movement from seed
+observed_move_fra <- observed_move[["france"]]
+gravity_move_fra <- gravity_move[["france_predict_adm3_alt"]]
+# rows are origin, columns are destination
+
+move_from_brest <- observed_move_fra["BREST", ]
+move_from_paris <- observed_move_fra["PARIS", ]
+move_from_seed <- c(move_from_brest, move_from_paris)
+fra_scen4$flow_from_seed <- as.vector(move_from_seed)
+
+gravity_from_brest <- gravity_move_fra["BREST", ]
+gravity_from_paris <- gravity_move_fra["PARIS", ]
+gravity_from_seed <- c(gravity_from_brest, gravity_from_paris)
+fra_scen4$gravity_from_seed <- as.vector(gravity_from_seed)
+
+fra_scen4$flow_diff <- fra_scen4$gravity_from_seed - fra_scen4$flow_from_seed
 
 
 ### Update the naming of the adm units in tidied spatial dataframe
@@ -89,67 +111,89 @@ time_to_spread_map_fra
 
 
 # plot of the difference between model with gravity movement and that using raw movement data
-time_diff_map_b <-
+time_diff_map_fra <-
   fra_scen4_map %>% 
-  filter(seed == "bre") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = diff), color="white", size = 0.1) +
   scale_fill_viridis_c() +
   coord_quickmap() +
+  facet_wrap(~seed) +
   ggtitle("Time difference of first case (gravity model - raw data model)") +
   theme_void()
 
-time_diff_map_b
-
-
-time_diff_map_p <-
-  fra_scen4_map %>% 
-  filter(seed == "prs") %>% 
-  ggplot() +
-  geom_polygon(aes(x = long, y = lat, group = group, fill = diff), color="white", size = 0.1) +
-  scale_fill_viridis_c() +
-  coord_quickmap() +
-  # ggtitle("Time difference of first case (gravity model - raw data model)") +
-  theme_void()
-
-time_diff_map_p
+time_diff_map_fra
 
 
 # plot of relative differences between model with gravity movement and that using raw movement data
-rel_diff_map_b <-
+rel_diff_map_fra <-
   fra_scen4_map %>% 
-  filter(seed == "bre") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff), color = "white", size = 0.1) +
   scale_fill_viridis_c() +
   coord_quickmap() +
+  facet_wrap(~seed) +
   ggtitle("Relative difference of first case (gravity model - raw data model)") +
   theme_void()
 
-rel_diff_map_b
-
-
-rel_diff_map_p <-
-  fra_scen4_map %>% 
-  filter(seed == "prs") %>% 
-  ggplot() +
-  geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff), color="white", size = 0.1) +
-  scale_fill_viridis_c() +
-  coord_quickmap() +
-  # ggtitle("Time difference of first case (gravity model - raw data model)") +
-  theme_void()
-
-rel_diff_map_p
+rel_diff_map_fra
 
 
 fra_scen4_map %>% 
   ggplot() +
-  geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff), color="white", size = 0.1) +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff), color = "white", size = 0.1) +
   scale_fill_viridis_b() +
+  coord_quickmap() +
+  facet_wrap(~seed) +
+  ggtitle("Relative difference of first case (gravity model - raw data model)") +
+  theme_void()
+
+# Measure time in weeks
+
+fra_scen4_map$week <- fra_scen4_map$mean %/% 7
+
+fra_scen4_map %>% 
+  ggplot() +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = week), color="white", size = 0.1) +
+  scale_fill_viridis_b(n.breaks = 13) +
   facet_wrap(~seed, nrow = 1) +
   coord_quickmap() +
   ggtitle("Time difference of first case (gravity model - raw data model)") +
   theme_void()
+
+
+## COMPARE TIME DIFFERENCES TO THE AMOUNT OF MOVEMENT IN PATCH
+
+fra_scen4 %>%
+  filter(!(seed == "bre" & location == "BREST"),
+         !(seed == "prs" & location == "PARIS")) %>% 
+  ggplot(aes(x = rel_diff, y = flow_from_seed)) +
+  geom_point() +
+  # geom_smooth(method = "lm", se = FALSE) +
+  scale_y_log10() +
+  facet_wrap(~seed)
+
+
+fra_scen4 %>%
+  filter(!(seed == "bre" & location == "BREST"),
+         !(seed == "prs" & location == "PARIS")) %>% 
+  ggplot(aes(x = rel_diff, y = flow_diff/flow_from_seed)) +
+  geom_point() +
+  # geom_smooth(method = "lm", se = FALSE) +
+  # scale_y_log10() +
+  facet_wrap(~seed)
+
+
+fra_scen4 %>%
+  filter(!(seed == "bre" & location == "BREST"),
+         !(seed == "prs" & location == "PARIS")) %>% 
+  ggplot(aes(x = rel_diff, y = gravity_from_seed/flow_from_seed)) +
+  geom_point() +
+  # geom_smooth(method = "lm", se = FALSE) +
+  # scale_y_log10() +
+  facet_wrap(~seed)
+
+
+
 
 
 ## PORTUGAL MAPS
