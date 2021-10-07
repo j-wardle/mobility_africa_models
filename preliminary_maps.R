@@ -222,6 +222,28 @@ port_scen4 <- left_join(port_scen4, portugal_location_data, by = c("patch" = "id
 
 port_scen4$diff <- port_scen4$mean - port_raw$mean
 
+port_scen4 <- port_scen4 %>% 
+  group_by(seed) %>% 
+  mutate(rel_diff = diff / max(mean),
+         last_spread = max(mean))
+
+# add info on movement from seed
+observed_move_prt <- observed_move[["portugal"]]
+gravity_move_prt <- gravity_move[["portugal_predict_adm2_alt"]]
+# rows are origin, columns are destination
+
+move_from_mdd <- observed_move_prt["MIRANDA_DO_DOURO", ]
+move_from_lsbn <- observed_move_prt["LISBOA", ]
+move_from_seed_prt <- c(move_from_lsbn, move_from_mdd)
+port_scen4$flow_from_seed <- as.vector(move_from_seed_prt)
+
+gravity_from_mdd <- gravity_move_prt["MIRANDA_DO_DOURO", ]
+gravity_from_lsbn <- gravity_move_prt["LISBOA", ]
+gravity_from_seed_prt <- c(gravity_from_lsbn, gravity_from_mdd)
+port_scen4$gravity_from_seed <- as.vector(gravity_from_seed_prt)
+
+port_scen4$flow_diff <- port_scen4$gravity_from_seed - port_scen4$flow_from_seed
+
 ### Update the naming of the adm units in tidied spatial dataframe
 
 port_fortified$id <- iconv(port_fortified$id, to = "ASCII//TRANSLIT")
