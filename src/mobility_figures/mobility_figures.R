@@ -253,3 +253,61 @@ portugal_plot_with_bins <-
   portugal_plot_with_bins
 
 ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
+
+
+
+# EXPERIMENTAL PLOT: all movement points, but highlight those originating in Paris
+
+# france_plot_with_paris <-
+  summary_overlay %>% 
+  filter(country == "FRANCE") %>% 
+  ggplot(aes(observed, predicted)) +
+  geom_point(size = 0.8, shape = 1, alpha = 0.2) +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+  # geom_vline(xintercept = bin_divides, colour = "grey", linetype = 2) +
+  # geom_errorbar(data = . %>% filter(group_count == 1),
+  #               aes(x = bin_median, ymin = bin_pred_lo, ymax = bin_pred_hi),
+  #               width = 0.5, size = 1) +
+  geom_point(data = . %>% filter(origin == "PARIS"),
+             aes(x = observed, y = predicted),
+             colour = "red", size = 0.8, shape = 1) +
+  coord_fixed() +
+  xlab("Observed movement") +
+  ylab("Predicted movement") +
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  facet_wrap(~ country, nrow = 1) +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
+  
+  summary_overlay %>% 
+    filter(country == "FRANCE") %>% 
+    ggplot(aes(observed, predicted)) +
+    geom_point(size = 0.8, shape = 1, alpha = 0.2) +
+    geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+    # geom_vline(xintercept = bin_divides, colour = "grey", linetype = 2) +
+    # geom_errorbar(data = . %>% filter(group_count == 1),
+    #               aes(x = bin_median, ymin = bin_pred_lo, ymax = bin_pred_hi),
+    #               width = 0.5, size = 1) +
+    geom_point(data = . %>% filter(origin == "BREST"),
+               aes(x = observed, y = predicted),
+               colour = "red", size = 0.8, shape = 1) +
+    coord_fixed() +
+    xlab("Observed movement") +
+    ylab("Predicted movement") +
+    scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                  labels = trans_format("log10", math_format(10^.x))) +
+    facet_wrap(~ country, nrow = 1) +
+    theme_classic() +
+    theme(legend.position = "none",
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          strip.text = element_text(size = 16))
+  
