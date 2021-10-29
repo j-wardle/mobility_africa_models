@@ -36,13 +36,23 @@ fra_conn <- prepare_movement_data(france_location_data,
 
 gravity_france_adm3 <- movement(fra_conn ~ france_location_data, flux_model = gravity())
 
+## Fit radiation model to Portugal data (adm2)
+
+radiation_portugal_adm2 <- movement(prtl_conn ~ portugal_location_data,
+                                    flux_model = radiationWithSelection())
+
+## Fit radiation model to France data (adm3)
+
+radiation_france_adm3 <- movement(fra_conn ~ france_location_data,
+                                  flux_model = radiationWithSelection())
+
 ## Save model coefficients
 
-models <- list(gravity_portugal_adm2,
-            gravity_france_adm3)
-names(models) <- c("gravity_portugal_adm2", "gravity_france_adm3")
+gravity_models <- list(gravity_portugal_adm2,
+                       gravity_france_adm3)
+names(gravity_models) <- c("gravity_portugal_adm2", "gravity_france_adm3")
 
-coefficients <- map_dfr(models, function(m) {
+gravity_coefficients <- map_dfr(gravity_models, function(m) {
   
   data.frame(theta = m[["coefficients"]][[1]],
              alpha = m[["coefficients"]][[2]],
@@ -51,7 +61,22 @@ coefficients <- map_dfr(models, function(m) {
   
 }, .id = "model")
 
-saveRDS(coefficients, "model_coefficients.rds")
+saveRDS(gravity_coefficients, "gravity_coefficients.rds")
+
+
+radiation_models <- list(radiation_portugal_adm2,
+                       radiation_france_adm3)
+names(radiation_models) <- c("radiation_france_adm2", "radiation_france_adm3")
+
+radiation_coefficients <- map_dfr(radiation_models, function(m) {
+  
+  data.frame(theta = m[["coefficients"]][[1]],
+             lambda = m[["coefficients"]][[2]])
+  
+}, .id = "model")
+
+saveRDS(radiation_models, "radiation_coefficients.rds")
+
 
 
 
@@ -340,6 +365,89 @@ lo_res_fit_predictions_mthd2 <- imap(predicted_movements_lo_res_fit, function(pr
   if(isTRUE(startsWith(name, "france"))) {
     
     if(isTRUE(grepl("alt", name))) {
+      p_stay_avg <- prtl_aggr_p_stay
+    } else {
+      p_stay_avg <- fra_aggr_p_stay
+    }
+  }
+  
+  if(isTRUE(startsWith(name, "portugal"))) {
+    
+    if(isTRUE(grepl("alt", name))) {
+      p_stay_avg <- fra_aggr_p_stay
+    } else {
+      p_stay_avg <- prtl_aggr_p_stay
+    }
+  }
+  
+  conn_method2 <- (1 - p_stay_avg) * prediction / rowSums(prediction)
+  diag(conn_method2) <- p_stay_avg
+  conn_method2 <- as.movement_matrix(conn_method2)
+  
+  if (!(isTRUE(sum(rowSums(conn_method2)) == nrow(conn_method2)))) {
+    warning("Row sums of probability matrix do not equal 1")
+  }
+  
+  conn_method2
+})
+
+saveRDS(lo_res_fit_predictions_mthd2, "lo_res_gravity_matrix2_normalised.rds")
+
+
+# For comparison of the predictions from different methods, can get the absolute movement numbers 
+# based on probability matrices and population sizes.
+
+lo_res_fit_mthd1_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd1)
+lo_res_fit_mthd2_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd2)
+
+saveRDS(lo_res_fit_mthd1_numbers, "lo_res_gravity_matrix1_numbers.rds")
+saveRDS(lo_res_fit_mthd2_numbers, "lo_res_gravity_matrix2_numbers.rds")
+
+
+
+### Predictions from radiation model
+
+## 1) Predict flows for the same spatial unit in the other country
+
+portugal_predict_adm2_alt_rad <- predict(radiation_france_adm3, portugal_location_data,
+                                     flux_model = gravity(), symmetric = FALSE)
+
+france_predict_adm3_alt_rad <- predict(radiation_portugal_adm2, france_location_data,
+                                   flux_model = gravity(), symmetric = FALSE)
+
+## Collate  predicted flows
+
+predicted_movements_rad <- map(ls(pattern = "_rad"), function(prediction) {
+  
+  get(prediction)[["movement_matrix"]]
+  
+})
+
+names(predicted_movements_rad) <- ls(pattern = c("alt_rad"))
+
+# Populate diagonals of predicted matrices --------------------------------
+# The radiation model does not predict numbers of 'non-commuters' (diagonals of the movement matrix)
+# We use one method to infer the size of these diagonals
+
+## Equivalent to Method 2 used with gravity model predictions
+# Use national average of p_stay as matrix diagonals,
+# where p_stay is the probability a person does not commute from their patch.
+# Use the same p_stay across all patches for a given matrix
+
+# first calculate average p_stay in different movement matrices
+
+fra_p_stay <- p_stay_average(fra_conn)
+fra_aggr_p_stay <- p_stay_average(fra_aggr_conn)
+prtl_p_stay <- p_stay_average(prtl_conn)
+prtl_aggr_p_stay <- p_stay_average(prtl_aggr_conn)
+
+# now estimate the movement matrices
+
+method2_predictions_rad <- imap(predicted_movements_rad, function(prediction, name) {
+  
+  if(isTRUE(startsWith(name, "france"))) {
+    
+    if(isTRUE(grepl("alt", name))) {
       p_stay_avg <- prtl_p_stay
     } else {
       p_stay_avg <- fra_p_stay
@@ -366,14 +474,15 @@ lo_res_fit_predictions_mthd2 <- imap(predicted_movements_lo_res_fit, function(pr
   conn_method2
 })
 
-saveRDS(lo_res_fit_predictions_mthd2, "lo_res_gravity_matrix2_normalised.rds")
+saveRDS(method2_predictions_rad, "radiation_matrix2_normalised.rds")
 
 
 # For comparison of the predictions from different methods, can get the absolute movement numbers 
 # based on probability matrices and population sizes.
 
-lo_res_fit_mthd1_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd1)
-lo_res_fit_mthd2_numbers <- prob_predictions_to_numbers(lo_res_fit_predictions_mthd2)
+method2_numbers_rad <- prob_predictions_to_numbers(method2_predictions_rad)
 
-saveRDS(lo_res_fit_mthd1_numbers, "lo_res_gravity_matrix1_numbers.rds")
-saveRDS(lo_res_fit_mthd2_numbers, "lo_res_gravity_matrix2_numbers.rds")
+saveRDS(method2_numbers_rad, "radiation_matrix2_numbers.rds")
+
+
+

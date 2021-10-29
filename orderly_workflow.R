@@ -8,8 +8,7 @@ orderly::orderly_commit(a)
 
 orderly::orderly_run("fit_mobility_models")
 
-
-folder <- "~/cluster/mobility_africa_210512/" # this is where simulation results are saved
+folder <- "~/cluster/mobility_africa_210903_rad/" # this is where simulation results are saved
 files <- list.files(folder)
 
 walk(
@@ -44,7 +43,8 @@ orderly::orderly_run("collate_outputs",
 
 
 orderly::orderly_run("produce_figures",
-                     parameters = list(folder = folder),
+                     parameters = list(folder = folder,
+                                       spatial_res = "high"),
                      use_draft = "newer")
 
 

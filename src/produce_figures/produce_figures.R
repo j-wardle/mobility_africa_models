@@ -28,29 +28,25 @@ collated_time_to_peak$model <- as.character(collated_time_to_peak$model)
 collated_time_to_peak <- collated_time_to_peak %>% 
   arrange(country, model)
 
-collated_time_to_peak %>% 
-  group_by(country, model) %>% 
-  summarise(n = n()/2) # check number of entries per grouping
+## Create a vector of the appropriate location names
+# NOTE: this code may need amending if there are additional
+# aggregated files included
 
-# create a vector of the appropriate location names
-# TO DO: come up with a better, non-manual way of doing this
+# first find the number of models per country
+french_models <- length(unique(
+  collated_time_to_peak$model[collated_time_to_peak$country == "fra"]))
+
+portugal_models <- length(unique(
+  collated_time_to_peak$model[collated_time_to_peak$country == "prtl"]))
+
+# then assign location names based on the number of models we have
 location_names <- c(
-  rep(france_location_data$location, 2),
-  rep(france_aggr_location_data$location, 4),
-  rep(france_location_data$location, 4),
-  rep(france_aggr_location_data$location, 4),
-  rep(france_location_data$location, 4),
-  rep(france_aggr_location_data$location, 2),
-  rep(portugal_location_data$location, 2),
-  rep(portugal_aggr_location_data$location, 4),
-  rep(portugal_location_data$location, 4),
-  rep(portugal_aggr_location_data$location, 4),
-  rep(portugal_location_data$location, 4),
-  rep(portugal_aggr_location_data$location, 2)
-)
+  rep(france_location_data$location, french_models * 2), # multiply by 2 because 2 seeding locations
+  rep(portugal_location_data$location, portugal_models * 2))
 
 collated_time_to_peak$patch_name <- location_names
 
+# tidy up value names
 collated_time_to_peak <- collated_time_to_peak %>% 
   mutate(seed = replace(seed, seed == "bre", "BREST"),
          seed = replace(seed, seed == "prs", "PARIS"),
@@ -60,13 +56,25 @@ collated_time_to_peak <- collated_time_to_peak %>%
          country = replace(country, country == "prtl", "portugal"),)
 
 
-## extract different model names
-model_types <- rep(unique(collated_time_to_peak$model), each = 4)
-countries <- rep(rep(unique(collated_time_to_peak$country), each = 2), 10)
-seed <- rep(unique(collated_time_to_peak$seed), 10)
+## Add distance from seed to dataframe
 
-# messed up by collating the results too early
-# re_split data: TO DO - better way to do this
+# First identify the combination of values to loop over
+different_seeds <- length(unique(collated_time_to_peak$seed))
+different_models <- length(unique(collated_time_to_peak$model))
+different_countries <- length(unique(collated_time_to_peak$country))
+seeds_per_country <- different_seeds / different_countries
+
+
+model_types <- rep(unique(collated_time_to_peak$model),
+                   each = different_seeds)
+countries <- rep(rep(unique(collated_time_to_peak$country),
+                     each = seeds_per_country),
+                 different_models) # final arg 10 when we have aggr
+seed <- rep(unique(collated_time_to_peak$seed),
+            different_models) # final arg 10 when we have aggr
+
+# Re-split the data to assign the distances
+# NOTE: probably a better way to do this (i.e before collating task) but runs quickly
 results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
   out <- filter(collated_time_to_peak, model == m & country == c & seed == s)
@@ -95,13 +103,17 @@ results <- pmap_dfr(list(model_types, countries, seed), function(m, c, s) {
   
 })
 
+# create a scaled_distance so that we can compare
+# relative distances of seeds in different countries
+
 results <- results %>% 
   group_by(seed) %>% 
   mutate(scaled_distance = distance / max(distance))
 
 results <- rename(results, median = `0.5`)
 results$model <- as.factor(results$model)
-results$seed <- factor(results$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+results$seed <- factor(results$seed, levels = c("BREST", "PARIS",
+                                                "MIRANDA_DO_DOURO", "LISBOA"))
 results$`95%CrI` <- results$`0.975` - results$`0.025`
 results$standardised_variation <- results$`95%CrI` / results$median
 
@@ -138,8 +150,8 @@ collated_time_to_first_case <- collated_time_to_first_case %>%
 
 ## extract different model names
 model_types <- rep(unique(collated_time_to_peak$model), each = 4)
-countries <- rep(rep(unique(collated_time_to_peak$country), each = 2), 10)
-seed <- rep(unique(collated_time_to_peak$seed), 10)
+countries <- rep(rep(unique(collated_time_to_peak$country), each = 2), 5) # final arg 10 when we have aggr
+seed <- rep(unique(collated_time_to_peak$seed), 5) # final arg 10 when we have aggr
 
 # messed up by collating the results too early
 # re_split data: TO DO - better way to do this
@@ -212,10 +224,10 @@ small_scatters <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Time to peak using\nobserved mobility (days)") +
     ylab("Time to peak using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(150, 220),
-                       breaks = seq(150, 210, 10)) +
-    scale_y_continuous(limits = c(150, 220),
-                       breaks = seq(150, 210, 20)) +
+    scale_x_continuous(limits = c(90, 210),
+                       breaks = seq(90, 210, 20)) +
+    scale_y_continuous(limits = c(90, 210),
+                       breaks = seq(90, 210, 20)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -249,10 +261,10 @@ small_scatters_cri <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Width of 95% CrI using\nobserved mobility (days)") +
     ylab("Width of 95% CrI using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(40, 110),
-                       breaks = seq(50, 100, 10)) +
-    scale_y_continuous(limits = c(40, 110),
-                       breaks = seq(50, 100, 10)) +
+    scale_x_continuous(limits = c(20, 60),
+                       breaks = seq(20, 60, 10)) +
+    scale_y_continuous(limits = c(20, 60),
+                       breaks = seq(20, 60, 10)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -274,47 +286,48 @@ ggsave("figures/peak_scatter_small_cri.png", p2,
 
 ## Scatters for aggregated spatial units
 
-adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
-
-results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
-
-min(results_big$median) #159.5
-max(results_big$median) #233
-
-big_scatters <- map(adm_big_models, function(model_name) {
-  
-  results %>% 
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed, scaled_distance),
-                names_from = model,
-                values_from = median) %>%
-    ggplot() +
-    geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
-    scale_colour_viridis_c(name = "Scaled\ndistance") +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to peak using\nobserved mobility (days)") +
-    ylab("Time to peak using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(150, 240),
-                       breaks = seq(150, 230, 10)) +
-    scale_y_continuous(limits = c(150, 240),
-                       breaks = seq(150, 230, 20)) +
-    ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
-    coord_fixed() +
-    theme_classic() +
-    facet_wrap(~seed, nrow = 2) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7),
-          axis.text.x = element_text(angle = 45),
-          strip.text = element_text(size = 8),
-          plot.title = element_text(hjust = 0.5))
-  
-})
-
-
-p2 <- wrap_plots(big_scatters) + plot_layout(guides = "collect")
-p2
-ggsave("figures/peak_scatter_big.png", p2,
-       width = 10, height = 8.65, units = "in")
+# temporarily hide this section ####
+# adm_big_models <- adm_big_models[adm_big_models != "raw_aggr"]
+# 
+# results_big <- filter(results, model %in% adm_big_models | model == "raw_aggr")
+# 
+# min(results_big$median) #159.5
+# max(results_big$median) #233
+# 
+# big_scatters <- map(adm_big_models, function(model_name) {
+#   
+#   results %>% 
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed, scaled_distance),
+#                 names_from = model,
+#                 values_from = median) %>%
+#     ggplot() +
+#     geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
+#     scale_colour_viridis_c(name = "Scaled\ndistance") +
+#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+#     xlab("Time to peak using\nobserved mobility (days)") +
+#     ylab("Time to peak using\npredicted mobility (days)") +
+#     scale_x_continuous(limits = c(150, 240),
+#                        breaks = seq(150, 230, 10)) +
+#     scale_y_continuous(limits = c(150, 240),
+#                        breaks = seq(150, 230, 20)) +
+#     ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
+#     coord_fixed() +
+#     theme_classic() +
+#     facet_wrap(~seed, nrow = 2) +
+#     theme(panel.border = element_rect(colour = "black", fill = NA),
+#           axis.text = element_text(size = 7),
+#           axis.text.x = element_text(angle = 45),
+#           strip.text = element_text(size = 8),
+#           plot.title = element_text(hjust = 0.5))
+#   
+# })
+# 
+# 
+# p2 <- wrap_plots(big_scatters) + plot_layout(guides = "collect")
+# p2
+# ggsave("figures/peak_scatter_big.png", p2,
+#        width = 10, height = 8.65, units = "in")
 
 ########################
 ########################
@@ -378,10 +391,10 @@ first_cases_scatter_small_cri <- map(adm_small_models, function(model_name) {
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
     xlab("Width of 95% CrI using\nobserved mobility (days)") +
     ylab("Width of 95% CrI using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 130),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 130),
-                       breaks = seq(0, 125, 25)) +
+    scale_x_continuous(limits = c(0, 90),
+                       breaks = seq(0, 90, 20)) +
+    scale_y_continuous(limits = c(0, 90),
+                       breaks = seq(0, 90, 20)) +
     ggtitle(paste0("Scenario ", which(adm_small_models == model_name))) +
     coord_fixed() +
     theme_classic() +
@@ -403,44 +416,45 @@ ggsave("figures/first_case_scatter_small_cri.png", f2,
 
 
 ## First cases - big
-
-first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
-
-min(first_cases_big$median) #1
-max(first_cases_big$median) #111
-
-
-first_cases_scatter_big <- map(adm_big_models, function(model_name) {
-
-  first_cases %>%
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed, scaled_distance),
-                names_from = model,
-                values_from = median) %>%
-    ggplot() +
-    geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
-    scale_colour_viridis_c(name = "Scaled\ndistance") +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to first case using observed mobility (days)") +
-    ylab("Time to first case using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    coord_fixed() +
-    ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
-    theme_classic() +
-    facet_wrap(~seed, nrow = 2) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          axis.text = element_text(size = 7),
-          plot.title = element_text(hjust = 0.5))
-
-})
-
-p4 <- wrap_plots(first_cases_scatter_big) + plot_layout(guides = "collect")
-p4
-ggsave("figures/first_case_scatter_big.png", p4,
-       width = 10, height = 8.65, units = "in")
+# temporarily hide this section ####
+# 
+# first_cases_big <- filter(first_cases, model %in% adm_big_models | model == "raw_aggr")
+# 
+# min(first_cases_big$median) #1
+# max(first_cases_big$median) #111
+# 
+# 
+# first_cases_scatter_big <- map(adm_big_models, function(model_name) {
+# 
+#   first_cases %>%
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed, scaled_distance),
+#                 names_from = model,
+#                 values_from = median) %>%
+#     ggplot() +
+#     geom_point(aes(x = raw_aggr, y = get(model_name), colour = scaled_distance), size = 0.8) +
+#     scale_colour_viridis_c(name = "Scaled\ndistance") +
+#     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+#     xlab("Time to first case using observed mobility (days)") +
+#     ylab("Time to first case using\npredicted mobility (days)") +
+#     scale_x_continuous(limits = c(0, 115),
+#                        breaks = seq(0, 125, 25)) +
+#     scale_y_continuous(limits = c(0, 115),
+#                        breaks = seq(0, 125, 25)) +
+#     coord_fixed() +
+#     ggtitle(paste0("Scenario ", which(adm_big_models == model_name) + 4)) +
+#     theme_classic() +
+#     facet_wrap(~seed, nrow = 2) +
+#     theme(panel.border = element_rect(colour = "black", fill = NA),
+#           axis.text = element_text(size = 7),
+#           plot.title = element_text(hjust = 0.5))
+# 
+# })
+# 
+# p4 <- wrap_plots(first_cases_scatter_big) + plot_layout(guides = "collect")
+# p4
+# ggsave("figures/first_case_scatter_big.png", p4,
+#        width = 10, height = 8.65, units = "in")
 
 
 
@@ -504,58 +518,58 @@ write.csv(spearman_peak_small, "figures/spearman_peak_small.csv")
 ## Models at aggregated spatial scale
 
 ## Time to first case
-
-names(adm_big_models) <- adm_big_models
-spearman_first_cases_big <- map_dfr(adm_big_models, function(model_name) {
-  
-  first_cases %>% 
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed),
-                names_from = model,
-                values_from = median) %>%
-    group_by(seed) %>% 
-    mutate(rho = cor.test(raw_aggr, get(model_name),  method = "spearman")[["estimate"]],
-           p_value = cor.test(raw_aggr, get(model_name),  method = "spearman")[["p.value"]]) %>% 
-    select(seed, rho, p_value)
-  
-}, .id = "model")
-
-spearman_first_cases_big <- spearman_first_cases_big %>% 
-  group_by(model, seed) %>% 
-  summarise(rho = round(mean(rho), 3),
-            p_value = round(mean(p_value), 5)) %>% 
-  pivot_wider(id_cols = model,
-              names_from = seed,
-              values_from = rho)
-
-write.csv(spearman_first_cases_big, "figures/spearman_first_case_big.csv")
-
-## Time to epidemic peak
-
-spearman_peak_big <- map_dfr(adm_big_models, function(model_name) {
-  
-  results %>% 
-    filter(model == "raw_aggr" | model == model_name) %>%
-    pivot_wider(id_cols = c(patch, seed),
-                names_from = model,
-                values_from = median) %>%
-    group_by(seed) %>% 
-    mutate(rho = cor.test(raw_aggr, get(model_name),  method = "spearman")[["estimate"]],
-           p_value = cor.test(raw_aggr, get(model_name),  method = "spearman")[["p.value"]]) %>% 
-    select(seed, rho, p_value)
-  
-}, .id = "model")
-
-spearman_peak_big <- spearman_peak_big %>% 
-  group_by(model, seed) %>% 
-  summarise(rho = round(mean(rho), 3),
-            p_value = round(mean(p_value), 5)) #%>% 
-# pivot_wider(id_cols = model,
-#             names_from = seed,
-#             values_from = rho)
-
-write.csv(spearman_peak_big, "figures/spearman_peak_big.csv")
-
+ # temporarily hide ####
+# names(adm_big_models) <- adm_big_models
+# spearman_first_cases_big <- map_dfr(adm_big_models, function(model_name) {
+#   
+#   first_cases %>% 
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed),
+#                 names_from = model,
+#                 values_from = median) %>%
+#     group_by(seed) %>% 
+#     mutate(rho = cor.test(raw_aggr, get(model_name),  method = "spearman")[["estimate"]],
+#            p_value = cor.test(raw_aggr, get(model_name),  method = "spearman")[["p.value"]]) %>% 
+#     select(seed, rho, p_value)
+#   
+# }, .id = "model")
+# 
+# spearman_first_cases_big <- spearman_first_cases_big %>% 
+#   group_by(model, seed) %>% 
+#   summarise(rho = round(mean(rho), 3),
+#             p_value = round(mean(p_value), 5)) %>% 
+#   pivot_wider(id_cols = model,
+#               names_from = seed,
+#               values_from = rho)
+# 
+# write.csv(spearman_first_cases_big, "figures/spearman_first_case_big.csv")
+# 
+# ## Time to epidemic peak
+# 
+# spearman_peak_big <- map_dfr(adm_big_models, function(model_name) {
+#   
+#   results %>% 
+#     filter(model == "raw_aggr" | model == model_name) %>%
+#     pivot_wider(id_cols = c(patch, seed),
+#                 names_from = model,
+#                 values_from = median) %>%
+#     group_by(seed) %>% 
+#     mutate(rho = cor.test(raw_aggr, get(model_name),  method = "spearman")[["estimate"]],
+#            p_value = cor.test(raw_aggr, get(model_name),  method = "spearman")[["p.value"]]) %>% 
+#     select(seed, rho, p_value)
+#   
+# }, .id = "model")
+# 
+# spearman_peak_big <- spearman_peak_big %>% 
+#   group_by(model, seed) %>% 
+#   summarise(rho = round(mean(rho), 3),
+#             p_value = round(mean(p_value), 5)) #%>% 
+# # pivot_wider(id_cols = model,
+# #             names_from = seed,
+# #             values_from = rho)
+# 
+# write.csv(spearman_peak_big, "figures/spearman_peak_big.csv")
+# 
 
 
 # COMPARING FIRST 20 PATCHES ----------------------------------------------
@@ -583,9 +597,9 @@ initial_matches <- map_dfr(adm_small_models, function(x) {
     
     length(initial_model$patch_name)
     
-    # match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
+    match_numb <- length(initial_model$patch_name[initial_model$patch_name %in% initial_patches_obs[[y]]$patch_name])
    
-    # match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
+    match_prop <- match_numb / length(initial_patches_obs[[y]]$patch_name)
      
   }, .id = "seed")
   
