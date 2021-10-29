@@ -1,6 +1,14 @@
 library(glue)
 library(purrr)
 
+a <- orderly::orderly_run("process_location_data")
+orderly::orderly_commit(a)
+a <- orderly::orderly_run("process_movement_data")
+orderly::orderly_commit(a)
+
+orderly::orderly_run("fit_mobility_models")
+
+
 folder <- "~/cluster/mobility_africa_210512/" # this is where simulation results are saved
 files <- list.files(folder)
 
