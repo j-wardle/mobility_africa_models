@@ -17,3 +17,15 @@ first_case$model <- results_prcsd$movement
 first_case$seed <- results_prcsd$seed_name
 
 saveRDS(first_case, "first_case.rds")
+
+# Keep each sim results, no summarizing
+
+first_case_allsims <- results_prcsd$sim_results %>%
+  filter(seed_success == 1 & infected > 0) %>%
+  group_by(sim, patch) %>% 
+  slice_head()
+
+first_case_allsims$model <- results_prcsd$movement
+first_case_allsims$seed <- results_prcsd$seed_name
+
+saveRDS(first_case_allsims, "firstcase_allsims.rds")

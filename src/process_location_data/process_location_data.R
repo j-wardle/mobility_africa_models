@@ -111,6 +111,15 @@ fra_adm3_populations <- fra_adm3_populations %>%
          n3 = stringr::str_replace(n3, "LA_", "LA"),
          n3 = stringr::str_replace(n3, "LES_", "LES"))
 
+# Some boundary changes were made in France in 2007. These are reflected in the population dataset,
+# but the mobile phone data uses the previous boundaries. We handle this with the following cleaning.
+# Arcachon was formed out of Bordeaux. Re-combine with Bordeaux area
+# Fougeres-Vitre was previously just called Fougeres
+
+fra_adm3_populations <- fra_adm3_populations %>% 
+  mutate(n3 = replace(n3, n3 == "ARCACHON", "BORDEAUX"),
+         n3 = replace(n3, n3 == "FOUGERES-VITRE", "FOUGERES"))
+
 # Keep locations that feature in mobile data. Exclude island of Corse as likely to skew gravity model
 france_location_data <- fra_adm3_populations %>%
   filter(n3 %in% fra_id_names$name & n1 != "Corse") %>%

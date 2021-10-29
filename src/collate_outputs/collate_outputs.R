@@ -14,8 +14,10 @@ infiles <- run_info$depends$as
 
 peak_times <- collate_outputs(infiles, "time_to_peak")
 first_case <- collate_outputs(infiles, "first_case")
+firstcase_allsims <- collate_outputs(infiles, "firstcase_allsims")
 
 
 
 saveRDS(peak_times, "collated_time_to_peak.rds")
 saveRDS(first_case, "collated_time_to_first_case.rds")
+saveRDS(firstcase_allsims, "collated_first_case_all_sims.rds")

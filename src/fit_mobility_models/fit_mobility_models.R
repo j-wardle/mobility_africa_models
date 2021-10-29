@@ -78,6 +78,10 @@ radiation_coefficients <- map_dfr(radiation_models, function(m) {
 saveRDS(radiation_models, "radiation_coefficients.rds")
 
 
+
+
+
+
 # Predict flows from gravity fits -----------------------------------------
 
 ## 1) Predict flows for the same spatial unit we fitted to (and in same countries)
@@ -94,22 +98,6 @@ portugal_predict_adm2_alt <- predict(gravity_france_adm3, portugal_location_data
                                  flux_model = gravity(), symmetric = FALSE)
 
 france_predict_adm3_alt <- predict(gravity_portugal_adm2, france_location_data,
-                               flux_model = gravity(), symmetric = FALSE)
-
-## 3) Predict flows for the aggregated spatial units (for the same countries as we fitted to)
-
-portugal_predict_adm1 <- predict(gravity_portugal_adm2, portugal_adm1_location_data,
-                                 flux_model = gravity(), symmetric = FALSE)
-
-france_predict_adm2 <- predict(gravity_france_adm3, france_adm2_location_data,
-                               flux_model = gravity(), symmetric = FALSE)
-
-## 4) Predict flows for the aggregated spatial units (in the country we did not fit to)
-
-portugal_predict_adm1_alt <- predict(gravity_france_adm3, portugal_adm1_location_data,
-                                 flux_model = gravity(), symmetric = FALSE)
-
-france_predict_adm2_alt <- predict(gravity_portugal_adm2, france_adm2_location_data,
                                flux_model = gravity(), symmetric = FALSE)
 
 ## Collate  predicted flows
@@ -131,43 +119,21 @@ names(predicted_movements) <- ls(pattern = "_predict_adm")
 ## Method 1
 # Use observed data as diagonals then normalise so that the row sum is equal to the patch population
 
-# first format the aggregated scaled data
-
-prtl_aggr_conn <- prepare_movement_data(portugal_adm1_location_data,
-                                        aggregated_scaled_matrix[["portugal"]])
-fra_aggr_conn <- prepare_movement_data(france_adm2_location_data,
-                                       aggregated_scaled_matrix[["france"]])
-
-# now estimate the movement matrices
-
 method1_predictions <- imap(predicted_movements, function(prediction, name) {
   
   if(isTRUE(startsWith(name, "france"))) {
     
-    if(isTRUE(grepl("adm3", name))) {
-      observed_movement <- fra_conn
-    } else {
-      observed_movement <- fra_aggr_conn
-    }
+    observed_movement <- fra_conn
+    
   }
   
   if(isTRUE(startsWith(name, "portugal"))) {
     
-    if(isTRUE(grepl("adm2", name))) {
-      observed_movement <- prtl_conn
-    } else {
-      observed_movement <- prtl_aggr_conn
-    }
+    observed_movement <- prtl_conn
+    
   }
   
   p_stay <- diag(observed_movement) / rowSums(observed_movement)
-  
-  # conn_method1 <- prediction
-  # diag(conn_method1) <-
-  # conn_method1 <- round(conn_method1)
-  # conn_method1 <- as.movement_matrix(conn_method1)
-  # conn_method1_probability <- conn_method1 / rowSums(conn_method1)
-  # conn_method1_probability <- as.movement_matrix(conn_method1_probability)
   
   conn_method1 <- (1 - p_stay) * prediction / rowSums(prediction)
   diag(conn_method1) <- p_stay
@@ -191,9 +157,7 @@ saveRDS(method1_predictions, "gravity_matrix1_normalised.rds")
 # first calculate average p_stay in different movement matrices
 
 fra_p_stay <- p_stay_average(fra_conn)
-fra_aggr_p_stay <- p_stay_average(fra_aggr_conn)
 prtl_p_stay <- p_stay_average(prtl_conn)
-prtl_aggr_p_stay <- p_stay_average(prtl_aggr_conn)
 
 # now estimate the movement matrices
 
@@ -242,9 +206,10 @@ saveRDS(method2_numbers, "gravity_matrix2_numbers.rds")
 
 
 
-
+######################################
 ## OPPOSITE AGGREGATION APPROACH ----
-## Fit to aggregated data, predict high resolution movements
+## Fit to aggregated data, then predict high resolution movements
+######################################
 
 # Fit gravity models ------------------------------------------------------
 
