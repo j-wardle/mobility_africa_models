@@ -101,7 +101,8 @@ first_cases <- time_to_first_case
 
 first_cases <- rename(first_cases, median = `0.5`)
 first_cases$model <- as.factor(first_cases$model)
-first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+first_cases$seed <- factor(first_cases$seed,
+                           levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"))
 first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
 first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 
@@ -192,21 +193,32 @@ order_success <- bind_rows(path1_order_capital,
 
 order_success$pathogen <- as.factor(order_success$pathogen)
 
+order_success <- order_success %>% 
+  group_by(seed, pathogen) %>% 
+  mutate(prop_infected = n / max(n))
+
+order_success$seed <- factor(order_success$seed,
+                             levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                             labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa")
+)
+
 # Plot the order prediction success data
-
-
 
 order_success_plot <-
   order_success %>% 
-  filter(n < 151) %>% 
   ggplot() +
-  # geom_line(aes(x = n, y = match_prop, colour = seed, linetype = pathogen)) + # use this line if multiple pathogens
-  geom_line(aes(x = n, y = match_prop, colour = seed)) + 
-  xlab("Number of patches infected") +
-  ylab("Proportion") +
+  geom_line(aes(x = prop_infected, y = match_prop, colour = seed)) +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+  xlab("Proportion of patches infected") +
+  ylab("Proportion of patches\ncorrectly identified") +
+  coord_fixed() +
   labs(colour = "Seed location",
        linetype = "Pathogen") +
-  theme_minimal()
+  theme_classic() +
+  theme(legend.position = "bottom",
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
 
 # Save plot image file
 prefix <- country
