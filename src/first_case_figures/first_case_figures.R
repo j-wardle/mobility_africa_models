@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -129,13 +131,15 @@ first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 ###x-axis : time to first case with observed mobility data
 ### y-axis : time to first case with predicted mobility data
 
+first_cases_plot <- first_cases %>% 
+  pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
+              names_from = model,
+              values_from = median) %>% 
+  filter(pathogen == 1)
+
+
 first_cases_scatter <-
-  first_cases %>% 
-    pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
-                names_from = model,
-                values_from = median) %>% 
-    filter(pathogen == 1) %>% 
-    ggplot() +
+    ggplot(first_cases_plot) +
     geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
     scale_colour_viridis_c(name = "Scaled\ndistance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
@@ -151,7 +155,11 @@ first_cases_scatter <-
     facet_wrap(~ seed) +
     theme(panel.border = element_rect(colour = "black", fill = NA),
           # axis.text = element_text(size = 7),
-          plot.title = element_text(hjust = 0.5))
+          plot.title = element_text(hjust = 0.5)) +
+    stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
+             color = "red", geom = "text", label.x = 75, label.y = 10, size = 3)
 
-ggsave("figures/france_first_cases_scatter.png", first_cases_scatter)#,
+ggsave("figures/first_cases_scatter.png", first_cases_scatter)#,
        # width = 10, height = 8.65, units = "in")
+
+if (! is.null(dev.list())) dev.off()

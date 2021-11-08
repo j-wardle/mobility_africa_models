@@ -5,6 +5,7 @@ artefacts:
       description: Figures of success in predicting invasion order
       filenames:
         - figures/order_success.rds
+        - figures/order_success_auc.rds
         
 parameters:
   - country
@@ -22,6 +23,7 @@ packages:
   - patchwork
   - scales
   - glue
+  - DescTools
   
 sources:
   - R/utils.R

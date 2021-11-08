@@ -4,7 +4,7 @@ artefacts:
   - staticgraph:
       description: Figures of times to first cases
       filenames:
-        - figures/france_first_cases_scatter.png
+        - figures/first_cases_scatter.png
         
 parameters:
   - country
@@ -21,6 +21,7 @@ packages:
   - stringr
   - patchwork
   - scales
+  - ggpubr
   
 depends:
   - collate_outputs:

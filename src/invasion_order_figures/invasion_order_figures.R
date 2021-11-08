@@ -1,3 +1,5 @@
+
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -224,11 +226,24 @@ order_success_plot <-
 prefix <- country
 ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot) #, scale = 0.5)
 
+
 # Save ggplot object for use in creating panel
 saveRDS(order_success_plot, file = glue("figures/{prefix}_invasion_order.rds"))
 
 saveRDS(order_success, file = "figures/order_success.rds")
 
+
+# Estimate AUC
+
+auc_values <- order_success %>% 
+  group_by(seed) %>% 
+  mutate(auc = DescTools::AUC(prop_infected, match_prop)) %>% 
+  summarise(auc = mean(auc))
+
+auc_values$model <- model2
+auc_values <- select(auc_values, model, seed, auc)
+
+saveRDS(auc_values, file = "figures/order_success_auc.rds")
 
 
 ###############################################################

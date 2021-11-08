@@ -4,7 +4,7 @@ artefacts:
   - staticgraph:
       description: Figures of times to epidemic peak in each patch
       filenames:
-        - figures/france_peak_scatter.png
+        - figures/peak_scatter.png
         
 parameters:
   - country
@@ -21,6 +21,7 @@ packages:
   - stringr
   - patchwork
   - scales
+  - ggpubr
   
 depends:
   - collate_outputs:

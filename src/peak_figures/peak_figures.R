@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -153,7 +155,11 @@ peak_scatter <-
   facet_wrap(~ seed) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
         axis.text = element_text(size = 7),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5)) +
+  stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
+           color = "red", geom = "text", label.x = 200, label.y = 130, size = 3)
 
-ggsave("figures/france_peak_scatter.png", peak_scatter)#,
+ggsave("figures/peak_scatter.png", peak_scatter)#,
        # width = 10, height = 8.65, units = "in")
+
+if (! is.null(dev.list())) dev.off()
