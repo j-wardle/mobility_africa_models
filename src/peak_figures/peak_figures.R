@@ -162,4 +162,6 @@ peak_scatter <-
 ggsave("figures/peak_scatter.png", peak_scatter)#,
        # width = 10, height = 8.65, units = "in")
 
+knitr::plot_crop("figures/peak_scatter.png")
+
 if (! is.null(dev.list())) dev.off()

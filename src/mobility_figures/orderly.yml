@@ -21,6 +21,8 @@ packages:
   - stringr
   - patchwork
   - scales
+  - ggpubr
+  - knitr
   
 depends:
   process_movement_data:

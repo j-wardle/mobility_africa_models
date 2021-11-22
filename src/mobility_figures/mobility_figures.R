@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 # MOBILITY SCATTER PLOTS --------------------------------------------------
 
 ## Create folder to save figures
@@ -172,7 +174,7 @@ combined_plot_with_bins <-
                 labels = trans_format("log10", math_format(10^.x))) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
-  facet_wrap(~ country, nrow = 1) +
+  facet_wrap(~ country, nrow = 2) +
   theme_classic() +
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
@@ -202,24 +204,27 @@ france_plot_with_bins <-
   geom_point(data = . %>% filter(group_count == 1),
              aes(x = bin_median, y = bin_pred_mid),
              size = 1.5) +
-  coord_fixed() +
   xlab("Observed movement") +
   ylab("Predicted movement") +
   scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
+  coord_fixed() +
   facet_wrap(~ country, nrow = 1) +
   theme_classic() +
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
+        strip.text = element_text(size = 16)) +
+  stat_cor(aes_string(label = "..rr.label.."),
+           color = "red", geom = "text", size = 3)
 
 france_plot_with_bins
 
 ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins) #, scale  = 2)
 
+knitr::plot_crop("figures/france_mob_predictions_errorbar.png")
 
 ## PORTUGAL
 
@@ -236,25 +241,27 @@ portugal_plot_with_bins <-
   geom_point(data = . %>% filter(group_count == 1),
              aes(x = bin_median, y = bin_pred_mid),
              size = 1.5) +
-  coord_fixed() +
   xlab("Observed movement") +
   ylab("Predicted movement") +
   scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
+  coord_fixed() +
   facet_wrap(~ country, nrow = 1) +
   theme_classic() +
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16))
+        strip.text = element_text(size = 16)) +
+  stat_cor(aes_string(label = "..rr.label.."),
+           color = "red", geom = "text", size = 3)
 
   portugal_plot_with_bins
 
 ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
 
-
+knitr::plot_crop("figures/portugal_mob_predictions_errorbar.png")
 
 # # EXPERIMENTAL PLOT: all movement points, but highlight those originating in Paris
 # 

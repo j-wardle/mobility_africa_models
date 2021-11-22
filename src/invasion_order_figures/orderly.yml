@@ -24,6 +24,7 @@ packages:
   - scales
   - glue
   - DescTools
+  - knitr
   
 sources:
   - R/utils.R

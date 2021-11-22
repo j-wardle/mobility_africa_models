@@ -22,6 +22,7 @@ packages:
   - patchwork
   - scales
   - ggpubr
+  - knitr
   
 depends:
   - collate_outputs:

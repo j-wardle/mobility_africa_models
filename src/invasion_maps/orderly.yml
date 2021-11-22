@@ -22,6 +22,8 @@ packages:
 - RColorBrewer
 - patchwork
 - forcats
+- knitr
+- magick
   
 resources:
   - task_data/gadm36_FRA_3.cpg

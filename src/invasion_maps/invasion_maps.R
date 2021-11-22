@@ -174,11 +174,17 @@ both_scen4_map <- both_scen4_map %>%
 
 both_scen4_map$rel_diff_bins <- fct_rev(both_scen4_map$rel_diff_bins)
 
-levels(both_scen4_map$rel_diff_bins) <- c("0.4 < x <= 0.5", "0.3 < x <= 0.4",
-                                          "0.2 < x <= 0.3", "0.1 < x <= 0.2",
-                                          "0.0 < x <= 0.1", "-0.1 < x <= 0.0",
-                                          "-0.2 < x <= -0.1", "-0.3 < x <= -0.2",
-                                          "-0.4 < x <= -0.3", "-0.5 < x <= -0.4")
+# levels(both_scen4_map$rel_diff_bins) <- c("0.4 < d <= 0.5", "0.3 < d <= 0.4",
+#                                           "0.2 < d <= 0.3", "0.1 < d <= 0.2",
+#                                           "0.0 < d <= 0.1", "-0.1 < d <= 0.0",
+#                                           "-0.2 < d <= -0.1", "-0.3 < d <= -0.2",
+#                                           "-0.4 < d <= -0.3", "-0.5 < d <= -0.4")
+
+levels(both_scen4_map$rel_diff_bins) <- c("0.4 < d \u2264 0.5", "0.3 < d \u2264 0.4",
+                                          "0.2 < d \u2264 0.3", "0.1 < d \u2264 0.2",
+                                          "0.0 < d \u2264 0.1", "-0.1 < d \u2264 0.0",
+                                          "-0.2 < d \u2264 -0.1", "-0.3 < d \u2264 -0.2",
+                                          "-0.4 < d \u2264 -0.3", "-0.5 < d \u2264 -0.4")
 
 both_scen4_map$seed <- as.factor(both_scen4_map$seed)
 both_scen4_map$seed <- factor(both_scen4_map$seed, 
@@ -190,27 +196,43 @@ plot_france_same_scale <- both_scen4_map %>%
   filter(seed == "Brest" | seed == "Paris") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
-  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference") +
+  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference (d)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
   # ggtitle("Relative difference of first case (gravity model - raw data model)") +
   theme_void() +
   theme(
-    text = element_text(size = 6)
+    text = element_text(size = 9),
+    legend.title = element_text(size = 6),
+    legend.text = element_text(size = 6),
+    legend.key.size = unit(0.4, "cm"),
+    plot.margin=grid::unit(c(0,0,0,0), "mm")
   )
+
+ggsave("figures/fra_map_rel_diff.png", plot_france_same_scale)
+
+knitr::plot_crop("figures/fra_map_rel_diff.png")
 
 plot_portugal_same_scale <- both_scen4_map %>%
   filter(seed == "Miranda do Douro" | seed == "Lisboa") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
-  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference") +
+  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference (d)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
   # ggtitle("Relative difference of first case (gravity model - raw data model)") +
   theme_void() +
   theme(
-    text = element_text(size = 6)
+    text = element_text(size = 9),
+    legend.title = element_text(size = 6),
+    legend.text = element_text(size = 6),
+    legend.key.size = unit(0.4, "cm"),
+    plot.margin=grid::unit(c(0,0,0,0), "mm")
   )
+
+ggsave("figures/prt_map_rel_diff.png", plot_portugal_same_scale)
+
+knitr::plot_crop("figures/prt_map_rel_diff.png")
 
 p <- plot_france_same_scale + plot_portugal_same_scale +
   plot_layout(guides = 'collect')

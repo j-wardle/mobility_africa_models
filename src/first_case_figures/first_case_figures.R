@@ -162,4 +162,6 @@ first_cases_scatter <-
 ggsave("figures/first_cases_scatter.png", first_cases_scatter)#,
        # width = 10, height = 8.65, units = "in")
 
+knitr::plot_crop("figures/first_cases_scatter.png")
+
 if (! is.null(dev.list())) dev.off()
