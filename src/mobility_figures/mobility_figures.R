@@ -210,7 +210,7 @@ france_plot_with_bins <-
                 labels = trans_format("log10", math_format(10^.x))) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
-  coord_fixed() +
+  # coord_fixed() +
   facet_wrap(~ country, nrow = 1) +
   theme_classic() +
   theme(legend.position = "none",
@@ -225,6 +225,9 @@ france_plot_with_bins
 ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins) #, scale  = 2)
 
 knitr::plot_crop("figures/france_mob_predictions_errorbar.png")
+
+# Save ggplot object for use in creating panel
+saveRDS(france_plot_with_bins, file = "figures/france_plot_with_bins.rds")
 
 ## PORTUGAL
 
@@ -247,7 +250,7 @@ portugal_plot_with_bins <-
                 labels = trans_format("log10", math_format(10^.x))) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
                 labels = trans_format("log10", math_format(10^.x))) +
-  coord_fixed() +
+  # coord_fixed() +
   facet_wrap(~ country, nrow = 1) +
   theme_classic() +
   theme(legend.position = "none",
@@ -262,6 +265,9 @@ portugal_plot_with_bins <-
 ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
 
 knitr::plot_crop("figures/portugal_mob_predictions_errorbar.png")
+
+# Save ggplot object for use in creating panel
+saveRDS(portugal_plot_with_bins, file = "figures/portugal_plot_with_bins.rds")
 
 # # EXPERIMENTAL PLOT: all movement points, but highlight those originating in Paris
 # 

@@ -23,6 +23,7 @@ packages:
   - scales
   - ggpubr
   - knitr
+  - cowplot
   
 depends:
   - collate_outputs:

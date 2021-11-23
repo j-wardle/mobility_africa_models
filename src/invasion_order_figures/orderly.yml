@@ -25,6 +25,7 @@ packages:
   - glue
   - DescTools
   - knitr
+  - cowplot
   
 sources:
   - R/utils.R
@@ -43,3 +44,8 @@ depends:
       use:
         portugal_location_data.rds: portugal_location_data.rds
         france_location_data.rds: france_location_data.rds
+  - mobility_figures:
+      id: latest(parameter:spatial_res == "high" && parameter:scenario_number == 4)
+      use:
+        portugal_plot_with_bins.rds: figures/portugal_plot_with_bins.rds
+        france_plot_with_bins.rds: figures/france_plot_with_bins.rds

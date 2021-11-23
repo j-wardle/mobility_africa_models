@@ -8,6 +8,11 @@ artefacts:
         - figures/comb_mob_predictions_errorbar.png
         - figures/france_mob_predictions_errorbar.png
         - figures/portugal_mob_predictions_errorbar.png
+  - data:
+      description: ggplot objects
+      filenames:
+        - figures/portugal_plot_with_bins.rds
+        - figures/france_plot_with_bins.rds
         
 parameters:
   - spatial_res

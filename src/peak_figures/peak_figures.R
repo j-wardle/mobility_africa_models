@@ -141,10 +141,10 @@ peak_scatter <-
   filter(pathogen == 1) %>% 
   ggplot() +
   geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
-  scale_colour_viridis_c(name = "Scaled\ndistance") +
+  scale_colour_viridis_c(name = "Scaled distance") +
   geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to peak using observed mobility (days)") +
-  ylab("Time to peak using\npredicted mobility (days)") +
+  xlab("Time to peak using\nobserved mobility (days)") +
+  ylab("Time to peak using predicted mobility (days)") +
   scale_x_continuous(limits = c(120, 220),
                      breaks = seq(120, 220, 20)) +
   scale_y_continuous(limits = c(120, 220),
@@ -152,15 +152,16 @@ peak_scatter <-
   coord_fixed() +
   theme_classic() +
   # facet_grid(pathogen ~ seed) +
-  facet_wrap(~ seed) +
+  facet_wrap(~ seed, nrow = 2) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
         axis.text = element_text(size = 7),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "top") +
   stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
            color = "red", geom = "text", label.x = 200, label.y = 130, size = 3)
 
-ggsave("figures/peak_scatter.png", peak_scatter)#,
-       # width = 10, height = 8.65, units = "in")
+ggsave("figures/peak_scatter.png", peak_scatter,
+       height = 7.4, units = "in")
 
 knitr::plot_crop("figures/peak_scatter.png")
 

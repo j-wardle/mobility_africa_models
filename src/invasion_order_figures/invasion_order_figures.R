@@ -209,11 +209,11 @@ order_success$seed <- factor(order_success$seed,
 order_success_plot <-
   order_success %>% 
   ggplot() +
-  geom_line(aes(x = prop_infected, y = match_prop, colour = seed)) +
+  geom_line(aes(x = prop_infected, y = match_prop, linetype = seed)) +
   geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
-  xlab("Proportion of patches infected") +
+  xlab("Proportion of patches\ninfected") +
   ylab("Proportion of patches\ncorrectly identified") +
-  coord_fixed() +
+  # coord_fixed() +
   labs(colour = "Seed location",
        linetype = "Pathogen") +
   theme_classic() +
@@ -233,6 +233,26 @@ saveRDS(order_success_plot, file = glue("figures/{prefix}_invasion_order.rds"))
 
 saveRDS(order_success, file = "figures/order_success.rds")
 
+
+# Create a combined figure with the mobility predictions
+
+if(country == "france") {
+  movement_preds <- readRDS("france_plot_with_bins.rds")
+}
+if(country == "portugal") {
+  movement_preds <- readRDS("portugal_plot_with_bins.rds")
+}
+
+
+column_plot_for_panel <-
+  plot_grid(movement_preds, order_success_plot,
+                        ncol = 1, align = 'v', axis = 'l')
+  
+save_plot("figures/column_plot_for_panel.png", column_plot_for_panel,
+          base_aspect_ratio = 1, nrow = 2)
+
+
+  
 
 # Estimate AUC
 
