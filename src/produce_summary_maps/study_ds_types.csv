@@ -1,0 +1,321 @@
+bibkey,country,data_category,data_start,data_end,data_spatial_resolution,data_available,data_sample_size,datasource_type
+gustafson2017identifying,SLE,estimated,NA,NA,adm3,no,NA,genomic
+dudas2017virus,LBR,estimated,march 2014,october 2015,adm1,no,NA,genomic
+dudas2017virus,SLE,estimated,march 2014,october 2015,adm2,no,NA,genomic
+dudas2017virus,GIN,estimated,march 2014,october 2015,adm2,no,NA,genomic
+lu2013approaching,CIV,empirical,december 2011,april 2012,subprefecture,no,NA,cdr
+huang2013open,DZA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,AGO,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,BEN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,BWA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,BFA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,BDI,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,CMR,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,CPV,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,CAF,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,TCD,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,COM,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,COG,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,CIV,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,COD,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,DJI,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,EGY,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GNQ,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ERI,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ETH,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GAB,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GMB,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GHA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GIN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,GNB,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,KEN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,LSO,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,LBR,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,LBY,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MDG,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MWI,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MLI,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MRT,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MAR,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,MOZ,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,NAM,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,NER,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,NGA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,RWA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,STP,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,SEN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,SLE,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,SOM,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ZAF,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,SDN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,SWZ,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,TZA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,TGO,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,TUN,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,UGA,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ESH,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ZMB,estimated,2010,2010,large_city,yes,NA,flight_capacity
+huang2013open,ZWE,estimated,2010,2010,large_city,yes,NA,flight_capacity
+choe2014internal,ZAF,empirical,1996,1996,district,yes,197320,ipums
+peak2018population,SLE,empirical,march 2015,july 2015,chiefdom,no,NA,cdr
+sorichetta2016mapping,AGO,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,BDI,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,BEN,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,BFA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,BWA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,CAF,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,CIV,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,CMR,empirical,2005,2005,adm2,yes_in_principle,NA,ipums
+sorichetta2016mapping,CMR,estimated,2005,2010,NA,yes_in_principle,NA,census
+sorichetta2016mapping,COD,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,COG,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,COM,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,DJI,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,ERI,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,ETH,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GAB,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GHA,empirical,2000,2000,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,GHA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GIN,empirical,1996,1996,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,GIN,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GMB,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GNB,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,GNQ,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,KEN,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,LBR,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MDG,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MLI,empirical,1998,1998,adm2,yes_in_principle,NA,ipums
+sorichetta2016mapping,MLI,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MOZ,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MRT,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MWI,empirical,2008,2008,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,MWI,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,MYT,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,NAM,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,NER,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,NGA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,RWA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SDN,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SEN,empirical,2002,2002,adm2,yes_in_principle,NA,ipums
+sorichetta2016mapping,SEN,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SLE,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SOM,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SSD,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,STP,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,SWZ,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,TCD,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,TGO,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,TZA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,UGA,empirical,2002,2002,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,UGA,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,ZAF,empirical,2007,2007,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,ZAF,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,ZMB,empirical,2010,2010,adm1,yes_in_principle,NA,ipums
+sorichetta2016mapping,ZMB,estimated,2005,2010,NA,yes,NA,data_other_countries
+sorichetta2016mapping,ZWE,estimated,2005,2010,NA,yes,NA,data_other_countries
+wesolowski2014commentary,SEN,empirical,january 2013,december 2013,arrondissement,no,NA,cdr
+wesolowski2014commentary,CIV,empirical,december 2011,april 2012,subprefecture,no,NA,cdr
+wesolowski2014commentary,KEN,empirical,june 2008,june 2009,settlement,no,NA,cdr
+wesolowski2014commentary,BFA,empirical,2006,2006,commune,yes,NA,ipums
+wesolowski2014commentary,CMR,empirical,2005,2005,arrondissement,yes,NA,ipums
+wesolowski2014commentary,GHA,empirical,2000,2000,district,yes,NA,ipums
+wesolowski2014commentary,GIN,empirical,1996,1996,prefecture,yes,NA,ipums
+wesolowski2014commentary,MLI,empirical,2009,2009,district,yes,NA,ipums
+wesolowski2014commentary,SEN,empirical,2002,2002,department,yes,NA,ipums
+wesolowski2014commentary,SLE,empirical,2004,2004,chiefdom,yes,NA,ipums
+wesolowski2014commentary,BEN,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,BFA,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,CIV,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,CMR,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,GHA,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,GIN,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,GMB,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,GNB,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,LBR,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,MLI,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,NER,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,NGA,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,SEN,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,SLE,estimated,NA,NA,NA,yes,NA,data_other_countries
+wesolowski2014commentary,TGO,estimated,NA,NA,NA,yes,NA,data_other_countries
+ruyssen2014determinants,AGO,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,BEN,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,BWA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,BFA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,BDI,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,CMR,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,CPV,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,CAF,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,TCD,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,COM,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,COD,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,COG,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GNQ,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,ETH,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GAB,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GMB,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GHA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GIN,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,GNB,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,KEN,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,LSO,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,LBR,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MDG,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MWI,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MLI,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MRT,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MUS,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,MOZ,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,NAM,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,NER,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,NGA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,RWA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,SEN,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,SLE,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,SOM,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,ZAF,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,SWZ,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,TZA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,TGO,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,UGA,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,ZMB,empirical,1980,2000,adm0,yes,NA,GBMD
+ruyssen2014determinants,ZWE,empirical,1980,2000,adm0,yes,NA,GBMD
+garcia2015modeling,GHA,empirical,2000,2000,adm1,no,1894133,ipums
+garcia2015modeling,KEN,empirical,1999,1999,adm2,no,1407547,ipums
+garcia2015modeling,MWI,empirical,2008,2008,adm2,no,1341977,ipums
+garcia2015modeling,MLI,empirical,1998,1998,adm2,no,991330,ipums
+garcia2015modeling,SEN,empirical,2002,2002,adm2,no,994562,ipums
+garcia2015modeling,SLE,empirical,2004,2004,adm2,no,494298,ipums
+garcia2015modeling,ZAF,empirical,1996,1996,adm1,no,3621164,ipums
+garcia2015modeling,ZAF,empirical,2001,2001,adm1,no,3725655,ipums
+garcia2015modeling,ZAF,empirical,2007,2007,adm1,no,104765,ipums
+garcia2015modeling,SDN,empirical,2008,2008,adm2,no,5609295,ipums
+garcia2015modeling,TZA,empirical,2002,2002,adm1,no,3737735,ipums
+garcia2015modeling,UGA,empirical,2002,2002,adm1,no,2497449,ipums
+yukich2013travel,ETH,empirical,june 2011,october 2011,health_facility,no,560,interview
+iqbal2007geo,DZA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,AGO,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,BEN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,BWA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,BFA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,BDI,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,CMR,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,CPV,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,CAF,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,TCD,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,COM,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,COG,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,CIV,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,COD,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,DJI,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,EGY,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GNQ,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,ERI,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,ETH,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GAB,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GMB,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GHA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GIN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,GNB,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,KEN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,LSO,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,LBR,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,LBY,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MDG,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MWI,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MLI,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MRT,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MAR,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,MOZ,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,NAM,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,NER,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,NGA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,RWA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,STP,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,SEN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,SLE,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,SOM,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,ZAF,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,SDN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,SWZ,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,TZA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,TGO,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,TUN,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,UGA,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,ZMB,empirical,1992,2001,adm0,no,NA,unhcr
+iqbal2007geo,ZWE,empirical,1992,2001,adm0,no,NA,unhcr
+mastrorillo2016influence,ZAF,empirical,NA,NA,district council,no,NA,census
+mastrorillo2016influence,ZAF,empirical,NA,NA,district council,no,NA,ipums
+pindolia2013demographics,KEN,empirical,january 1999,december 1999,adm2,no,NA,ipums
+pindolia2013demographics,UGA,empirical,january 2002,december 2002,adm2,no,NA,ipums
+pindolia2013demographics,TZA,empirical,january 2002,december 2002,adm2,no,NA,ipums
+marshall2018,MLI,empirical,september 2010,october 2010,commune,yes,NA,interview
+marshall2018,MLI,empirical,march 2011,march 2011,commune,yes,NA,interview
+marshall2018,BFA,empirical,july 2011,july 2011,commune,yes,NA,interview
+marshall2018,ZMB,empirical,july 2012,july 2012,ward,yes,NA,interview
+marshall2018,TZA,empirical,march 2013,march 2013,ward,yes,NA,interview
+dsilva2017,GIN,estimated,may 2014,oct 2014,adm0,no,NA,incidence
+dsilva2017,LBR,estimated,may 2014,oct 2014,adm0,no,NA,incidence
+dsilva2017,SLE,estimated,may 2014,oct 2014,adm0,no,NA,incidence
+dsilva2017,GIN,estimated,may 2014,oct 2014,adm2,no,NA,incidence
+dsilva2017,LBR,estimated,may 2014,oct 2014,adm1,no,NA,incidence
+dsilva2017,SLE,estimated,may 2014,oct 2014,adm2,no,NA,incidence
+tompkins2016,SEN,empirical,january 2013,december 2013,arrondissement,no,18384,cdr
+ruktanonchai2016,NAM,empirical,october 2010,september 2011,constituency,yes_in_principle,1900000,cdr
+silal2015,ZAF,estimated,2002,2008,province,no,NA,incidence
+silal2015,MOZ,estimated,2002,2008,province,no,NA,incidence
+wesolowski2013,KEN,empirical,june 2008,june 2009,county,no,12000000000,cdr
+wesolowski2013,KEN,empirical,2009,2009,county,no,NA,census
+mari2017big,SEN,empirical,january 2013,december 2013,arrondissement,no,15000000000,cdr
+kraemer2017spread,AGO,estimated,NA,NA,district,no,NA,estimates_other
+kraemer2017spread,COD,estimated,NA,NA,district,no,NA,estimates_other
+matamalas2016assessing,SEN,empirical,NA,NA,arrondissement,no,NA,cdr
+finger2016mobile,SEN,empirical,january 2013,december 2013,arrondissement,yes_in_principle,NA,cdr
+collinson2014migration,ZAF,empirical,2000,2011,province,yes_in_principle,NA,hdss
+andrews2012projecting,ZAF,empirical,NA,NA,province,yes,NA,hdss
+kramer2016spatial,GIN,estimated,NA,NA,adm2,yes,NA,flowminder
+kramer2016spatial,MLI,estimated,NA,NA,adm2,yes,NA,flowminder
+kramer2016spatial,SEN,estimated,NA,NA,adm2,yes,NA,flowminder
+kramer2016spatial,LBR,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,SLE,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,BEN,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,BFA,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,GMB,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,GHA,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,GNB,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,NER,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,NGA,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,TGO,estimated,NA,NA,adm1,yes,NA,flowminder
+kramer2016spatial,CIV,estimated,NA,NA,adm1,yes,NA,flowminder
+dobra2018loglinear,ZAF,estimated,september 2011,september 2016,municipality,no,476601,social_media
+dobra2018loglinear,ZAF,estimated,january 2016,december 2016,municipality,no,NA,social_media
+dobra2017space,ZAF,empirical,2004,2014,district,no,NA,hdss
+tatem2012spatial,AGO,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,BWA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,BFA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,BDI,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,CMR,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,CAF,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,TCD,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,COG,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,COD,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,CIV,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,DJI,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,ETH,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,GAB,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,GHA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,KEN,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,MWI,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,MLI,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,MOZ,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,NER,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,NGA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,RWA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,ZAF,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,SDN,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,SWZ,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,TZA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,TGO,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,UGA,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,ZMB,estimated,NA,NA,NA,no,NA,genomic
+tatem2012spatial,ZWE,estimated,NA,NA,NA,no,NA,genomic
