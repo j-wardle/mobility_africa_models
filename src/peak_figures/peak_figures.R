@@ -124,7 +124,9 @@ peak <- peak %>%
 
 peak <- rename(peak, median = `0.5`)
 peak$model <- as.factor(peak$model)
-peak$seed <- factor(peak$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+peak$seed <- factor(peak$seed,
+                    levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                    labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa"))
 peak$`95%CrI` <- peak$`0.975` - peak$`0.025`
 peak$standardised_variation <- peak$`95%CrI` / peak$median
 

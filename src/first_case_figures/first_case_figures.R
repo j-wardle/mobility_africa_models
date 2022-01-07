@@ -122,7 +122,9 @@ first_cases <- first_cases %>%
 
 first_cases <- rename(first_cases, median = `0.5`)
 first_cases$model <- as.factor(first_cases$model)
-first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+first_cases$seed <- factor(first_cases$seed,
+                           levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                           labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa"))
 first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
 first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 
