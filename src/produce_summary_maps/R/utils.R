@@ -24,23 +24,22 @@ prepare_data_features <- function(data_locations,
     match.arg(category)
 
     features <- features[features$data_category == category, ]
-    out <- dplyr::left_join(
-        data_locations, features, by = c("bibkey", "country")
-        )
+    out <- left_join(
+      data_locations, features, by = c("bibkey", "country")
+    )
     out <- out[out$country %in% africa, ]
 
     ## Rearrange factor levels so that legends come out OK.
     out$datasource_type <- factor(
         out$datasource_type,
         levels = c(
-            "cdr", "ipums", "census", "interview", "hdss",
-            "GBMD", "unhcr", "genomic", "flight_capacity",
-            "data_other_countries", "incidence", "estimates_other",
-            "flowminder", "social_media"
+          "cdr", "ipums", "census", "interview", "hdss",
+          "GBMD", "unhcr", "genomic", "flight_capacity",
+          "data_other_countries", "incidence", "estimates_other",
+          "flowminder", "social_media"
         ),
         ordered = TRUE
     )
-
     out
 }
 

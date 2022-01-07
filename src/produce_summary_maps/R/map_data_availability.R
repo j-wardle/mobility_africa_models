@@ -4,7 +4,7 @@
 ## or, specific_location
 map_data_availability <- function(data_features) {
 
-    fname <- here::here("data/Africa_SHP")
+    fname <- ("shapefiles/Africa_SHP")
     africa <- sf::st_read(fname)
 
     p <- ggplot() + theme_map() + xlab("") + ylab("")
@@ -32,7 +32,7 @@ map_data_availability <- function(data_features) {
                  values = availability_scale, guide = FALSE
              )
     p <- p + scale_size_manual(
-                 values = size_scale,
+               values = size_scale,
                  guide = FALSE
              )
     p <- p + paper_theme$theme + paper_theme$legend
