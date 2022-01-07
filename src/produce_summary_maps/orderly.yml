@@ -14,10 +14,17 @@ artefacts:
       - est_and_emp_data.png
 
 resources:
-- empirical_data_locations.csv
 - estimated_data_locations_scale.csv
 - study_ds_types.csv
 - shapefiles
 
-source:
+sources:
+- R/common_plot_properties.R
+- R/map_data_availability.R
 - R/utils.R
+
+depends:
+  - annotate_extracted_data:
+      id: latest
+      use:
+        empirical_data_locations_scale.csv: empirical_data_locations_scale.csv
