@@ -1,0 +1,24 @@
+script: empirical_data_locations_scale.R
+
+packages:
+- countrycode
+- dplyr
+- glue
+- httr
+- purrr
+- readr
+- sf
+- stringr
+
+resources:
+- adm0_centroids.csv
+- shapefiles
+- study_ds_types.csv
+
+artefacts:
+  data:
+    description: Empirical data location and scale
+    filenames:
+      - empirical_data_scale.csv
+      - empirical_data_locations.csv
+      - empirical_data_locations_scale.csv
