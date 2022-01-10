@@ -1,12 +1,12 @@
 ## ISO3 codes for all countries in Africa.
 ## List of all countries in Africa
 africa <- c(
-    "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF",
-    "TCD", "COM", "COG", "CIV", "COD", "DJI", "EGY", "GNQ", "ERI",
-    "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "KEN", "LSO", "LBR",
-    "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "NAM", "NER",
-    "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
-    "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
+  "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF",
+  "TCD", "COM", "COG", "CIV", "COD", "DJI", "EGY", "GNQ", "ERI",
+  "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "KEN", "LSO", "LBR",
+  "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "NAM", "NER",
+  "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
+  "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
 )
 
 ## Color scheme for possible data sources

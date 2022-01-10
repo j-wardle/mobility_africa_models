@@ -1,10 +1,11 @@
-script: empirical_data_locations_scale.R
+script: script.R
 
 packages:
 - countrycode
 - dplyr
 - glue
 - httr
+- maps
 - purrr
 - readr
 - sf
@@ -12,7 +13,9 @@ packages:
 
 resources:
 - adm0_centroids.csv
-- shapefiles
+- empirical_data_locations_scale.R
+- estimates_data
+- estimated_data_locations_scale.R
 - study_ds_types.csv
 
 artefacts:
@@ -22,3 +25,5 @@ artefacts:
       - empirical_data_scale.csv
       - empirical_data_locations.csv
       - empirical_data_locations_scale.csv
+      - num_admin_units_africa.csv
+      - estimated_data_locations_scale.csv
