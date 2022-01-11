@@ -73,12 +73,7 @@ city_known <- left_join(
 )
 
 city_notknown <- airport_info[!idx, ]
-## create a new data frame that we can then join up later.
-city_country <- data.frame(
-  city = city_notknown$City
-)
-
-
+city_country <- read_csv("city_not_known.csv")
 city_notknown <- left_join(
   city_notknown, city_country,
   by = c("City" = "city")
@@ -86,7 +81,7 @@ city_notknown <- left_join(
 
 ## all_airports <- htmltab::htmltab("https://www.ccra.com/airport-codes/")
 ## airport_info[airport_info$NodeName %in% all_airports$Code, ]
-city_known <- city_known[!city_known$country.etc %in%
+city_known <- city_known[!city_known$`country.etc` %in%
   c("Serbia and Montenegro", "Canary Islands"), ]
 
 out <- data.frame(
@@ -108,10 +103,8 @@ write_csv(
   append = TRUE
 )
 
-city_notknown <- city_notknown[!city_notknown$country %in%
+city_notknown <- city_notknown[!city_notknown$`country` %in%
   c("Serbia and Montenegro", "Canary Islands"), ]
-
-
 
 out <- data.frame(
   bibkey = "huang2013open",
@@ -232,6 +225,7 @@ locations <- map_dfr(
 ## 43 ZAF         9
 ## 44 ZMB        72
 ## 45 ZWE        10
+adm_count <- read_csv("num_admin_units_africa.csv")
 counts <- count(locations, country)
 data_adm_levels <- left_join(counts, adm_count)
 
@@ -256,6 +250,10 @@ closest <- select(
   closest, country,
   n = n_data, adm_level = adm_level_gadm
 )
+##################################
+## Exclude MYT which is a French overseas
+## territory.
+data_adm_levels <- data_adm_levels[data_adm_levels$country != "MYT", ]
 ## Make sure both data frames are in same order.
 closest <- arrange(closest, country)
 data_adm_levels <- arrange(data_adm_levels, country)
@@ -328,8 +326,8 @@ write_csv(
 ## "dsilva2017"
 data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "dsilva2017", ]
-data$location <- c("GIN", "LBR", "SLE")
-data$country <- c("GIN", "LBR", "SLE")
+data$location <- c("GIN", "LBR", "SLE", "GIN", "LBR", "SLE")
+data$country <- c("GIN", "LBR", "SLE", "GIN", "LBR", "SLE")
 adm0_centroids <- read_csv(file = "adm0_centroids.csv")
 out <- left_join(data, adm0_centroids)
 out$scale <- "ADM0"
@@ -343,22 +341,24 @@ gin <- readRDS("shapefiles/gadm36_GIN_2_sf.rds")
 sle <- readRDS("shapefiles/gadm36_SLE_2_sf.rds")
 lbr <- readRDS("shapefiles/gadm36_LBR_1_sf.rds")
 
-centroids <- purrr::map2_dfr(
+centroids <- map2_dfr(
   list(gin, sle, lbr),
   list("2", "2", "1"),
   function(df, level) {
-    centroids <- sf::st_centroid(df$geometry)
-    centroids <- sf::st_coordinates(centroids)
+    centroids <- st_centroid(df$geometry)
+    centroids <- st_coordinates(centroids)
     locations <- df[[glue::glue("NAME_{level}")]]
     country <- df$GID_0
-    data.frame(
-      bibkey = "dsilva2017",
+    message("Doing ", country[1], " ", level)
+    x <- data.frame(
       location = locations,
       country = country,
       long = centroids[, 1],
-      lat = centroids[, 2],
-      scale = glue::glue("ADM{level}")
+      lat = centroids[, 2]
     )
+    x$bibkey <- "dsilva2017"
+    x$scale <- glue("ADM{level}")
+    x
   }
 )
 
@@ -410,9 +410,9 @@ write_csv(
 ## hen used the models to predict between-district mobility for Angola
 ## and the DR Congo
 ## shapefiles shared by Moritz, not available otherwise.
-out <- sf::st_read("data/drc_moritz/shp/")
-centroids <- sf::st_centroid(out$geometry)
-centroids <- sf::st_coordinates(centroids)
+out <- st_read("drc_moritz/shp/")
+centroids <- st_centroid(out$geometry)
+centroids <- st_coordinates(centroids)
 
 out <- data.frame(
   bibkey = "kraemer2017spread",
@@ -469,7 +469,7 @@ write_csv(
 ## as location, although the distances are calculated between sample
 ## locations.
 #######################################################################
-data <- read_csv("data/study_ds_types.csv")
+data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "tatem2012spatial", ]
 out <- data[, c("bibkey", "country")]
 out$country <- countrycode(

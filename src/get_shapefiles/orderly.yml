@@ -1,0 +1,16 @@
+script: script.R
+
+packages:
+- glue
+- httr
+- purrr
+- readr
+- stringr
+- zip
+
+artefacts:
+  data:
+    description: Shapefiles and number of admin units
+    filenames:
+      - num_admin_units_africa.csv
+      - africa_shapefiles.zip

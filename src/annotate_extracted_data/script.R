@@ -1,4 +1,6 @@
-dir.create("shapefiles")
+### orderly::orderly_develop_start()
+unzip("africa_shapefiles.zip")
 source("estimated_data_locations_scale.R")
 source("empirical_data_locations_scale.R")
-
+files2zip <- dir('shapefiles', full.names = TRUE)
+zip::zip(zipfile = "africa_shapefiles2.zip", files = files2zip)
