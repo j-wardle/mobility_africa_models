@@ -14,7 +14,6 @@ artefacts:
       - est_and_emp_data.png
 
 resources:
-- estimated_data_locations_scale.csv
 - study_ds_types.csv
 - shapefiles
 
@@ -28,3 +27,4 @@ depends:
       id: latest
       use:
         empirical_data_locations_scale.csv: empirical_data_locations_scale.csv
+        estimated_data_locations_scale.csv: estimated_data_locations_scale.csv

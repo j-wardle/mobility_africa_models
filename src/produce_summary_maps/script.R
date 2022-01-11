@@ -9,7 +9,8 @@ africa <- c(
   "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
   "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
 )
-
+## Africa shape file from http://geoportal.icpac.net/layers/geonode%3Aafr_g2014_2013_0
+## Open Data Commons Open Database License / OSM (ODbL/OSM)
 est_data_loc <- read_csv("estimated_data_locations_scale.csv")
 emp_data_loc <- read_csv("empirical_data_locations_scale.csv")
 data_features <- read_csv("study_ds_types.csv")
