@@ -87,7 +87,7 @@ paper_theme <- list(
     axis.text.x = element_text(angle = 0, hjust = 0.5, size = 6)
   ),
   legend = theme(
-    legend.title = element_blank()
+    legend.title = element_blank(), legend.position = "bottom"
   )
 )
 

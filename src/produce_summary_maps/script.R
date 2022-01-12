@@ -46,5 +46,39 @@ emp_data_features_grp <- mutate_at(
      )
    }
  )
+## TODO empricial data is missing one datasource type (check Epidemics7 poster for comparison)
+p1 <- map_data_availability(emp_data_features_grp) +
+  ggtitle("Empirical data on human movement")
 
-p1 <- map_data_availability(emp_data_features_grp)
+p2 <- map_data_availability(est_data_features_grp) +
+  ggtitle("Human movement estimates")
+
+
+ggsave("empirical.png", p1)
+ggsave("estimated.png", p2)
+
+
+x <- select(data_features, bibkey, data_category)
+x <- distinct(x)
+count(x, data_category)
+
+## Within studies reporting empirical data,
+## what were the data types
+emp <- filter(data_features, data_category == "empirical")
+## table(emp$datasource_type)
+
+##       cdr    census      GBMD      hdss interview     ipums     unhcr
+##        11         2        42         3         6        33        51
+## GBMD is Global Bilateral Migration Database
+est <- filter(data_features, data_category != "empirical")
+## table(est$datasource_type)
+
+##               census data_other_countries      estimates_other
+##                    1                   60                    2
+##      flight_capacity           flowminder              genomic
+##                   52                   14                   33
+##            incidence         social_media
+##                    8                    2
+other_cntry <- filter(data_features, datasource_type == "data_other_countries")
+## unique(other_cntry$bibkey)
+## [1] "sorichetta2016mapping"    "wesolowski2014commentary"

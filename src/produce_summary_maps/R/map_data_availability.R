@@ -6,8 +6,9 @@ map_data_availability <- function(data_features) {
   fname <- ("shapefiles/afr_g2014_2013_0")
   africa <- st_read(fname)
 
-  values <- unique(emp_data_features$datasource_type)
-  labels <- datasource_labels[values]
+  types <- unique(data_features$datasource_type)
+  values <- datasource_palette[types]
+  labels <- datasource_labels[types]
   p <- ggplot() +
     theme_map() +
     xlab("") +
@@ -31,7 +32,8 @@ map_data_availability <- function(data_features) {
   p <- p + scale_color_manual(
     values = values,
     labels = labels,
-    aesthetics = c("colour", "fill")
+    aesthetics = c("colour", "fill"),
+    guide = guide_legend(nrow = length(types))
   )
 
   p <- p + scale_alpha_manual(
