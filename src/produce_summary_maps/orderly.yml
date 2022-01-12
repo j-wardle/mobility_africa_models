@@ -11,7 +11,8 @@ artefacts:
   staticgraph:
     description: Maps of data availability
     filenames:
-      - est_and_emp_data.png
+      - empirical.png
+      - estimated.png
 
 resources:
 - study_ds_types.csv
