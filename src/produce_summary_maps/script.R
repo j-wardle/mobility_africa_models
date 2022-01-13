@@ -13,12 +13,24 @@ africa <- c(
 ## Open Data Commons Open Database License / OSM (ODbL/OSM)
 est_data_loc <- read_csv("estimated_data_locations_scale.csv")
 emp_data_loc <- read_csv("empirical_data_locations_scale.csv")
-data_features <- read_csv("study_ds_types.csv")
+
+ds_types <- read_csv("study_ds_types.csv")
+ds_types$datasource_grped <- case_when(
+  ds_types$datasource_type == "cdr" ~ "cdr",
+  ds_types$datasource_type %in% c("ipums", "census", "interview", "hdss") ~ "census",
+  ds_types$datasource_type %in% c("GBMD", "unhcr") ~ "unhcr",
+  ds_types$datasource_type %in% c("genomic", "incidence") ~ "incidence",
+  ds_types$datasource_type %in% c("data_other_countries", "estimates_other", "flowminder") ~ "estimates_other",
+  ds_types$datasource_type == "social_media" ~ "social_media",
+  ds_types$datasource_type == "flight_capacity" ~ "flight_capacity"
+)
+
+
 est_data_features <- prepare_data_features(
-  est_data_loc, data_features, "estimated"
+  est_data_loc, ds_types, "estimated"
 )
 emp_data_features <- prepare_data_features(
-  emp_data_loc, data_features, "empirical"
+  emp_data_loc, ds_types, "empirical"
 )
 
 emp_data_features_grp <- mutate_at(
@@ -33,7 +45,7 @@ emp_data_features_grp <- mutate_at(
   }
 )
 
- est_data_features_grp <- mutate_at(
+est_data_features_grp <- mutate_at(
    est_data_features,
    "datasource_type",
    function(x) {
@@ -47,7 +59,7 @@ emp_data_features_grp <- mutate_at(
    }
  )
 ## TODO empricial data is missing one datasource type (check Epidemics7 poster for comparison)
-p1 <- map_data_availability(emp_data_features_grp) +
+p1 <- map_data_availability(emp_data_features_grp, data_features_grp) +
   ggtitle("Empirical data on human movement")
 
 p2 <- map_data_availability(est_data_features_grp) +
@@ -58,20 +70,21 @@ ggsave("empirical.png", p1)
 ggsave("estimated.png", p2)
 
 
-x <- select(data_features, bibkey, data_category)
+
+x <- select(ds_types, bibkey, data_category)
 x <- distinct(x)
 count(x, data_category)
 
 ## Within studies reporting empirical data,
 ## what were the data types
-emp <- filter(data_features, data_category == "empirical")
-## table(emp$datasource_type)
+emp <- filter(ds_types, data_category == "empirical")
+## table(emp$datasource_grped)
 
 ##       cdr    census      GBMD      hdss interview     ipums     unhcr
 ##        11         2        42         3         6        33        51
 ## GBMD is Global Bilateral Migration Database
-est <- filter(data_features, data_category != "empirical")
-## table(est$datasource_type)
+est <- filter(ds_types, data_category != "empirical")
+## table(est$datasource_grped)
 
 ##               census data_other_countries      estimates_other
 ##                    1                   60                    2
@@ -79,6 +92,26 @@ est <- filter(data_features, data_category != "empirical")
 ##                   52                   14                   33
 ##            incidence         social_media
 ##                    8                    2
-other_cntry <- filter(data_features, datasource_type == "data_other_countries")
+other_cntry <- filter(ds_types, datasource_type == "data_other_countries")
 ## unique(other_cntry$bibkey)
 ## [1] "sorichetta2016mapping"    "wesolowski2014commentary"
+library(tibble)
+p <-
+  ggplot(data = mtcars, mapping = aes(wt, mpg)) +
+  geom_point()
+
+df <- tibble(x = 0.01, y = 0.01,
+             plot = list(p +
+                         coord_cartesian(xlim = c(3, 4),
+                                         ylim = c(13, 16)) +
+                         labs(x = NULL, y = NULL) +
+                         theme_bw(10)))
+p +
+  expand_limits(x = 0, y = 0) +
+  geom_plot_npc(data = df, aes(npcx = x, npcy = y, label = plot))
+
+p +
+  expand_limits(x = 0, y = 0) +
+  geom_plot_npc(data = df,
+                vp.width = 1/2, vp.height = 1/4,
+                aes(npcx = x, npcy = y, label = plot))

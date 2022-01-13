@@ -36,18 +36,19 @@ datasource_labels <- c(
   cdr = "Mobile phone data; data on daily/weekly movement", ## high utility
   ## medium utility
   ipums = "Census micro-data",
-  census = "Census, demographic surveillance surveys, interviews; data on annual or 5-yearly migration",
+  ##  census = "Census, demographic surveillance surveys, interviews; data on annual or 5-yearly migration",
+  census = "Census, short-term migration",
   interview = "Interviews",
-  hdss = "Health and demographic surveillance surveys",
+  hdss = "DHS",
   ## low utility
   GBMD = "Global bi-lateral migration data",
-  unhcr = "Long term migration and data on movement of refugees",
+  unhcr = "Long term migration; refugee movement",
   ## Estimated data sources
   genomic = "Genomes",
   flight_capacity = "Flight capacity",
-  data_other_countries = "Estimates using data from other countries",
-  incidence = "Estimated from incidence/genomic data",
-  estimates_other = "Estimates from other studies or based on data from other countries",
+  data_other_countries = "Using data from other countries",
+  incidence = "Incidence/genomic data",
+  estimates_other = "Using data from other countries",
   flowminder = "Estimates from Flowminder",
   social_media = "Social media"
 )
