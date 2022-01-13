@@ -59,7 +59,8 @@ est_data_features_grp <- mutate_at(
    }
  )
 ## TODO empricial data is missing one datasource type (check Epidemics7 poster for comparison)
-p1 <- map_data_availability(emp_data_features_grp, data_features_grp) +
+emp <- filter(ds_types, data_category == "empirical")
+p1 <- map_data_availability(emp_data_features_grp, emp) +
   ggtitle("Empirical data on human movement")
 
 p2 <- map_data_availability(est_data_features_grp) +
@@ -77,7 +78,7 @@ count(x, data_category)
 
 ## Within studies reporting empirical data,
 ## what were the data types
-emp <- filter(ds_types, data_category == "empirical")
+
 ## table(emp$datasource_grped)
 
 ##       cdr    census      GBMD      hdss interview     ipums     unhcr

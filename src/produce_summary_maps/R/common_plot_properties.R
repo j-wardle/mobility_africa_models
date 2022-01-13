@@ -33,11 +33,12 @@ datasource_palette <- c(
 )
 
 datasource_labels <- c(
-  cdr = "Mobile phone data; data on daily/weekly movement", ## high utility
+  ##cdr = "Mobile phone data; data on daily/weekly movement", ## high utility
+  cdr = "CDR",
   ## medium utility
   ipums = "Census micro-data",
   ##  census = "Census, demographic surveillance surveys, interviews; data on annual or 5-yearly migration",
-  census = "Census, short-term migration",
+  census = "Short-term migration",
   interview = "Interviews",
   hdss = "DHS",
   ## low utility

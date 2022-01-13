@@ -6,7 +6,7 @@
 ## data_features has multiple rows for each study, data_category, datasource_type
 ## and each country - one row for each adm unit modelled.
 map_data_availability <- function(data_features, datasources) {
-  Fname <- ("shapefiles/afr_g2014_2013_0")
+  fname <- ("shapefiles/afr_g2014_2013_0")
   africa <- st_read(fname)
 
   types <- unique(data_features$datasource_type)
@@ -14,17 +14,21 @@ map_data_availability <- function(data_features, datasources) {
   labels <- datasource_labels[types]
   x <- count(datasources, datasource_grped)
   x$label <- datasource_labels[x$datasource_grped]
-  x$label <- glue::glue("{x$label} ({x$n} / {sum(x$n)})")
-  bar <- ggplot(x,aes(n, datasource_grped, fill = datasource_grped)) +
-    geom_col(alpha = 0.8) +
-    geom_text(
-      aes(x = 0, y = datasource_grped, label = label)
+  x$label <- glue::glue("{x$label} ({x$n})")
+  ## To make each bar longer so that labels will fit.
+  bar <- ggplot(x,aes(x = 1, datasource_grped, fill = datasource_grped)) +
+    ##geom_col(alpha = 0.8) +
+    geom_label(
+      aes(label = label),
+      hjust = 0, vjust = 0, size = 2
     ) +
     scale_fill_manual(
       values = datasource_palette,
       labels = datasource_labels,
       guide = "none"
-    ) + theme_void()
+    ) + theme_void() +
+    theme(aspect.ratio = 1/3) +
+    coord_cartesian(clip = "off")
 
   p <- ggplot() +
     theme_map() +
@@ -50,7 +54,7 @@ map_data_availability <- function(data_features, datasources) {
     values = values,
     labels = labels,
     aesthetics = c("colour", "fill"),
-    guide = guide_legend(nrow = length(types))
+    guide = "none"##guide_legend(nrow = length(types))
   )
 
   p <- p + scale_alpha_manual(
@@ -60,8 +64,15 @@ map_data_availability <- function(data_features, datasources) {
     values = size_scale,
     guide = "none"
   )
-  p <- p + paper_theme$theme +
-          paper_theme$legend
+  p <- p + paper_theme$theme
 
-  p
+  df <- tibble(
+    x = 0.01, y = 0.01,
+    plot = list(bar)
+  )
+  p2 <- p +
+    geom_plot_npc(
+      data = df, aes(npcx = x, npcy = y, label = plot)
+    )
+  p2
 }
