@@ -30,6 +30,7 @@ dsilva2017,mobility_model,gravity,compartmental gravity model with exponent on d
 dsilva2017,mobility_data_start,may 24 2014,NA
 dsilva2017,mobility_data_end,oct 31 2014,NA
 dsilva2017,disease_focus,ebola,NA
+dsilva2017,outcome_var,absolute flows,number of people traveling from one country to another or between districts
 tompkins2016,doi,https://doi.org/10.4081/gh.2016.408,NA
 tompkins2016,mobility_data_type,empirical,NA
 tompkins2016,mobility_data_source,cdr,18383 enteries
@@ -165,6 +166,7 @@ kramer2016spatial,code_available,yes,http://dx.doi.org/10.5061/dryad.n3g63
 kramer2016spatial,mobility_model,logit,probability of infection between all susceptible units i and sources j
 dobra2018loglinear,doi,https://doi.org/10.1214/18-aoas1164,NA
 dobra2018loglinear,disease_focus,none,NA
+dobra2018loglinear,outcome_var,unclear,NA
 dobra2018loglinear,mobility_data_type,estimated,geolocated tweets
 dobra2018loglinear,mobility_data_source,social_media,geolocated tweets bought from gnop and via twitter apis
 dobra2018loglinear,country,south africa,NA
