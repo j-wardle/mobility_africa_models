@@ -694,6 +694,7 @@ dudas2017virus,mobility_data_end,24 october 2015,sampled between these dates
 dudas2017virus,mobility_model,glm,parse glm formulation of ctmc diffusion
 dudas2017virus,code_available,yes,NA
 dudas2017virus,mobility_data_available,yes,NA
+dudas2017virus,outcome_var,instantaneous movement rate, instantaneous movement rate from location i to location j 
 gustafson2017identifying,doi,http://dx.doi.org/10.1098/rsif.2017.0583,NA
 gustafson2017identifying,disease_focus,ebola,NA
 gustafson2017identifying,country,sierra leone,NA
@@ -702,3 +703,4 @@ gustafson2017identifying,mobility_data_source,genomic,https://github.com/kgustaf
 gustafson2017identifying,mobility_data_spatial_resolution,cheifdom,NA
 gustafson2017identifying,mobility_model,gravity,NA
 gustafson2017identifying,mobility_model,levy flight,NA
+gustafson2017identifying,outcome_var,transmission probability,probability of a virus being transmitted from chiefdom i to chiefdom j
