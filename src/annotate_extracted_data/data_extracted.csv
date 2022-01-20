@@ -606,6 +606,7 @@ peak2018population,mobility_data_end,july 2015,1 july 2015
 peak2018population,mobility_data_spatial_resolution,cheifdom,NA
 peak2018population,mobility_model,none,no model of mobility. anamoly detetction to investigate if the restrictions caused changes in mobility
 huang2013open,doi,https://doi.org/10.1371/journal.pone.0064317,NA
+huang2013open,outcome_var,annual aggregated passenger flow,annual aggregated passenger flow
 huang2013open,disease_focus,none,although study seems to be a part of vector-borne disease airline importation risk (vbd-air) project
 huang2013open,country,Algeria,almost all countries in africa but see spatial resolution
 huang2013open,country,Angola,
