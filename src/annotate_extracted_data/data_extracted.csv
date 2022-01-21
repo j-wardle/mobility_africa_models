@@ -486,6 +486,7 @@ wesolowski2014commentary,country,nigeria,
 wesolowski2014commentary,country,senegal,
 wesolowski2014commentary,country,sierra leone,
 wesolowski2014commentary,country,togo,
+wesolowski2014commentary,outcome_var,absolute flows,
 sorichetta2016mapping,doi,https://doi.org/10.1038/sdata.2016.66,NA
 sorichetta2016mapping,disease_focus,malaria,NA
 sorichetta2016mapping,mobility_data_source,census,internal census-based migration microdata available through ipums
@@ -588,6 +589,7 @@ sorichetta2016mapping,mobility_data_spatial_resolution,adm2,zambia
 sorichetta2016mapping,mobility_data_spatial_resolution,NA,zimbabwe
 sorichetta2016mapping,mobility_data_temporal_resolution,5 years,true for both estimated and empirical
 sorichetta2016mapping,mobility_model_params_available,yes,NA
+sorichetta2016mapping,outcome_var,subnational migration flows,in a 5 year period
 choe2014internal,doi,https://doi.org/10.1111/saje.12011,NA
 choe2014internal,disease_focus,none,NA
 choe2014internal,country,south africa,NA
