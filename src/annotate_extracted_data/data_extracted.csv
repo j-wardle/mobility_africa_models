@@ -95,6 +95,13 @@ kraemer2017spread,mobility_data_spatial_resolution,district,NA
 kraemer2017spread,mobility_model,gravity,NA
 kraemer2017spread,mobility_model,radiation,NA
 kraemer2017spread,mobility_model,adjancency metrics,NA
+kraemer2017spread,mobility_data_source_country,Namibia,aggregated and deidentified mobile phone-derived mobility estimates at the constituency level
+kraemer2017spread,mobility_data_source_scale,constituency,
+kraemer2017spread,mobility_data_start,october 2010,
+kraemer2017spread,mobility_data_end,september 2011,
+kraemer2017spread,mobility_data_used_date_from,december 2015,Dec 5 2015
+kraemer2017spread,mobility_data_used_date_to,november 2016,
+kraemer2017spread,mobility_data_source_available,yes,direct download
 kraemer2017spread,outcome_var,total number commuting,for both gravity and radation models
 matamalas2016assessing,doi,http://dx.doi.org/10.1098/rsif.2016.0203,NA
 matamalas2016assessing,disease_focus,none,NA

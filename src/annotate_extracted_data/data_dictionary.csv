@@ -5,3 +5,4 @@ mobility_data_source; source of data quantifying human mobility. Examples includ
 CDR; call data record
 data_spatial_resolution; spatial resolution of the data available. This might be different from the resolution at which data are used in a model
 data_available; whether the data used or estimated by the study are made available e.g. in a public repo. We set this to "no" if the speicifc subset of data used in the paper are not made made available even if the original data source are online e.g. with census data used in pindolia2013demographics
+mobility_data_source_country; where the country of soucre of mobility data is different for which it is used.
