@@ -60,6 +60,7 @@ silal2015,mobility_data_start,2002,NA
 silal2015,mobility_data_end,2008,NA
 silal2015,mobility_model,gravity,constant rate between patches inversely weighted by distance
 silal2015,disease_focus,malaria,NA
+silal2015,outcome_var,rate of movement,weekly
 wesolowski2013,doi,https://doi.org/10.1371/journal.pone.0052971,
 wesolowski2013,country,kenya,NA
 wesolowski2013,mobility_data_type,empirical,NA
@@ -94,6 +95,7 @@ kraemer2017spread,mobility_data_spatial_resolution,district,NA
 kraemer2017spread,mobility_model,gravity,NA
 kraemer2017spread,mobility_model,radiation,NA
 kraemer2017spread,mobility_model,adjancency metrics,NA
+kraemer2017spread,outcome_var,total number commuting,for both gravity and radation models
 matamalas2016assessing,doi,http://dx.doi.org/10.1098/rsif.2016.0203,NA
 matamalas2016assessing,disease_focus,none,NA
 matamalas2016assessing,country,senegal,country data used
@@ -164,6 +166,7 @@ kramer2016spatial,mobility_data_source,flowminder,flowminder estimates using cen
 kramer2016spatial,mobility_data_available,yes,http://dx.doi.org/10.5061/dryad.n3g63
 kramer2016spatial,code_available,yes,http://dx.doi.org/10.5061/dryad.n3g63
 kramer2016spatial,mobility_model,logit,probability of infection between all susceptible units i and sources j
+kramer2016spatial,outcome_var,infection probability,between all susceptible units i and sources j
 dobra2018loglinear,doi,https://doi.org/10.1214/18-aoas1164,NA
 dobra2018loglinear,disease_focus,none,NA
 dobra2018loglinear,outcome_var,unclear,NA
