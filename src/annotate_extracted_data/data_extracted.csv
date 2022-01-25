@@ -596,7 +596,7 @@ sorichetta2016mapping,mobility_data_spatial_resolution,adm2,zambia
 sorichetta2016mapping,mobility_data_spatial_resolution,adm1,zimbabwe
 sorichetta2016mapping,mobility_data_temporal_resolution,5 years,true for both estimated and empirical
 sorichetta2016mapping,mobility_model_params_available,yes,NA
-sorichetta2016mapping,outcome_var,subnational migration flows,in a 5 year period
+sorichetta2016mapping,outcome_var,subnational migration flows,in a 5 year period implicitly conditional on moving out of source
 choe2014internal,doi,https://doi.org/10.1111/saje.12011,NA
 choe2014internal,disease_focus,none,NA
 choe2014internal,country,south africa,NA
