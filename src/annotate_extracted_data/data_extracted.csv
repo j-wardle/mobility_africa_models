@@ -30,7 +30,7 @@ dsilva2017,mobility_model,gravity,compartmental gravity model with exponent on d
 dsilva2017,mobility_data_start,may 24 2014,NA
 dsilva2017,mobility_data_end,oct 31 2014,NA
 dsilva2017,disease_focus,ebola,NA
-dsilva2017,outcome_var,absolute flows,number of people traveling from one country to another or between districts
+dsilva2017,outcome_var,absolute flows,number of people traveling from one country to another or between districts. only for people moving
 tompkins2016,doi,https://doi.org/10.4081/gh.2016.408,NA
 tompkins2016,mobility_data_type,empirical,NA
 tompkins2016,mobility_data_source,cdr,18383 enteries
@@ -102,7 +102,7 @@ kraemer2017spread,mobility_data_end,september 2011,
 kraemer2017spread,mobility_data_used_date_from,december 2015,Dec 5 2015
 kraemer2017spread,mobility_data_used_date_to,november 2016,
 kraemer2017spread,mobility_data_source_available,yes,direct download
-kraemer2017spread,outcome_var,total number commuting,for both gravity and radation models
+kraemer2017spread,outcome_var,total number commuting,for both gravity and radation models. conditional on moving out of i 
 matamalas2016assessing,doi,http://dx.doi.org/10.1098/rsif.2016.0203,NA
 matamalas2016assessing,disease_focus,none,NA
 matamalas2016assessing,country,senegal,country data used
@@ -493,7 +493,7 @@ wesolowski2014commentary,country,nigeria,
 wesolowski2014commentary,country,senegal,
 wesolowski2014commentary,country,sierra leone,
 wesolowski2014commentary,country,togo,
-wesolowski2014commentary,outcome_var,absolute flows,
+wesolowski2014commentary,outcome_var,absolute flows,implicitly conditional on moving out of source
 sorichetta2016mapping,doi,https://doi.org/10.1038/sdata.2016.66,NA
 sorichetta2016mapping,disease_focus,malaria,NA
 sorichetta2016mapping,mobility_data_source,census,internal census-based migration microdata available through ipums
