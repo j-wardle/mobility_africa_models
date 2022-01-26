@@ -143,7 +143,7 @@ collinson2014migration,mobility_data_end,dec 2011,only year is mentioned in the 
 collinson2014migration,mobility_model,none,NA
 andrews2012projecting,doi,https://doi.org/10.1093/infdis/jis401,
 andrews2012projecting,disease_focus,hiv,NA
-andrews2012projecting,country, south africa, 
+andrews2012projecting,country,south africa, 
 andrews2012projecting,mobility_model,none,NA
 andrews2012projecting,mobility_data_type,empirical,NA
 andrews2012projecting,mobility_data_source,survey,some census data and some unplublished data
