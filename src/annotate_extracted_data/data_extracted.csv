@@ -49,7 +49,7 @@ ruktanonchai2016,mobility_data_source,cdr,NA
 ruktanonchai2016,mobility_data_spatial_resolution,constituency,NA
 ruktanonchai2016,mobility_data_available,yes,adjacency matrix from mobile phone data aggregated to the constituency level is made available.
 ruktanonchai2016,mobility_data_start,october 2010,NA
-ruktanonchai2016,mobility_data_end,september 2011,NA
+ruktanonchai2016,mobility_data_end,september 2011,assume that these 2010 mobile phone data likely reflect movement patterns similar to those that would have been observed in 2000.
 ruktanonchai2016,mobility_model,none,no model was fitted. connectivity matrix gave probabilities.
 silal2015,doi,https://doi.org/10.1371/journal.pone.0144990,NA
 silal2015,mobility_data_type,estimated,NA
