@@ -328,7 +328,7 @@ yukich2013travel,doi,https://doi.org/10.1186/1475-2875-12-33,NA
 yukich2013travel,disease_focus,malaria,NA
 yukich2013travel,country,ethiopia,NA
 yukich2013travel,mobility_data_type,empirical,NA
-yukich2013travel,mobility_data_source,survey,interview using a standard pre-tested questionnaire
+yukich2013travel,mobility_data_source,interview,interview using a standard pre-tested questionnaire
 yukich2013travel,mobility_data_spatial_resolution,health_facility,a single health facility in ethiopia
 yukich2013travel,sample_size,560,patients 141 cases and 419 controls
 yukich2013travel,mobility_model,none,assessed travel as a risk factor for malaria.

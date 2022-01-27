@@ -56,7 +56,7 @@ huang2013open,UGA,estimated,2010,2010,large_city,yes,NA,flight_capacity
 huang2013open,ESH,estimated,2010,2010,large_city,yes,NA,flight_capacity
 huang2013open,ZMB,estimated,2010,2010,large_city,yes,NA,flight_capacity
 huang2013open,ZWE,estimated,2010,2010,large_city,yes,NA,flight_capacity
-choe2014internal,ZAF,empirical,1996,1996,district,yes,197320,ipums
+choe2014internal,ZAF,empirical,1996,1996,district,yes_in_principle,197320,ipums
 peak2018population,SLE,empirical,march 2015,july 2015,chiefdom,no,NA,cdr
 sorichetta2016mapping,AGO,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,BDI,estimated,2005,2010,NA,yes,NA,data_other_countries
