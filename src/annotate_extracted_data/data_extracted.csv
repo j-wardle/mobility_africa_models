@@ -53,14 +53,16 @@ ruktanonchai2016,mobility_data_end,september 2011,assume that these 2010 mobile 
 ruktanonchai2016,mobility_model,none,no model was fitted. connectivity matrix gave probabilities.
 silal2015,doi,https://doi.org/10.1371/journal.pone.0144990,NA
 silal2015,mobility_data_type,estimated,NA
-silal2015,mobility_data_source,incidence,weekly case notification data
+silal2015,mobility_data_source,incidence,weekly case notification data from 2002 to 2008 used to infer mobility. validation against 2009 to 2012
 silal2015,country,south africa,NA
-silal2015,mobility_data_spatial_resolution,province,NA
+silal2015,mobility_data_spatial_resolution,province,limited to 5 muncipalities in ehlanzeni district and maputo province
 silal2015,mobility_data_start,2002,NA
 silal2015,mobility_data_end,2008,NA
 silal2015,mobility_model,gravity,constant rate between patches inversely weighted by distance
 silal2015,disease_focus,malaria,NA
 silal2015,outcome_var,rate of movement,weekly
+silal2015,mobility_model_params_available,yes,some estimated some expert opinion
+silal2015,mobility_data_available,no,NA
 wesolowski2013,doi,https://doi.org/10.1371/journal.pone.0052971,
 wesolowski2013,country,kenya,NA
 wesolowski2013,mobility_data_type,empirical,NA
@@ -125,15 +127,6 @@ finger2016mobile,mobility_model_start,jan 2005,estimated 2005 mobility from 2013
 finger2016mobile,mobility_model_end,dec 2005,NA
 finger2016mobile,mobility_model_spatial_resolution,arrondissement,NA
 finger2016mobile,mobility_model,none,mobility matrix estimated from data used with a multiplier to make rows add up to 1
-silal2015hitting,doi,https://doi.org/10.1371/journal.pone.0144990,NA
-silal2015hitting,disease_focus,malaria,NA
-silal2015hitting,country,south africa,NA
-silal2015hitting,mobility_data_type,estimated,
-silal2015hitting,mobility_data_source,incidence,weekly case notification data from 2002 to 2008 used to infer mobility. validation against 2009 to 2012
-silal2015hitting,mobility_model_spatial_resolution,province,limited to 5 muncipalities in ehlanzeni district and maputo province
-silal2015hitting,mobility_model,gravity,constant rate between patches inversely weighted by distance
-silal2015hitting,mobility_model_params_available,yes,some estimated some expert opinion
-silal2015hitting,mobility_data_available,no,NA
 collinson2014migration,doi,https://doi.org/10.3402/gha.v7.23514,NA
 collinson2014migration,country,south africa, 
 collinson2014migration,mobility_data_type,empirical,NA
