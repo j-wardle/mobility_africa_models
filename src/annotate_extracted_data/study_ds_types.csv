@@ -1,6 +1,5 @@
 bibkey,country,data_category,data_start,data_end,data_spatial_resolution,data_available,data_sample_size,datasource_type
 silal2015hitting,ZAF,estimated,2002,2008,province,no,NA,incidence
-song2010modelling,NA,empirical,NA,NA,NA,no,NA,cdr
 gustafson2017identifying,SLE,estimated,NA,NA,adm3,no,NA,genomic
 dudas2017virus,LBR,estimated,march 2014,october 2015,adm1,no,NA,genomic
 dudas2017virus,SLE,estimated,march 2014,october 2015,adm2,no,NA,genomic

@@ -677,12 +677,6 @@ huang2013open,mobility_data_type,empirical,purchased
 huang2013open,mobility_data_type,estimated,open-access predictions
 huang2013open,mobility_data_source,flight_capacity,connectivity and scheduled air travel network routes were defined by a 2010 scheduled flight capacity dataset purchased from oag; passenger flow data from us canada and europe constituted the training data set
 huang2013open,mobility_model,lognormal mixed model,4 models were explored - lognormal model for main effects only (b) generalized linear model for main effects and interactions with poisson distribution and a log link (c) same as b but with negbin (d) lognormal mixed model. (d) outperformed others
-song2010modelling,doi,https://doi.org/10.1038/nphys1760,NA
-song2010modelling,disease_focus,none,NA
-song2010modelling,country,NA,some european country. si only says that data were from a european mobile company
-song2010modelling,mobility_data_type,empirical,NA
-song2010modelling,mobility_data_source,cdr,also data from mobile service giving approximate location
-song2010modelling,mobility_model,ibm,individual based model
 lu2013approaching,doi,https://doi.org/10.1038/srep02923,NA
 lu2013approaching,disease_focus,none,NA
 lu2013approaching,country,cote d’ivoire,NA
