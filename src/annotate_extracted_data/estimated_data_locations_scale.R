@@ -53,9 +53,9 @@ airport_info <- read_csv(
   "estimates_data/AirportInfo.csv"
 )
 ## Max lat and long from bounding box of Africa, from the shapefile
-airport_info <- filter(
-  airport_info, Lon >= -47, Lon <= 38, Lat >= -26, Lat <= 52
-)
+#airport_info <- filter(
+#  airport_info, Lon >= -47, Lon <= 38, Lat >= -26, Lat <= 52
+#)
 ## To get countries,
 data(world.cities)
 world.cities$name <- gsub("[[:punct:] ]+", " ", world.cities$name)
@@ -96,7 +96,10 @@ out <- data.frame(
   lat = city_known$Lat,
   scale = "airport"
 )
-
+## not all these countries are in africa
+continent <- countrycode(out$country, "iso3c", "continent")
+in_africa <- which(continent == "Africa")
+out <- out[in_africa, ]
 write_csv(
   x = out,
   path = "estimates_estimated_data_locations_scale.csv",

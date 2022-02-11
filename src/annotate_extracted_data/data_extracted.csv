@@ -20,6 +20,7 @@ marshall2018,mobility_data_end,march 2013,tanzania rainy
 marshall2018,mobility_model,gravity,NA
 marshall2018,mobility_model,radiation,NA
 marshall2018,disease_focus,malaria,NA
+marshall2018,outcome_var,relative flow,probability of a trip being to destination
 dsilva2017,doi,http://dx.doi.org/10.1016/j.jtbi.2017.05.034,
 dsilva2017,country,guinea,
 dsilva2017,country,liberia,
@@ -38,9 +39,10 @@ tompkins2016,mobility_data_spatial_resolution,arrondissement,NA
 tompkins2016,mobility_data_start,1 jan 2013,NA
 tompkins2016,mobility_data_end,31 dec 2013,d4d data. the dates are not in the paper but in cited paper https://arxiv.org/pdf/1407.4885.pdf
 tompkins2016,country,senegal,NA
-tompkins2016,mobility_model,agent-based,NA
+tompkins2016,mobility_model,gravity,NA
 tompkins2016,disease_focus,malaria,NA
 tompkins2016,sample_size,18384,NA
+tompkins2016,outcome_var,relative flow,probability pij of a journey from point i to point j
 ruktanonchai2016,doi,https://doi.org/10.1371/journal.pcbi.1004846,NA
 ruktanonchai2016,disease_focus,malaria,NA
 ruktanonchai2016,country,namibia,NA
@@ -77,6 +79,7 @@ wesolowski2013,mobility_model,gravity,NA
 wesolowski2013,sample_size,12000000000,cdr
 wesolowski2013,sample_size,NA,census; not mentioned in the paper
 wesolowski2013,mobility_data_available,no,NA
+wesolowski2013,outcome_var,absolute flows,number of trips between locations x and y
 mari2017big,doi,https://doi.org/10.1038/s41598-017-00493-1,NA
 mari2017big,disease_focus,schistosomiasis,NA
 mari2017big,country,senegal,NA
@@ -114,6 +117,7 @@ matamalas2016assessing,mobility_data_source,cdr,d4d and other data
 matamalas2016assessing,mobility_data_spatial_resolution,arrondissement,NA
 matamalas2016assessing,mobility_model,markov process,various formulations
 matamalas2016assessing,mobility_data_available,no,d4d link is no longer working
+matamalas2016assessing,outcome_var,relative flow,transition probability of an individual,
 finger2016mobile,doi,https://doi.org/10.1073/pnas.1522305113,NA
 finger2016mobile,disease_focus,cholera,NA
 finger2016mobile,country,senegal,NA
