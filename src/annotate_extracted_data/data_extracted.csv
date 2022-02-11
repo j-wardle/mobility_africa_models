@@ -117,7 +117,7 @@ matamalas2016assessing,mobility_data_source,cdr,d4d and other data
 matamalas2016assessing,mobility_data_spatial_resolution,arrondissement,NA
 matamalas2016assessing,mobility_model,markov process,various formulations
 matamalas2016assessing,mobility_data_available,no,d4d link is no longer working
-matamalas2016assessing,outcome_var,relative flow,transition probability of an individual,
+matamalas2016assessing,outcome_var,relative flow,transition probability of an individual
 finger2016mobile,doi,https://doi.org/10.1073/pnas.1522305113,NA
 finger2016mobile,disease_focus,cholera,NA
 finger2016mobile,country,senegal,NA
@@ -131,6 +131,7 @@ finger2016mobile,mobility_model_start,jan 2005,estimated 2005 mobility from 2013
 finger2016mobile,mobility_model_end,dec 2005,NA
 finger2016mobile,mobility_model_spatial_resolution,arrondissement,NA
 finger2016mobile,mobility_model,none,mobility matrix estimated from data used with a multiplier to make rows add up to 1
+finger2016mobile,outcome_var,relative flow,community-level average fraction of time that users living in arrondissement i spend in arrondissement j during day t
 collinson2014migration,doi,https://doi.org/10.3402/gha.v7.23514,NA
 collinson2014migration,country,south africa, 
 collinson2014migration,mobility_data_type,empirical,NA
@@ -147,6 +148,7 @@ andrews2012projecting,mobility_data_source,survey,some census data and some unpl
 andrews2012projecting,mobility_data_spatial_resolution,settlement,a single province in south africa masiphumelele
 andrews2012projecting,mobility_data_available,yes_but,summarised census data are available in a pdf format. rest is unpublished.
 andrews2012projecting,mobility_model_params_available,yes,estimates of immigration and emigration parameters used are available
+andrews2012projecting,outcome_var,movement rate, mobility summarised as immigration and emigration rates
 kramer2016spatial,doi,http://dx.doi.org/10.1098/rsos.160294,NA
 kramer2016spatial,country,guinea,
 kramer2016spatial,country,liberia,
@@ -197,6 +199,8 @@ dobra2017space,mobility_data_spatial_resolution,district,a single district (umkh
 dobra2017space,mobility_model,none,NA
 dobra2017space,mobility_data_available,no_but,descriptive statistics are available
 dobra2017space,code_available,no,NA
+dobra2017space,outcome_var,time outside,proportion of time associated with periods of residence outside the rural study community of a repeat-tester
+dobra2017space,outcome_var,migration distance,sum of the distances between consecutive residences occupied by a repeat-tester in a given year
 tatem2012spatial,doi,http://dx.doi.org/10.1097/qad.0b013e328359a904,NA
 tatem2012spatial,disease_focus,hiv,hiv-1
 tatem2012spatial,country,angola,
@@ -251,6 +255,7 @@ pindolia2013demographics,mobility_model,network,NA
 pindolia2013demographics,mobility_data_available,no,see table 1 in si for all data sources
 pindolia2013demographics,code_available,no,NA
 pindolia2013demographics,mobility_model_params_available,no,some regression coeffs are available in si but r2 is very low
+pindolia2013demographics,outcome_var,absolute flows,
 mastrorillo2016influence,doi,http://dx.doi.org/10.1016/j.gloenvcha.2016.04.014,NA
 mastrorillo2016influence,country,south africa,NA
 mastrorillo2016influence,disease_focus,none,NA
@@ -262,6 +267,7 @@ mastrorillo2016influence,mobility_model,gravity,augmented
 mastrorillo2016influence,mobility_model_params_available,yes,NA
 mastrorillo2016influence,mobility_data_available,no,NA
 mastrorillo2016influence,code_available,no,NA
+mastrorillo2016influence,outcome_var,absolute flows,NA
 iqbal2007geo,doi,http://dx.doi.org/10.1080/07388940701257515,NA
 iqbal2007geo,country,Algeria, the paper states that all 50 states in africa were considered but there are 55 states in africa and 52 in GADM shapefile for Africa. I assume Western Sahara is not included in the analysis so i have deleted it. that still leaves one more than stated in the paper
 iqbal2007geo,country,Angola,
@@ -321,6 +327,7 @@ iqbal2007geo,mobility_data_end,dec 2001,only year is mentioned
 iqbal2007geo,mobility_data_available,no,unhcr yearbooks are available online. descriptive statistics in paper
 iqbal2007geo,code_available,no,NA
 iqbal2007geo,mobility_model_params_available,yes,NA
+iqbal2007geo,outcome_var,refugee flows,
 yukich2013travel,doi,https://doi.org/10.1186/1475-2875-12-33,NA
 yukich2013travel,disease_focus,malaria,NA
 yukich2013travel,country,ethiopia,NA
@@ -381,6 +388,7 @@ garcia2015modeling,mobility_data_end,dec 2002,uganda only year is specified
 garcia2015modeling,mobility_data_available,no_but,descriptive stats in supplementary
 garcia2015modeling,code_available,no,broken link
 garcia2015modeling,mobility_model_params_available,yes,in si
+garcia2015modeling,outcome_var,absolute flows,
 ruyssen2014determinants,doi,https://doi.org/10.1080/00220388.2013.866218,NA
 ruyssen2014determinants,disease_focus,none,NA
 ruyssen2014determinants,mobility_model,human capital model,sjaastad’s human capital model of migration
@@ -435,6 +443,7 @@ ruyssen2014determinants,country,Zimbabwe,
 ruyssen2014determinants,mobility_data_available,yes,in si pdf
 ruyssen2014determinants,mobility_model_params_available,yes,NA
 ruyssen2014determinants,code_available,no,NA
+ruyssen2014determinants,outcome_var,absolute flows,Aggregate migration
 wesolowski2014commentary,doi,https://doi.org/10.1371/currents.outbreaks.0177e7fcf52217b8b634376e2f3efc5e,NA
 wesolowski2014commentary,mobility_data_type,empirical,NA
 wesolowski2014commentary,mobility_data_type,estimated,for 15 african countries
@@ -605,6 +614,7 @@ choe2014internal,mobility_model,conditional logit,NA
 choe2014internal,mobility_model_params_available,yes,NA
 choe2014internal,code_available,no,NA
 choe2014internal,mobility_data_available,yesbut,cannot access the paper. check again once andrew confirms openathens account
+choe2014internal,outcome_var,probability of migration,probability of individual i choosing region j 
 peak2018population,doi,https://doi.org/10.1093/ije/dyy095,NA
 peak2018population,disease_focus,ebola,NA
 peak2018population,country,sierra leone,NA
@@ -614,6 +624,7 @@ peak2018population,mobility_data_start,march 2015,20 march 2015
 peak2018population,mobility_data_end,july 2015,1 july 2015
 peak2018population,mobility_data_spatial_resolution,cheifdom,NA
 peak2018population,mobility_model,none,no model of mobility. anamoly detetction to investigate if the restrictions caused changes in mobility
+peak2018population,outcome_var,absolute flows,number of trips between chiefdoms
 huang2013open,doi,https://doi.org/10.1371/journal.pone.0064317,NA
 huang2013open,outcome_var,annual aggregated passenger flow,annual aggregated passenger flow
 huang2013open,disease_focus,none,although study seems to be a part of vector-borne disease airline importation risk (vbd-air) project
