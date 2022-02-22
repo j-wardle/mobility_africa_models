@@ -15,12 +15,14 @@ map_data_availability <- function(data_features, datasources) {
   x <- count(datasources, datasource_grped)
   x$label <- datasource_labels[x$datasource_grped]
   x$label <- glue::glue("{x$label} ({x$n})")
-  ## To make each bar longer so that labels will fit.
-  bar <- ggplot(x,aes(x = 1, datasource_grped, fill = datasource_grped)) +
-    ##geom_col(alpha = 0.8) +
-    geom_label(
-      aes(label = label),
-      hjust = 0, vjust = 0, size = 2
+  x$total <- sum(x$n)
+
+  bar <- ggplot(x) +
+    geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0.1) +
+    geom_col(aes(n, datasource_grped, fill = datasource_grped), alpha = 0.4) +
+    geom_text(
+      aes(total, datasource_grped, label = label),
+      hjust = 1, vjust = 0, size = 2
     ) +
     scale_fill_manual(
       values = datasource_palette,
@@ -29,6 +31,7 @@ map_data_availability <- function(data_features, datasources) {
     ) + theme_void() +
     theme(aspect.ratio = 1/3) +
     coord_cartesian(clip = "off")
+
 
   p <- ggplot() +
     theme_map() +
