@@ -180,11 +180,21 @@ both_scen4_map$rel_diff_bins <- fct_rev(both_scen4_map$rel_diff_bins)
 #                                           "-0.2 < d <= -0.1", "-0.3 < d <= -0.2",
 #                                           "-0.4 < d <= -0.3", "-0.5 < d <= -0.4")
 
+# levels(both_scen4_map$rel_diff_bins) <- c("0.4 < d \u2264 0.5 (slower spread)", "0.3 < d \u2264 0.4",
+#                                           "0.2 < d \u2264 0.3", "0.1 < d \u2264 0.2",
+#                                           "0.0 < d \u2264 0.1", "-0.1 < d \u2264 0.0",
+#                                           "-0.2 < d \u2264 -0.1", "-0.3 < d \u2264 -0.2",
+#                                           "-0.4 < d \u2264 -0.3", "-0.5 < d \u2264 -0.4 (faster spread)")
+
 levels(both_scen4_map$rel_diff_bins) <- c("0.4 < d \u2264 0.5", "0.3 < d \u2264 0.4",
                                           "0.2 < d \u2264 0.3", "0.1 < d \u2264 0.2",
                                           "0.0 < d \u2264 0.1", "-0.1 < d \u2264 0.0",
                                           "-0.2 < d \u2264 -0.1", "-0.3 < d \u2264 -0.2",
                                           "-0.4 < d \u2264 -0.3", "-0.5 < d \u2264 -0.4")
+
+
+both_scen4_map$rel_diff_bins <- fct_rev(both_scen4_map$rel_diff_bins)
+
 
 both_scen4_map$seed <- as.factor(both_scen4_map$seed)
 both_scen4_map$seed <- factor(both_scen4_map$seed, 
@@ -196,43 +206,161 @@ plot_france_same_scale <- both_scen4_map %>%
   filter(seed == "Brest" | seed == "Paris") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
-  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference (d)") +
+  scale_fill_brewer(palette = "RdBu", drop = "FALSE",
+                    direction = -1,
+                    name = "Relative difference (d)") +
+  xlab("Dummy text\ndummy text") +
+  ylab("Time to first case using predicted mobility (days)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
   # ggtitle("Relative difference of first case (gravity model - raw data model)") +
-  theme_void() +
+  # theme_void() +
+  theme_classic() +
   theme(
-    text = element_text(size = 9),
-    legend.title = element_text(size = 6),
-    legend.text = element_text(size = 6),
+    panel.border = element_rect(colour = "black", fill = NA),
+    text = element_text(size = 11),
+    axis.text = element_text(size = 14, colour = "white"),
+    axis.title = element_text(size = 16, colour = "white"),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_text(face = "bold", size = 10),
+    legend.text = element_text(size = 10),
     legend.key.size = unit(0.4, "cm"),
-    plot.margin=grid::unit(c(0,0,0,0), "mm")
+    legend.position = "none" #,
+    # legend.direction = "horizontal",
+    # plot.margin=grid::unit(c(0,0,0,0), "mm")
   )
 
-ggsave("figures/fra_map_rel_diff.png", plot_france_same_scale)
+plot_france_same_scale
 
-knitr::plot_crop("figures/fra_map_rel_diff.png")
+ggsave("figures/fra_map_rel_diff.png", plot_france_same_scale,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+discrete_legend <- both_scen4_map %>%
+  filter(seed == "Brest" | seed == "Paris") %>% 
+  ggplot() +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
+  scale_fill_brewer(palette = "RdBu", drop = "FALSE", direction = -1,
+                    name = "Relative difference (d)",
+                    guide = guide_legend(
+                      direction = "horizontal",
+                      title.position = "top",
+                      label.position = "bottom",
+                      label.hjust = 0.5,
+                      label.vjust = 0.5,
+                      label.theme = element_text(angle = 80),
+                      nrow = 1
+                    )) +
+  xlab("Dummy text\ndummy text") +
+  ylab("Time to first case using predicted mobility (days)") +
+  coord_quickmap() +
+  facet_wrap(~seed, nrow = 2) +
+  # ggtitle("Relative difference of first case (gravity model - raw data model)") +
+  # theme_void() +
+  theme_classic() +
+  theme(
+    panel.border = element_rect(colour = "black", fill = NA),
+    # text = element_text(size = 11),
+    axis.text = element_text(size = 14, colour = "white"),
+    axis.title = element_text(size = 16, colour = "white"),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8),
+    # legend.key.size = unit(0.4, "cm"),
+    legend.position = "bottom" ,
+    legend.direction = "horizontal"
+  )
+
+ggsave("figures/discrete_legend.png", discrete_legend,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+# Create a continuous legend to be extracted
+
+cont_legend <- both_scen4_map
+cont_legend$dummy_legend_scale <- runif(nrow(cont_legend), min = -0.5, max = 0.5)
+cont_legend$dummy_legend_scale <- round(cont_legend$dummy_legend_scale, 2)
+  
+continuous_legend <- cont_legend %>%
+  filter(seed == "Brest" | seed == "Paris") %>% 
+  ggplot() +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = dummy_legend_scale), color = "white", size = 0.1) +
+  scale_fill_distiller(palette = "RdBu", direction = -1,
+                       name = "Relative difference"#,
+                       # guide = guide_colourbar(
+                       #   direction = "horizontal",
+                       #   title.position = "top",
+                       #   label.position = "bottom",
+                       #   label.hjust = 0.5,
+                       #   label.vjust = 0.5,
+                       #   label.theme = element_text(angle = 80),
+                       #   nrow = 1
+                       # )
+  ) +
+  xlab("Dummy text\ndummy text") +
+  ylab("Time to first case using predicted mobility (days)") +
+  coord_quickmap() +
+  facet_wrap(~seed, nrow = 2) +
+  # ggtitle("Relative difference of first case (gravity model - raw data model)") +
+  # theme_void() +
+  theme_classic() +
+  theme(
+    panel.border = element_rect(colour = "black", fill = NA),
+    # text = element_text(size = 11),
+    axis.text = element_text(size = 14, colour = "white"),
+    axis.title = element_text(size = 16, colour = "white"),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8),
+    # legend.key.size = unit(0.4, "cm"),
+    legend.position = "bottom" ,
+    legend.direction = "horizontal"
+  )
+  
+ggsave("figures/continuous_legend.png", continuous_legend,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+
+# knitr::plot_crop("figures/fra_map_rel_diff.png")
 
 plot_portugal_same_scale <- both_scen4_map %>%
   filter(seed == "Miranda do Douro" | seed == "Lisboa") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
-  scale_fill_brewer(palette = "RdBu", drop = "FALSE", name = "Relative difference (d)") +
+  scale_fill_brewer(palette = "RdBu", drop = "FALSE",
+                    direction = -1,
+                    name = "Relative difference (d)") +
+  xlab("Dummy text\ndummy text") +
+  ylab("Time to first case using predicted mobility (days)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
   # ggtitle("Relative difference of first case (gravity model - raw data model)") +
-  theme_void() +
+  # theme_void() +
+  theme_classic() +
   theme(
-    text = element_text(size = 9),
-    legend.title = element_text(size = 6),
-    legend.text = element_text(size = 6),
+    panel.border = element_rect(colour = "black", fill = NA),
+    text = element_text(size = 11),
+    axis.text = element_text(size = 14, colour = "white"),
+    axis.title = element_text(size = 16, colour = "white"),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_text(face = "bold", size = 10),
+    legend.text = element_text(size = 10),
     legend.key.size = unit(0.4, "cm"),
-    plot.margin=grid::unit(c(0,0,0,0), "mm")
+    legend.position = "none" #,
+    # legend.direction = "horizontal",
+    # plot.margin=grid::unit(c(0,0,0,0), "mm")
   )
 
-ggsave("figures/prt_map_rel_diff.png", plot_portugal_same_scale)
+ggsave("figures/prt_map_rel_diff.png", plot_portugal_same_scale,
+       width = 6, height = 6, units = "in", dpi = 150)
 
-knitr::plot_crop("figures/prt_map_rel_diff.png")
+# knitr::plot_crop("figures/prt_map_rel_diff.png")
 
 p <- plot_france_same_scale + plot_portugal_same_scale +
   plot_layout(guides = 'collect')
