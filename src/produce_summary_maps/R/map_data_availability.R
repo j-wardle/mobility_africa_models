@@ -23,7 +23,7 @@ map_data_availability <- function(data_features, datasources) {
     geom_col(aes(n, datasource_grped, fill = datasource_grped), alpha = 0.4) +
     geom_text(
       aes(total, datasource_grped, label = label),
-      hjust = 1, vjust = 0, size = 2
+      hjust = 1, vjust = 0.5, size = 3
     ) +
     scale_fill_manual(
       values = datasource_palette,
@@ -71,7 +71,7 @@ map_data_availability <- function(data_features, datasources) {
   p <- p + paper_theme$theme
 
   df <- tibble(
-    x = 0.01, y = 0.01,
+    x = 0.01, y = 0.25,
     plot = list(bar)
   )
   p2 <- p +

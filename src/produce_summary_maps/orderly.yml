@@ -16,7 +16,6 @@ artefacts:
       - estimated.png
 
 resources:
-- study_ds_types.csv
 - shapefiles
 
 sources:
@@ -30,3 +29,4 @@ depends:
       use:
         empirical_data_locations_scale.csv: empirical_data_locations_scale.csv
         estimated_data_locations_scale.csv: estimated_data_locations_scale.csv
+        study_ds_types.csv: study_ds_types.csv

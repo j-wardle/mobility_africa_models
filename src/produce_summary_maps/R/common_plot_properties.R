@@ -26,6 +26,7 @@ datasource_palette <- c(
   genomic = "#000000",
   flight_capacity = "#E69F00",
   data_other_countries = "#56B4E9",
+  estimates_other = "#56e9d5",
   incidence = "#CC79A7",
   estimates_other = "#0072B2",
   flowminder = "#0072B2",
@@ -38,19 +39,19 @@ datasource_labels <- c(
   ## medium utility
   ipums = "Census micro-data",
   ##  census = "Census, demographic surveillance surveys, interviews; data on annual or 5-yearly migration",
-  census = "Short-term migration",
+  census = "Census",
   interview = "Interviews",
   hdss = "DHS",
   ## low utility
   GBMD = "Global bi-lateral migration data",
-  unhcr = "Long term migration; refugee movement",
+  unhcr = "Long-term or refugee migration",
   ## Estimated data sources
   genomic = "Genomes",
   flight_capacity = "Flight capacity",
-  data_other_countries = "Using data from other countries",
+  data_other_countries = "Empirical data (other countries)",
   incidence = "Incidence/genomic data",
-  estimates_other = "Using data from other countries",
-  flowminder = "Estimates from Flowminder",
+  estimates_other = "Mobility proxies",
+  flowminder = "Mobility proxies",
   social_media = "Social media"
 )
 ## Availability mapped to transperency
@@ -84,12 +85,13 @@ cluster_palette <- c(
 
 paper_theme <- list(
   dateformat = scales::date_format("%m-%Y"),
-  theme = theme_classic(base_size = 10),
+  theme = theme_classic(base_size = 14),
   xticklabels = theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, size = 6)
   ),
   legend = theme(
-    legend.title = element_blank(), legend.position = "bottom"
+    legend.title = element_blank(),
+    legend.position = "bottom"
   )
 )
 

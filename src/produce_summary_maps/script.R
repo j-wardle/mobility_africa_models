@@ -15,12 +15,17 @@ est_data_loc <- read_csv("estimated_data_locations_scale.csv")
 emp_data_loc <- read_csv("empirical_data_locations_scale.csv")
 
 ds_types <- read_csv("study_ds_types.csv")
+## sorichetta2016mapping do make use of empirical data but the data
+## are pooled across countries to generate proxies.
+## Therefore, datasource_grped is really 'data_other_countries' for them
+
 ds_types$datasource_grped <- case_when(
   ds_types$datasource_type == "cdr" ~ "cdr",
   ds_types$datasource_type %in% c("ipums", "census", "interview", "hdss") ~ "census",
   ds_types$datasource_type %in% c("GBMD", "unhcr") ~ "unhcr",
   ds_types$datasource_type %in% c("genomic", "incidence") ~ "incidence",
-  ds_types$datasource_type %in% c("data_other_countries", "estimates_other", "flowminder") ~ "estimates_other",
+  ds_types$datasource_type %in% c("data_other_countries") ~ "data_other_countries",
+  ds_types$datasource_type %in% c("estimates_other", "flowminder") ~ "estimates_other",
   ds_types$datasource_type == "social_media" ~ "social_media",
   ds_types$datasource_type == "flight_capacity" ~ "flight_capacity"
 )
@@ -51,7 +56,8 @@ est_data_features_grp <- mutate_at(
    function(x) {
      x <- case_when(
        x %in% c("genomic", "incidence") ~ "incidence",
-       x %in% c("data_other_countries", "estimates_other", "flowminder") ~ "estimates_other",
+       x %in% c("data_other_countries", "flowminder") ~ "data_other_countries",
+       x == "estimates_other" ~ "estimates_other",
        x == "social_media" ~ "social_media",
        x == "flight_capacity" ~ "flight_capacity",
        x == "census" ~ "census"

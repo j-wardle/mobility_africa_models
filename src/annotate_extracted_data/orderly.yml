@@ -31,6 +31,7 @@ artefacts:
       - num_admin_units_africa.csv
       - estimated_data_locations_scale.csv
       - africa_shapefiles2.zip
+      - study_ds_types.csv
 
 
 depends:
