@@ -16,7 +16,8 @@ map_data_availability <- function(data_features, datasources) {
   x$label <- datasource_labels[x$datasource_grped]
   x$label <- glue::glue("{x$label} ({x$n})")
   x$total <- sum(x$n)
-
+  ##x <- arrange(x, n)
+  x$datasource_grped <- reorder(x$datasource_grped, x$n)
   bar <- ggplot(x) +
     geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0.1) +
     geom_col(aes(n, datasource_grped, fill = datasource_grped), alpha = 0.4) +

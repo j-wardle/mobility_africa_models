@@ -63,8 +63,9 @@ emp <- filter(ds_types, data_category == "empirical")
 p1 <- map_data_availability(emp_data_features_grp, emp) +
   ggtitle("Empirical data on human movement")
 
-p2 <- map_data_availability(est_data_features_grp) +
-  ggtitle("Human movement estimates")
+est <- filter(ds_types, data_category != "empirical")
+p2 <- map_data_availability(est_data_features_grp, est) +
+  ggtitle("Mobility Proxies")
 
 
 ggsave("empirical.png", p1)
@@ -96,23 +97,3 @@ est <- filter(ds_types, data_category != "empirical")
 other_cntry <- filter(ds_types, datasource_type == "data_other_countries")
 ## unique(other_cntry$bibkey)
 ## [1] "sorichetta2016mapping"    "wesolowski2014commentary"
-library(tibble)
-p <-
-  ggplot(data = mtcars, mapping = aes(wt, mpg)) +
-  geom_point()
-
-df <- tibble(x = 0.01, y = 0.01,
-             plot = list(p +
-                         coord_cartesian(xlim = c(3, 4),
-                                         ylim = c(13, 16)) +
-                         labs(x = NULL, y = NULL) +
-                         theme_bw(10)))
-p +
-  expand_limits(x = 0, y = 0) +
-  geom_plot_npc(data = df, aes(npcx = x, npcy = y, label = plot))
-
-p +
-  expand_limits(x = 0, y = 0) +
-  geom_plot_npc(data = df,
-                vp.width = 1/2, vp.height = 1/4,
-                aes(npcx = x, npcy = y, label = plot))

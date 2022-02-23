@@ -475,9 +475,6 @@ write_csv(
 data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "tatem2012spatial", ]
 out <- data[, c("bibkey", "country")]
-out$country <- countrycode(
-  out$country, "country.name", "iso3c"
-)
 out$locations <- out$country
 adm0_centroids <- read_csv(file = "adm0_centroids.csv")
 out <- left_join(out, adm0_centroids)

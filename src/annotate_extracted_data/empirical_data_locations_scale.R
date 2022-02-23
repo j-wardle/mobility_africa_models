@@ -196,15 +196,15 @@ write_csv(x = out, file = "empirical_data_locations.csv", append = TRUE)
 ################# ruyssen2014determinants ############################
 adm0_centroids <- read_csv("adm0_centroids.csv")
 
-data <- read_csv("study_ds_types.csv", na = "")
+data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "ruyssen2014determinants", "country"]
-data$iso3c <- countrycode(
-  data$country, "country.name", "iso3c"
-)
+## data$iso3c <- countrycode(
+##   data$country, "country.name", "iso3c"
+## )
 
 spatial_resolution <- data.frame(
   bibkey = c("ruyssen2014determinants"),
-  country = data$iso3c,
+  country = data$country,
   adm_level = 0
 )
 
@@ -215,7 +215,7 @@ write_csv(
 )
 
 
-out <- adm0_centroids[adm0_centroids$country %in% data$iso3c, ]
+out <- adm0_centroids[adm0_centroids$country %in% data$country, ]
 
 out$location <- out$country
 out$bibkey <- "ruyssen2014determinants"
@@ -338,15 +338,15 @@ write_csv(
 adm0_centroids <- read_csv("adm0_centroids.csv")
 
 
-data <- read_csv("study_ds_types.csv", na = "")
+data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "iqbal2007geo", "country"]
-data$iso3c <- countrycode(
-  data$country, "country.name", "iso3c"
-)
+## data$iso3c <- countrycode(
+##   data$country, "country.name", "iso3c"
+## )
 
 spatial_resolution <- data.frame(
   bibkey = c("iqbal2007geo"),
-  country = data$iso3c,
+  country = data$country,
   adm_level = 0
 )
 
@@ -356,7 +356,7 @@ write_csv(
   append = TRUE
 )
 
-out <- adm0_centroids[adm0_centroids$country %in% data$iso3c, ]
+out <- adm0_centroids[adm0_centroids$country %in% data$country, ]
 
 out$location <- out$country
 out$bibkey <- "iqbal2007geo"

@@ -3,6 +3,7 @@ script: script.R
 packages:
 - dplyr
 - ggplot2
+- ggpmisc
 - ggthemes
 - readr
 - sf
