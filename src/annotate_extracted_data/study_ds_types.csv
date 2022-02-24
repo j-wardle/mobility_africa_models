@@ -286,8 +286,8 @@ kramer2016spatial,NER,estimated,NA,NA,adm1,yes,NA,flowminder
 kramer2016spatial,NGA,estimated,NA,NA,adm1,yes,NA,flowminder
 kramer2016spatial,TGO,estimated,NA,NA,adm1,yes,NA,flowminder
 kramer2016spatial,CIV,estimated,NA,NA,adm1,yes,NA,flowminder
-dobra2018loglinear,ZAF,estimated,september 2011,september 2016,municipality,no,476601,social_media
-dobra2018loglinear,ZAF,estimated,january 2016,december 2016,municipality,no,NA,social_media
+dobra2018loglinear,ZAF,empirical,september 2011,september 2016,municipality,no,476601,social_media
+dobra2018loglinear,ZAF,empirical,january 2016,december 2016,municipality,no,NA,social_media
 dobra2017space,ZAF,empirical,2004,2014,district,no,NA,hdss
 tatem2012spatial,AGO,estimated,NA,NA,NA,no,NA,genomic
 tatem2012spatial,BWA,estimated,NA,NA,NA,no,NA,genomic

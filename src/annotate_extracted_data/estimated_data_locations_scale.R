@@ -439,29 +439,6 @@ write_csv(
 ## https://datadryad.org/stash/dataset/doi:10.5061/dryad.k95j3
 ## Use data from flowminder
 
-#######################################################################
-## "dobra2018loglinear"
-## geolocated tweets mapped to 213 municipalities of South Africa.
-zaf <- readRDS("shapefiles/gadm36_ZAF_3_sf.rds")
-## There are 234 of these rather than 213
-centroids <- st_centroid(zaf)
-centroids <- st_coordinates(centroids$geometry)
-
-out <- data.frame(
-  bibkey = "dobra2018loglinear",
-  locations = zaf$NAME_3,
-  country = "ZAF",
-  long = centroids[, 1],
-  lat = centroids[, 2],
-  scale = "ADM3"
-)
-
-write_csv(
-  x = out,
-  path = "estimated_data_locations_scale.csv",
-  append = TRUE
-)
-
 
 #######################################################################
 ## "tatem2012spatial"

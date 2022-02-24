@@ -33,10 +33,10 @@ prepare_data_features <- function(data_locations,
     out$datasource_type <- factor(
         out$datasource_type,
         levels = c(
-          "cdr", "ipums", "census", "interview", "hdss",
+          "cdr", "social_media", "ipums", "census", "interview", "hdss",
           "GBMD", "unhcr", "genomic", "flight_capacity",
           "data_other_countries", "incidence", "estimates_other",
-          "flowminder", "social_media"
+          "flowminder"
         ),
         ordered = TRUE
     )

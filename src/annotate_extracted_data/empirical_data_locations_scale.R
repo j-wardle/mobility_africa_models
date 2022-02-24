@@ -861,9 +861,42 @@ write_csv(
 
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
+
+#######################################################################
+## "dobra2018loglinear"
+## geolocated tweets mapped to 213 municipalities of South Africa.
+zaf <- readRDS("shapefiles/gadm36_ZAF_3_sf.rds")
+## There are 234 of these rather than 213
+centroids <- st_centroid(zaf)
+centroids <- st_coordinates(centroids$geometry)
+
+out <- data.frame(
+  bibkey = "dobra2018loglinear",
+  locations = zaf$NAME_3,
+  country = "ZAF",
+  long = centroids[, 1],
+  lat = centroids[, 2]
+)
+
+write_csv(
+  x = out,
+  path = "empirical_data_scale.csv",
+  append = TRUE
+)
+
+spatial_resolution <- data.frame(
+  bibkey = c("dobra2018loglinear"),
+  country = "ZAF",
+  adm_level = 3
+)
+write_csv(
+  x = spatial_resolution,
+  path = "empirical_data_locations.csv",
+  append = TRUE
+)
 
 ######################################################################
 ######################################################################

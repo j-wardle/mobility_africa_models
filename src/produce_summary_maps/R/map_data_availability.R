@@ -41,7 +41,7 @@ map_data_availability <- function(data_features, datasources) {
   p <- p + geom_sf(data = africa, lwd = 0.1, alpha = 0.3)
   p <- p + coord_sf(datum = NA)
   p <- p +
-    geom_point(
+    geom_jitter(
       data = data_features,
       aes(
         x = long,
@@ -50,7 +50,7 @@ map_data_availability <- function(data_features, datasources) {
         alpha = data_available,
         size = scale
       ),
-      position = "jitter",
+      width = 0.25,
       shape = 21 ## hollow circle; migh help see overlapping points.
     )
 
