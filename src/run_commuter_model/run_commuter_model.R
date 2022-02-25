@@ -21,6 +21,7 @@ compartments <- c("susceptible", "exposed", "infected", "recovered")
 
 
 ## Generalized commuter model as function
+## This is the function to run - it uses the other functions defined below
 
 commuter_model <- function(sim, seed_location, movement_matrix) {
   
@@ -36,18 +37,29 @@ commuter_model <- function(sim, seed_location, movement_matrix) {
 }
 
 
-# SEIR functions
+## SEIR functions
+## There is one function for infection dynamics while people are in their home locations
+## And a second function for the dynamics when people are in their work locations
+## Home and work locations are defined in the movement data matrices (lines 6:9)
+## Input is a 3D array (state) with dimensions c(number_patches, number_patches, 4)
+## The 4 comes from the number of infection compartments
 
 seir_step_home <- function(state, number_patches) {
+  
+  # get total people living in each location
   N <- rowSums(state[,,"susceptible"]) + rowSums(state[,,"exposed"]) +
     rowSums(state[,,"infected"]) + rowSums(state[,,"recovered"])
   
+  # extract numbers in each compartment as a matrix
   S <- state[,,"susceptible"]
   E <- state[,,"exposed"]
   I <- state[,,"infected"]
   R <- state[,,"recovered"]
   
+  # calculate how many infectious people in each resident population
   home_infections <- rowSums(state[,,"infected"])
+  
+  # calculate probability of each transition and then the numbers moving between compartments
   
   pr_SE <- 1 - exp(- beta * home_infections / N * dt)
   n_SE <- matrix(rbinom(ncol(S)*nrow(S), S, pr_SE), ncol = ncol(S))
@@ -58,11 +70,13 @@ seir_step_home <- function(state, number_patches) {
   pr_IR <- 1 - exp(-gamma * dt)
   n_IR <- matrix(rbinom(ncol(I)*nrow(I), I, pr_IR), ncol = ncol(I))
   
+  # calculate new numbers in each compartment
   S <- S - n_SE
   E <- E + n_SE - n_EI
   I <- I + n_EI - n_IR
   R <- R + n_IR
   
+  # combine all compartments into a 4D array
   array(c(S, E, I, R), dim = c(number_patches, number_patches, 4))
   
 }
@@ -98,6 +112,9 @@ seir_step_work <- function(state, number_patches) {
   
 }
 
+# Function to run SEIR model across multiple time-steps
+# i %% 10 tells us if the step is in the first half of the day (when people are at home) or
+# the second part of the day (when people are at work)
 
 seir_run <- function(data, n_step, number_patches) {
   
@@ -118,6 +135,8 @@ seir_run <- function(data, n_step, number_patches) {
 }
 
 
+# Function to tidy outputs because they can get large v quickly
+# Keeps one set of state numbers per day (rather than for every time-step)
 seir_tidydata <- function(data, steps) {
   
   results <- as.data.frame.table(data[,,,seq(1, length(steps), by = 10)]) %>%
@@ -143,6 +162,9 @@ seir_tidydata <- function(data, steps) {
 }
 
 
+## Function to run the model in chunks of days
+## Implemented to resolve issues with running out of memory when running model
+## for large number of days at once 
 model_in_chunks <- function(movement_matrix, run_time, chunk_days = 20,
                             seed_location, seed_number, n_step, steps) {
   
@@ -152,19 +174,26 @@ model_in_chunks <- function(movement_matrix, run_time, chunk_days = 20,
   
   number_of_chunks <- ceiling(run_time/ chunk_days)
   
-  # Generate arrays in default fifty day chunks due to large size
+  # Generate arrays in default twenty day chunks due to large size
+  # Set up initial array
   chunk_array <- array(0, dim = c(number_patches, number_patches,
                                   length(compartments),
                                   n_step + 1),
                        dimnames = list(array_rows, array_cols, compartments, steps))
   
+  # Populate array based on numbers in movement_matrix
   chunk_array[,,"susceptible", 1] <- movement_matrix
+  
+  # Seed infections
   chunk_array[seed_location, seed_location, "infected", 1] <- seed_number
   
+  # Set up list for outputs
   out <- vector("list", length = number_of_chunks)
   
+  # Run model for first chunk of days
   out[[1]] <- seir_run(chunk_array, n_step = n_step, number_patches = number_patches)
   
+  # Run model for subsequent chunks
   for (i in 2:number_of_chunks) {
     
     chunk_array <- array(0, dim = c(number_patches, number_patches,
@@ -172,12 +201,16 @@ model_in_chunks <- function(movement_matrix, run_time, chunk_days = 20,
                                     n_step + 1),
                          dimnames = list(array_rows, array_cols, compartments, steps))
     
+    # The first array of each chunk is populated using the finishing state of the previous chunk
     chunk_array[,,, 1] <- out[[i-1]][,,,n_step + 1]
     
+    # Reduce the amount of output we save in previous step (keep one set of numbers per day)
     out[[i-1]] <- seir_tidydata(out[[i-1]], steps = steps)
     
+    # Store the time of the previous output
     out[[i-1]][["time"]] <- out[[i-1]][["time"]] + chunk_days*(i-2)
     
+    # Run model for new chunk
     out[[i]] <- seir_run(chunk_array, n_step = n_step, number_patches = number_patches)
     
     

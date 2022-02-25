@@ -12,3 +12,8 @@ orderly_envir.yml
 .Rdata
 orderly_dev_script.R
 src/process_movement_data/task_data/
+src/produce_figures/figures/
+src/produce_figures/*.rds
+src/invasion_maps/figures/
+src/invasion_order_figures/figures/
+ESA/
