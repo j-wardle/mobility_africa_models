@@ -66,6 +66,7 @@ sorichetta2016mapping,BWA,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,CAF,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,CIV,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,CMR,empirical,2005,2005,adm2,yes_in_principle,NA,ipums
+sorichetta2016mapping,CMR,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,COD,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,COG,estimated,2005,2010,NA,yes,NA,data_other_countries
 sorichetta2016mapping,COM,estimated,2005,2010,NA,yes,NA,data_other_countries
