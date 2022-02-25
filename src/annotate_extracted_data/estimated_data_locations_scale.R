@@ -86,7 +86,7 @@ out <- data.frame(
 )
 write_csv(
   x = out,
-  path = "estimates_estimated_data_locations_scale.csv",
+  path = "estimated_data_locations_scale.csv",
   append = TRUE
 )
 

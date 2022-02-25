@@ -46,7 +46,8 @@ emp_data_features_grp <- mutate_at(
   function(x) {
     x <- case_when(
       x == "cdr" ~ "cdr",
-      x %in% c("ipums", "census", "interview", "hdss") ~ "census",
+      x %in% c("ipums", "census", "hdss") ~ "census",
+      x == "interview" ~ "interview",
       x %in% c("GBMD", "unhcr") ~ "unhcr",
       x == "social_media" ~ "social_media"
     )
@@ -74,6 +75,8 @@ est_data_features_grp <- mutate_at(
 emp <- filter(ds_types, data_category == "empirical")
 p1 <- map_data_availability(emp_data_features_grp, emp) +
   ggtitle("Empirical data on human movement")
+ggsave("empirical.png", p1)
+
 
 est <- filter(ds_types, data_category != "empirical")
 group1 <- c("data_other_countries")
@@ -82,6 +85,8 @@ est1 <- est[est$datasource_type %in% group1, ]
 p2 <- map_data_availability(est_data_features_grp1, est1) +
   ggtitle("Mobility Proxies",
           "based on empirical data from other African countries")
+ggsave("estimated.png", p2)
+
 
 est_data_features_grp1 <- est_data_features_grp[!est_data_features_grp$datasource_type %in% group1, ]
 est1 <- est[!est$datasource_type %in% group1, ]
@@ -90,8 +95,8 @@ p3 <- map_data_availability(est_data_features_grp1, est1) +
           "based on data from non-African countries or on indirect evidence")
 
 
-ggsave("empirical.png", p1)
-ggsave("estimated.png", p2)
+
+
 ggsave("estimated_indirect.png", p3)
 
 

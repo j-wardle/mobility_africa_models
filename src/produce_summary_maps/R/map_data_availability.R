@@ -14,16 +14,18 @@ map_data_availability <- function(data_features, datasources) {
   labels <- datasource_labels[types]
   x <- count(datasources, datasource_grped)
   x$label <- datasource_labels[x$datasource_grped]
-  x$label <- glue::glue("{x$label} ({x$n})")
+  x$label <- glue::glue(" {x$label} ({x$n})")
   x$total <- sum(x$n)
   ##x <- arrange(x, n)
   x$datasource_grped <- reorder(x$datasource_grped, x$n)
   bar <- ggplot(x) +
-    geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0.1) +
-    geom_col(aes(n, datasource_grped, fill = datasource_grped), alpha = 0.4) +
+    geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0) +
+    geom_col(
+      aes(total/10, datasource_grped, fill = datasource_grped), alpha = 0.7
+    ) +
     geom_text(
-      aes(total, datasource_grped, label = label),
-      hjust = 1, vjust = 0.5, size = 3
+      aes(total/10, datasource_grped, label = label),
+      hjust = 0, vjust = 0.5, size = 3
     ) +
     scale_fill_manual(
       values = datasource_palette,
@@ -38,7 +40,7 @@ map_data_availability <- function(data_features, datasources) {
     theme_map() +
     xlab("") +
     ylab("")
-  p <- p + geom_sf(data = africa, lwd = 0.1, alpha = 0.3)
+  p <- p + geom_sf(data = africa, lwd = 0.1, alpha = 0.6)
   p <- p + coord_sf(datum = NA)
   p <- p +
     geom_jitter(
@@ -47,10 +49,11 @@ map_data_availability <- function(data_features, datasources) {
         x = long,
         y = lat,
         col = datasource_type,
-        alpha = data_available,
+        ##alpha = data_available,
         size = scale
       ),
-      width = 0.5,
+      key_glyph = draw_key_rect,
+      width = 0.05,
       shape = 21 ## hollow circle; migh help see overlapping points.
     )
 
@@ -58,7 +61,7 @@ map_data_availability <- function(data_features, datasources) {
     values = values,
     labels = labels,
     aesthetics = c("colour", "fill"),
-    guide = "none"##guide_legend(nrow = length(types))
+    guide = "none" ##guide_legend(nrow = length(types))
   )
 
   p <- p + scale_alpha_manual(
@@ -69,6 +72,7 @@ map_data_availability <- function(data_features, datasources) {
     guide = "none"
   )
   p <- p + paper_theme$theme
+
 
   df <- tibble(
     x = 0.01, y = 0.25,

@@ -17,7 +17,7 @@ datasource_palette <- c(
   ## medium utility
   ipums = "#7aa457",
   census = "#7aa457",
-  interview = "a48157",
+  interview = "#000000",
   hdss = "#7aa457",
   ## low utility
   GBMD = "#cb6751",
@@ -63,13 +63,13 @@ availability_scale <- c(
 
 ## Spatial scale mapped to size
 size_scale <- c(
-  ADM0 = 4,
-  ADM1 = 3,
-  airport = 3.5,
-  ADM2 = 2,
-  ADM3 = 1,
-  ADM4 = 0.5,
-  specific_location = 0.5
+  ADM0 = 5,
+  ADM1 = 4,
+  airport = 4,
+  ADM2 = 3,
+  ADM3 = 2,
+  ADM4 = 1,
+  specific_location = 1
 )
 
 cluster_palette <- c(
