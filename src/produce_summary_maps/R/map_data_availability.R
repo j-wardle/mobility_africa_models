@@ -50,7 +50,7 @@ map_data_availability <- function(data_features, datasources) {
         alpha = data_available,
         size = scale
       ),
-      width = 0.25,
+      width = 0.5,
       shape = 21 ## hollow circle; migh help see overlapping points.
     )
 

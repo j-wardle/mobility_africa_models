@@ -17,7 +17,7 @@ datasource_palette <- c(
   ## medium utility
   ipums = "#7aa457",
   census = "#7aa457",
-  interview = "#7aa457",
+  interview = "a48157",
   hdss = "#7aa457",
   ## low utility
   GBMD = "#cb6751",

@@ -35,6 +35,7 @@ ds_types$datasource_grped <- case_when(
 est_data_features <- prepare_data_features(
   est_data_loc, ds_types, "estimated"
 )
+
 emp_data_features <- prepare_data_features(
   emp_data_loc, ds_types, "empirical"
 )
@@ -58,14 +59,17 @@ est_data_features_grp <- mutate_at(
    function(x) {
      x <- case_when(
        x %in% c("genomic", "incidence") ~ "incidence",
-       x %in% c("data_other_countries", "flowminder") ~ "data_other_countries",
-       x == "estimates_other" ~ "estimates_other",
+       x %in% c("data_other_countries") ~ "data_other_countries",
+       x %in% c("flowminder", "estimates_other") ~ "estimates_other",
        x == "social_media" ~ "social_media",
        x == "flight_capacity" ~ "flight_capacity",
        x == "census" ~ "census"
      )
    }
- )
+)
+
+
+
 ## TODO empricial data is missing one datasource type (check Epidemics7 poster for comparison)
 emp <- filter(ds_types, data_category == "empirical")
 p1 <- map_data_availability(emp_data_features_grp, emp) +
