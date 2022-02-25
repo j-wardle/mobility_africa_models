@@ -62,6 +62,20 @@ if (scenario_number == 3) {
   
 }
 
+if (scenario_number == 2) {
+  
+  model1 <- "raw"
+  model2 <- "g1_alt"
+  
+}
+
+if (scenario_number == 5) {
+  
+  model1 <- "raw"
+  model2 <- "r2"
+  
+}
+
 time_to_first_case <- time_to_first_case %>% 
   filter(model == model1 | model == model2)
 
@@ -157,14 +171,19 @@ first_cases_scatter <-
     facet_wrap(~ seed, nrow = 2) +
     theme(panel.border = element_rect(colour = "black", fill = NA),
           # axis.text = element_text(size = 7),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
           plot.title = element_text(hjust = 0.5),
-          legend.position = "top") +
+          legend.position = "none") +
     stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
              color = "red", geom = "text", label.x = 75, label.y = 10, size = 3)
 
-ggsave("figures/first_cases_scatter.png", first_cases_scatter,
-       height = 7.4, units = "in")
+# ggsave("figures/first_cases_scatter.png", first_cases_scatter,
+#        height = 7.4, units = "in")
 
-knitr::plot_crop("figures/first_cases_scatter.png")
+ggsave("figures/first_cases_scatter.png", first_cases_scatter,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+# knitr::plot_crop("figures/first_cases_scatter.png")
 
 if (! is.null(dev.list())) dev.off()

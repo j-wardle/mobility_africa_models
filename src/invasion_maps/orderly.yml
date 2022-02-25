@@ -24,6 +24,7 @@ packages:
 - forcats
 - knitr
 - magick
+- stringr
   
 resources:
   - task_data/gadm36_FRA_3.cpg

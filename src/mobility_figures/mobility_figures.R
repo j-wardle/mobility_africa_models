@@ -11,10 +11,12 @@ obs_mob <- readRDS("scaled_matrix.rds")
 if (spatial_res == "high") {
   pred_mob1 <- readRDS("gravity_matrix1_numbers.rds")
   pred_mob2 <- readRDS("gravity_matrix2_numbers.rds")
+  pred_mob3 <- readRDS("radiation_matrix2_numbers.rds")
 }
 if (spatial_res == "low") {
   pred_mob1 <- readRDS("lo_res_gravity_matrix1_numbers.rds")
   pred_mob2 <- readRDS("lo_res_gravity_matrix2_numbers.rds")
+  pred_mob3 <- readRDS("radiation_matrix2_numbers.rds")
 }
 
 palette <- ggpubr::get_palette("lancet", 5)
@@ -33,9 +35,10 @@ france_mob <- france_mob %>%
 
 france_pred1 <- pred_mob1[grepl("france", names(pred_mob1)) & grepl("adm3", names(pred_mob1))]
 france_pred2 <- pred_mob2[grepl("france", names(pred_mob2)) & grepl("adm3", names(pred_mob2))]
+france_pred3 <- pred_mob3[grepl("france", names(pred_mob3)) & grepl("adm3", names(pred_mob3))]
 
-france_pred <- c(france_pred1, france_pred2)
-names(france_pred) <- c("Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4")
+france_pred <- c(france_pred1, france_pred2, france_pred3)
+names(france_pred) <- c("Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4", "Scenario 5")
 
 france_predictions <- map(france_pred, function(mod) {
   
@@ -71,9 +74,10 @@ prt_mob <- prt_mob %>%
 
 prt_pred1 <- pred_mob1[grepl("portugal", names(pred_mob1)) & grepl("adm2", names(pred_mob1))]
 prt_pred2 <- pred_mob2[grepl("portugal", names(pred_mob2)) & grepl("adm2", names(pred_mob2))]
+prt_pred3 <- pred_mob3[grepl("portugal", names(pred_mob3)) & grepl("adm2", names(pred_mob3))]
 
-prt_pred <- c(prt_pred1, prt_pred2)
-names(prt_pred) <- c("Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4")
+prt_pred <- c(prt_pred1, prt_pred2, prt_pred3)
+names(prt_pred) <- c("Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4", "Scenario 5")
 
 prt_predictions <- map(prt_pred, function(mod) {
   
@@ -216,15 +220,16 @@ france_plot_with_bins <-
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16)) +
+        strip.text = element_blank()) +
   stat_cor(aes_string(label = "..rr.label.."),
            color = "red", geom = "text", size = 3)
 
 france_plot_with_bins
 
-ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins) #, scale  = 2)
+ggsave("figures/france_mob_predictions_errorbar.png", france_plot_with_bins,
+       width = 3, height = 3, units = "in", dpi = 300) #, scale  = 2)
 
-knitr::plot_crop("figures/france_mob_predictions_errorbar.png")
+# knitr::plot_crop("figures/france_mob_predictions_errorbar.png")
 
 # Save ggplot object for use in creating panel
 saveRDS(france_plot_with_bins, file = "figures/france_plot_with_bins.rds")
@@ -256,18 +261,64 @@ portugal_plot_with_bins <-
   theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
-        strip.text = element_text(size = 16)) +
+        strip.text = element_blank()) +
   stat_cor(aes_string(label = "..rr.label.."),
            color = "red", geom = "text", size = 3)
 
   portugal_plot_with_bins
 
-ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
+# ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins) #, scale  = 2)
 
-knitr::plot_crop("figures/portugal_mob_predictions_errorbar.png")
+ggsave("figures/portugal_mob_predictions_errorbar.png", portugal_plot_with_bins,
+       width = 3, height = 3, units = "in", dpi = 300) #, scale  = 2)
+
+
+# knitr::plot_crop("figures/portugal_mob_predictions_errorbar.png")
 
 # Save ggplot object for use in creating panel
 saveRDS(portugal_plot_with_bins, file = "figures/portugal_plot_with_bins.rds")
+
+
+
+
+## Extract numbers for text comparing observed and predicted values
+
+# france <- summary_overlay %>%
+#   ungroup() %>%
+#   filter(country == "FRANCE")
+# sum(france$predicted > france$observed)
+# # [1] 98645
+# 
+# portugal <- summary_overlay %>%
+#   ungroup() %>%
+#   filter(country == "PORTUGAL")
+# sum(portugal$predicted > portugal$observed)
+# # [1] 98645
+# 
+# sum(portugal$predicted[which(portugal$observed != 0)] > portugal$observed[which(portugal$observed != 0)]) /
+#   sum(portugal$observed != 0)
+# 
+# sum(france$predicted[which(france$observed != 0)] > france$observed[which(france$observed != 0)]) /
+#   sum(france$observed != 0)
+
+# THIS GIVES THE PROPORTION OF POINTS OVER/UNDERESTIMATED BY ORDER OF MAGNITUDE
+
+# summary_overlay$ratio <- summary_overlay$predicted / summary_overlay$observed
+# 
+# france <- summary_overlay %>%
+#   ungroup() %>%
+#   filter(country == "FRANCE" & observed != 0)
+# 
+# sum(france$ratio > 10) /
+#   sum(france$observed != 0)
+# 
+# portugal <- summary_overlay %>%
+#   ungroup() %>%
+#   filter(country == "PORTUGAL" & observed != 0)
+# 
+# sum(portugal$ratio < 0.1) /
+#   sum(portugal$observed != 0)
+
 
 # # EXPERIMENTAL PLOT: all movement points, but highlight those originating in Paris
 # 
@@ -323,6 +374,8 @@ saveRDS(portugal_plot_with_bins, file = "figures/portugal_plot_with_bins.rds")
 #           axis.text = element_text(size = 14),
 #           axis.title = element_text(size = 16),
 #           strip.text = element_text(size = 16))
+
+
 
 
 if (! is.null(dev.list())) dev.off()

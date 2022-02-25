@@ -65,6 +65,20 @@ if (scenario_number == 3) {
   
 }
 
+if (scenario_number == 2) {
+  
+  model1 <- "raw"
+  model2 <- "g1_alt"
+  
+}
+
+if (scenario_number == 5) {
+  
+  model1 <- "raw"
+  model2 <- "r2"
+  
+}
+
 time_to_first_case <- time_to_first_case %>% 
   filter(model == model1 | model == model2)
 
@@ -211,20 +225,20 @@ order_success_plot <-
   ggplot() +
   geom_line(aes(x = prop_infected, y = match_prop, linetype = seed)) +
   geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
-  xlab("Proportion of patches\ninfected") +
-  ylab("Proportion of patches\ncorrectly identified") +
+  xlab("Proportion infected\n  ") +
+  ylab("Proportion correctly\nidentified") +
   # coord_fixed() +
-  labs(colour = "Seed location",
-       linetype = "Pathogen") +
+  labs(linetype = "Seed location") +
   theme_classic() +
-  theme(legend.position = "bottom",
+  theme(legend.position = "none",
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
         strip.text = element_text(size = 16))
 
 # Save plot image file
 prefix <- country
-ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot)
+ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot,
+       width = 3, height = 3, units = "in", dpi = 300)
 
 knitr::plot_crop(glue("figures/{prefix}_invasion_order.png"))
 
