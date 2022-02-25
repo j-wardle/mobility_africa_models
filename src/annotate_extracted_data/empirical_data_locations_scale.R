@@ -13,22 +13,13 @@ out <- data.frame(
   location = civ$NAME_4,
   country = "CIV",
   long = coords[, 1],
-  lat = coords[, 2]
-)
-spatial_resolution <- data.frame(
-  bibkey = c("lu2013approaching"),
-  country = c("CIV"),
-  adm_level = 4
-)
-
-write_csv(
-  x = spatial_resolution,
-  file = "empirical_data_scale.csv"
+  lat = coords[, 2],
+  scale = "ADM4"
 )
 
 write_csv(
   x = out,
-  file = "empirical_data_locations.csv"
+  file = "empirical_data_locations_scale.csv"
 )
 
 ################################################
@@ -42,21 +33,12 @@ out <- data.frame(
   location = zaf$NAME_3,
   country = "ZAF",
   long = coords[, 1],
-  lat = coords[, 2]
-)
-spatial_resolution <- data.frame(
-  bibkey = c("choe2014internal"),
-  country = c("ZAF"),
-  adm_level = 3
+  lat = coords[, 2],
+  scale = "ADM3"
 )
 
 write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-write_csv(x = out, file = "empirical_data_locations.csv", append = TRUE)
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE)
 
 ######################################################################
 ########## peak2018population ########################################
@@ -70,22 +52,13 @@ out <- data.frame(
   location = sle$NAME_3,
   country = "SLE",
   long = coords[, 1],
-  lat = coords[, 2]
-)
-spatial_resolution <- data.frame(
-  bibkey = c("peak2018population"),
-  country = c("SLE"),
-  adm_level = 3
+  lat = coords[, 2],
+  scale = "ADM3"
 )
 
 write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
-
-
-write_csv(x = out, file = "empirical_data_locations.csv", append = TRUE)
 
 ######################################################################
 ################## sorichetta2016mapping #############################
@@ -94,18 +67,6 @@ countries <- c(
   "CMR", "GHA", "GIN", "MLI", "MWI", "SEN", "UGA", "ZAF", "ZMB"
 )
 adm_levels <- c("2", "1", "1", "2", "1", "2", "1", "1", "1")
-
-spatial_resolution <- data.frame(
-  bibkey = c("sorichetta2016mapping"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
 
 out <- map2_dfr(
   countries,
@@ -125,16 +86,19 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "sorichetta2016mapping",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
-write_csv(x = out, file = "empirical_data_locations.csv", append = TRUE)
+
+write_csv(x = out, file = "empirical_data_locations_scale.csv", append = TRUE)
 
 ######################################################################
 ############ wesolowski2014commentary ################################
@@ -151,18 +115,6 @@ countries <- c(
 )
 adm_levels <- c(3, 2, 4, 2, 2, 3, 2, 2, 3)
 
-spatial_resolution <- data.frame(
-  bibkey = c("wesolowski2014commentary"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 out <- map2_dfr(
   countries,
   adm_levels,
@@ -181,16 +133,18 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "wesolowski2014commentary",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
-write_csv(x = out, file = "empirical_data_locations.csv", append = TRUE)
+write_csv(x = out, file = "empirical_data_locations_scale.csv", append = TRUE)
 
 ######################################################################
 ################# ruyssen2014determinants ############################
@@ -198,31 +152,15 @@ adm0_centroids <- read_csv("adm0_centroids.csv")
 
 data <- read_csv("study_ds_types.csv")
 data <- data[data$bibkey == "ruyssen2014determinants", "country"]
-## data$iso3c <- countrycode(
-##   data$country, "country.name", "iso3c"
-## )
-
-spatial_resolution <- data.frame(
-  bibkey = c("ruyssen2014determinants"),
-  country = data$country,
-  adm_level = 0
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 
 out <- adm0_centroids[adm0_centroids$country %in% data$country, ]
 
 out$location <- out$country
 out$bibkey <- "ruyssen2014determinants"
 out <- out[, c("bibkey", "location", "country", "long", "lat")]
-
+out$scale <- "ADM0"
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -236,16 +174,6 @@ countries <- c(
 countries <- countrycode(countries, "country.name", "iso3c")
 adm_levels <- c(
   "1", "2", "2", "2", "2", "2", "1", "1", "1", "2", "1", "1"
-)
-spatial_resolution <- data.frame(
-  bibkey = c("garcia2015modeling"),
-  country = countries,
-  adm_level = adm_levels
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
 )
 
 
@@ -284,18 +212,20 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "garcia2015modeling",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -308,28 +238,17 @@ geom <- st_geometry(eth[idx, ])
 centroid <- st_centroid(geom)
 coords <- st_coordinates(centroid)
 
-spatial_resolution <- data.frame(
-  bibkey = c("yukich2013travel"),
-  country = "ETH",
-  adm_level = 3
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 out <- data.frame(
   bibkey = "yukich2013travel",
   location = "Adami Tulu Jido Kombolcha",
   country = "ETH",
   long = coords[, 1],
-  lat = coords[, 2]
+  lat = coords[, 2],
+  scale = "ADM3"
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -344,26 +263,16 @@ data <- data[data$bibkey == "iqbal2007geo", "country"]
 ##   data$country, "country.name", "iso3c"
 ## )
 
-spatial_resolution <- data.frame(
-  bibkey = c("iqbal2007geo"),
-  country = data$country,
-  adm_level = 0
-)
 
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
 
 out <- adm0_centroids[adm0_centroids$country %in% data$country, ]
 
 out$location <- out$country
 out$bibkey <- "iqbal2007geo"
 out <- out[, c("bibkey", "location", "country", "long", "lat")]
-
+out$scale <- "ADM0"
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -383,23 +292,14 @@ out <- data.frame(
   location = zaf$NAME_2,
   country = "ZAF",
   long = coords[, 1],
-  lat = coords[, 2]
+  lat = coords[, 2],
+  scale = "ADM2"
 )
 
-spatial_resolution <- data.frame(
-  bibkey = c("mastrorillo2016influence"),
-  country = "ZAF",
-  adm_level = 2
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
 
 write_csv(
   x = out,
-  file = "empirical_data_locations.csv", append = TRUE
+  file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -409,19 +309,6 @@ write_csv(
 countries <- c("kenya", "tanzania", "uganda")
 countries <- countrycode(countries, "country.name", "iso3c")
 adm_levels <- rep("2", 3)
-
-spatial_resolution <- data.frame(
-  bibkey = c("pindolia2013demographics"),
-  country = countries,
-  adm_level = adm_levels
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-
 ## https://biogeo.ucdavis.edu/data/gadm3.6/Rsf/gadm36_GHA_1_sf.rds
 url_prefix <- "https://biogeo.ucdavis.edu/data/gadm3.6/Rsf/gadm36_"
 url_suffix <- "_sf.rds"
@@ -460,18 +347,20 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "pindolia2013demographics",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -519,41 +408,16 @@ tza <- data.frame(
 )
 
 out <- rbind(mli, bfa, zambia, tza)
-
-spatial_resolution <- data.frame(
-  bibkey = c("marshall2018"),
-  country = c("MLI", "BFA", "ZMB", "TZA"),
-  adm_level = c(3, 3, 3, 3)
-)
+out$scale <- "ADM3"
 
 write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 ######################################################################
 ## tompkins2016
 ######################################################################
 countries <- "SEN"
 adm_levels <- "3"
-
-spatial_resolution <- data.frame(
-  bibkey = c("tompkins2016"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-
 out <- map2_dfr(
   countries,
   adm_levels,
@@ -572,18 +436,21 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "tompkins2016",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
+
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 ######################################################################
 ## ruktanonchai2016
@@ -593,19 +460,6 @@ write_csv(
 ######################################################################
 countries <- "NAM"
 adm_levels <- "2"
-
-spatial_resolution <- data.frame(
-  bibkey = c("ruktanonchai2016"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 out <- map2_dfr(
   countries,
   adm_levels,
@@ -624,18 +478,20 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "ruktanonchai2016",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -644,19 +500,6 @@ write_csv(
 countries <- "KEN"
 adm_levels <- "1"
 
-spatial_resolution <- data.frame(
-  bibkey = c("wesolowski2013"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-
 out <- map2_dfr(
   countries,
   adm_levels,
@@ -675,17 +518,19 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "wesolowski2013",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 ######################################################################
@@ -694,18 +539,6 @@ write_csv(
 countries <- "SEN"
 adm_levels <- "3"
 
-spatial_resolution <- data.frame(
-  bibkey = c("mari2017big"),
-  country = countries,
-  adm_level = adm_levels
-)
-
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 out <- map2_dfr(
   countries,
   adm_levels,
@@ -724,18 +557,20 @@ out <- map2_dfr(
       "Length of centroids ",
       nrow(coords)
     )
-    out <- data.frame(
+    x <- data.frame(
       bibkey = "mari2017big",
       location = cntry[[paste0("NAME_", adm_level)]],
       country = country,
       long = coords[, 1],
       lat = coords[, 2]
     )
+    x$scale <- glue("ADM{adm_level}")
+    x
   }
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 #######################################################################
@@ -743,21 +578,8 @@ write_csv(
 ## Same as above
 #######################################################################
 out$bibkey <- "matamalas2016assessing"
-
-spatial_resolution <- data.frame(
-  bibkey = c("matamalas2016assessing"),
-  country = countries,
-  adm_level = adm_levels
-)
-
 write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 #######################################################################
@@ -765,20 +587,8 @@ write_csv(
 ## Same as above.
 #######################################################################
 out$bibkey <- "finger2016mobile"
-
-spatial_resolution <- data.frame(
-  bibkey = c("finger2016mobile"),
-  country = countries,
-  adm_level = adm_levels
-)
 write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
-write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 #######################################################################
@@ -790,22 +600,12 @@ out <- data.frame(
   location = "Agincourt",
   country = "ZAF",
   long = 31.229470,
-  lat = -24.828060
-)
-
-spatial_resolution <- data.frame(
-  bibkey = c("collinson2014migration"),
-  country = "ZAF",
-  adm_level = 3
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
+  lat = -24.828060,
+  scale = "ADM3"
 )
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 #######################################################################
@@ -817,23 +617,12 @@ out <- data.frame(
   location = "Masiphumelele",
   country = "ZAF",
   long = 18.377730,
-  lat = -34.128830
+  lat = -34.128830,
+  scale = "ADM3"
 )
-
-spatial_resolution <- data.frame(
-  bibkey = c("andrews2012projecting"),
-  country = "ZAF",
-  adm_level = 3
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 
 write_csv(
-  x = out, file = "empirical_data_locations.csv", append = TRUE
+  x = out, file = "empirical_data_locations_scale.csv", append = TRUE
 )
 
 #######################################################################
@@ -845,20 +634,9 @@ out <- data.frame(
   location = "KwaZulu-Natal",
   country = "ZAF",
   long = 30.882700,
-  lat = -28.944469
+  lat = -28.944469,
+  scale = "ADM3"
 )
-
-spatial_resolution <- data.frame(
-  bibkey = c("dobra2017space"),
-  country = "ZAF",
-  adm_level = 3
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_scale.csv",
-  append = TRUE
-)
-
 
 write_csv(
   x = out, file = "empirical_data_locations_scale.csv", append = TRUE
@@ -878,37 +656,12 @@ out <- data.frame(
   locations = zaf$NAME_3,
   country = "ZAF",
   long = centroids[, 1],
-  lat = centroids[, 2]
+  lat = centroids[, 2],
+  scale = "ADM3"
 )
 
 write_csv(
   x = out,
-  path = "empirical_data_scale.csv",
+  path = "empirical_data_locations_scale.csv",
   append = TRUE
-)
-
-spatial_resolution <- data.frame(
-  bibkey = c("dobra2018loglinear"),
-  country = "ZAF",
-  adm_level = 3
-)
-write_csv(
-  x = spatial_resolution,
-  path = "empirical_data_locations.csv",
-  append = TRUE
-)
-
-######################################################################
-######################################################################
-## I have been inconsistent in recording spatial scale across empirical
-## and estimated data locations, fixing that here.
-######################################################################
-######################################################################
-out <- read_csv("empirical_data_locations.csv")
-data_scale <- read_csv("empirical_data_scale.csv")
-data_scale$adm_level <- glue("ADM{data_scale$adm_level}")
-out <- left_join(out, data_scale, by = c("bibkey", "country"))
-out <- rename(out, scale = adm_level)
-write_csv(
-  x = out, path = "empirical_data_locations_scale.csv"
 )

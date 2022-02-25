@@ -52,48 +52,42 @@ write_csv(
 airport_info <- read_csv(
   "estimates_data/AirportInfo.csv"
 )
-## Max lat and long from bounding box of Africa, from the shapefile
-#airport_info <- filter(
-#  airport_info, Lon >= -47, Lon <= 38, Lat >= -26, Lat <= 52
-#)
 ## To get countries,
-data(world.cities)
-world.cities$name <- gsub("[[:punct:] ]+", " ", world.cities$name)
-world.cities$name <- trimws(world.cities$name)
-world.cities$name <- tolower(world.cities$name)
+## https://stackoverflow.com/questions/49435847/extracting-country-name-from-city-name-in-r
+city_country <- read.csv("https://raw.githubusercontent.com/girijesh18/dataset/master/City_and_province_list.csv")
 
-airport_info$City <- tolower(airport_info$City)
+# custom_dict for countrycode cannot have duplicate origin codes
+city_country <- city_country[!duplicated(city_country$City), ]
 
-idx <- airport_info$City %in% world.cities$name
-
-city_known <- airport_info[idx, ]
-city_known <- left_join(
-  city_known, world.cities,
-  by = c("City" = "name")
+airport_info$country <- countrycode(
+  airport_info$City, "City", "Country",
+  custom_dict = city_country
 )
+## not matched airport names in Africa
+## Get country name from airport name
+x <- airport_info[is.na(airport_info$country), ]
 
-city_notknown <- airport_info[!idx, ]
-city_country <- read_csv("city_not_known.csv")
-city_notknown <- left_join(
-  city_notknown, city_country,
-  by = c("City" = "city")
+y <- map_dfr(
+  cntries, function(cntry) {
+    message("Looking for ", cntry)
+    idx <- stringr::str_detect(airport_info$OAGName, fixed(cntry))
+    out <- airport_info[idx, ]
+    message(paste(out$OAGName, collapse = "\n"))
+    out$country <- cntry
+    out
+  }
 )
-
+cntry_known <- airport_info[!is.na(airport_info$country), ]
+cntry_unknown <- y
+final <- rbind(cntry_known, cntry_unknown)
 ## all_airports <- htmltab::htmltab("https://www.ccra.com/airport-codes/")
 ## airport_info[airport_info$NodeName %in% all_airports$Code, ]
-city_known <- city_known[!city_known$`country.etc` %in%
-  c("Serbia and Montenegro", "Canary Islands"), ]
-
 out <- data.frame(
   bibkey = "huang2013open",
-  location = city_known$City,
-  country = countrycode(
-    city_known$country.etc,
-    "country.name",
-    "iso3c"
-  ),
-  long = city_known$Lon,
-  lat = city_known$Lat,
+  location = final$City,
+  country = final$country,
+  long = final$Lon,
+  lat = final$Lat,
   scale = "airport"
 )
 ## not all these countries are in africa
@@ -103,28 +97,6 @@ out <- out[in_africa, ]
 write_csv(
   x = out,
   path = "estimates_estimated_data_locations_scale.csv",
-  append = TRUE
-)
-
-city_notknown <- city_notknown[!city_notknown$`country` %in%
-  c("Serbia and Montenegro", "Canary Islands"), ]
-
-out <- data.frame(
-  bibkey = "huang2013open",
-  location = city_notknown$City,
-  country = countrycode(
-    city_notknown$country,
-    "country.name",
-    "iso3c"
-  ),
-  long = city_notknown$Lon,
-  lat = city_notknown$Lat,
-  scale = "airport"
-)
-
-write_csv(
-  x = out,
-  path = "estimated_data_locations_scale.csv",
   append = TRUE
 )
 
