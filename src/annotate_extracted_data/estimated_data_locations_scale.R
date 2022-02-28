@@ -52,18 +52,12 @@ write_csv(
 airport_info <- read_csv(
   "estimates_data/AirportInfo.csv"
 )
-africa <- c(
-  "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF",
-  "TCD", "COM", "COG", "CIV", "COD", "DJI", "EGY", "GNQ", "ERI",
-  "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "KEN", "LSO", "LBR",
-  "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "NAM", "NER",
-  "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
-  "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
-)
+
+africa <- readRDS("africa_iso3c.rds")
 cntries <- countrycode(
   africa, "iso3c", "country.name"
 )
-## Get country name from airport name
+## Get country name from airport name except Papua New Guinea
 y <- map2_dfr(
   cntries, africa, function(cntry, iso3c) {
     message("Looking for ", cntry)
@@ -74,6 +68,11 @@ y <- map2_dfr(
     out
   }
 )
+not_png <- str_detect(y$OAGName, fixed("Papua New Guinea"), negate = TRUE)
+y <- y[not_png, ]
+## Also exclude Liberia in Costa Rica
+not_lib <- str_detect(y$OAGName, fixed("Liberia Costa Rica"), negate = TRUE)
+y <- y[not_lib, ]
 ## all_airports <- htmltab::htmltab("https://www.ccra.com/airport-codes/")
 ## airport_info[airport_info$NodeName %in% all_airports$Code, ]
 out <- data.frame(

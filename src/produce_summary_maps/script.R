@@ -1,14 +1,8 @@
 ## orderly::orderly_develop_start(use_draft = "newer")
 ## ISO3 codes for all countries in Africa.
 ## List of all countries in Africa
-africa <- c(
-  "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF",
-  "TCD", "COM", "COG", "CIV", "COD", "DJI", "EGY", "GNQ", "ERI",
-  "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "KEN", "LSO", "LBR",
-  "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "NAM", "NER",
-  "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
-  "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
-)
+unzip("africa_shapefiles.zip")
+africa <- readRDS("africa_iso3c.rds")
 ## Africa shape file from http://geoportal.icpac.net/layers/geonode%3Aafr_g2014_2013_0
 ## Open Data Commons Open Database License / OSM (ODbL/OSM)
 est_data_loc <- read_csv("estimated_data_locations_scale.csv")

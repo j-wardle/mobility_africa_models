@@ -14,3 +14,4 @@ artefacts:
     filenames:
       - num_admin_units_africa.csv
       - africa_shapefiles.zip
+      - africa_iso3c.rds      

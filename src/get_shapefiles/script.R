@@ -3,11 +3,11 @@ africa <- c(
   "DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CAF",
   "TCD", "COM", "COG", "CIV", "COD", "DJI", "EGY", "GNQ", "ERI",
   "ETH", "GAB", "GMB", "GHA", "GIN", "GNB", "KEN", "LSO", "LBR",
-  "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "NAM", "NER",
+  "LBY", "MDG", "MWI", "MLI", "MRT", "MAR", "MOZ", "MUS" ,"NAM", "NER",
   "NGA", "RWA", "STP", "SEN", "SLE", "SOM", "ZAF", "SDN", "SWZ",
-  "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
+  "TZA", "TGO", "TUN", "UGA", "ZMB", "ZWE", "SYC", "SSD"
 )
-
+saveRDS(africa, "africa_iso3c.rds")
 url_prefix <- "https://biogeo.ucdavis.edu/data/gadm3.6/Rsf/gadm36_"
 urls <- map(
   c(1, 2, 3, 4), ~ glue("{url_prefix}{africa}_{.x}_sf.rds")

@@ -1,0 +1,59 @@
+---
+output: 
+pdf_document:
+citation_package: natbib
+keep_tex: false
+fig_caption: true
+latex_engine: pdflatex
+title: scoping review summary
+author:
+- name: Sangeeta Bhatia
+affiliation: Imperial College London
+abstract: 
+keywords: 
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+spacing: double
+bibliography: 
+biblio-style: apsr
+endnote: no
+---
+
+```{r setup, eval = TRUE}
+africa <- readRDS("africa_iso3c.rds")
+ds_types <- read_csv("study_ds_types.csv")
+x <- count(ds_types, data_category)
+emp <- x$n[x$data_category == "empirical"]
+est <- x$n[x$data_category != "empirical"]
+empc <- unique(ds_types$country[ds_types$data_category == "empirical"])
+missing <- paste(africa[! africa %in% empc], collapse = " ")
+```
+
+Across
+the 30 studies, we identified `r emp` empirical human mobility data sets
+and `r est` mobility proxies. 
+
+Empirical data were available for `r length(empc)` countries on the African
+mainland.
+
+Empirical data were not available for `r missing`.
+
+```{r}
+gbmd <- ds_types[ds_types$datasource_type == "GBMD", ]
+gbmd <- unique(gbmd$country)
+
+unhcr <- ds_types[ds_types$datasource_type == "unhcr", ]
+unhcr <- unique(unhcr$country)
+
+x <- unique(c(gbmd, unhcr))
+missing <- paste(africa[! africa %in% x], collapse = " ")
+```
+
+Data on long-term
+migration patterns between countries was available, from GBMD (n = `r length(gbmd)`
+countries) or data on refugee movement from UNHCR (n = `r length(unhcr)`)
+
+```{r}
+```

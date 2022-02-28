@@ -31,10 +31,10 @@ artefacts:
       - africa_shapefiles2.zip
       - study_ds_types.csv
 
-
 depends:
   get_shapefiles:
     id: latest
     use:
       africa_shapefiles.zip: africa_shapefiles.zip
       num_admin_units_africa.csv: num_admin_units_africa.csv
+      africa_iso3c.rds: africa_iso3c.rds

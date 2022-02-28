@@ -19,9 +19,10 @@ map_data_availability <- function(data_features, datasources) {
   ##x <- arrange(x, n)
   x$datasource_grped <- reorder(x$datasource_grped, x$n)
   bar <- ggplot(x) +
-    geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0) +
+    geom_col(aes(total, datasource_grped), fill = "gray", alpha = 0,       width = 0.5) +
     geom_col(
-      aes(total/10, datasource_grped, fill = datasource_grped), alpha = 0.7
+      aes(total/10, datasource_grped, fill = datasource_grped), alpha = 0.7,
+      width = 0.5
     ) +
     geom_text(
       aes(total/10, datasource_grped, label = label),
@@ -52,8 +53,7 @@ map_data_availability <- function(data_features, datasources) {
         ##alpha = data_available,
         size = scale
       ),
-      key_glyph = draw_key_rect,
-      width = 0.05,
+      width = 0.25,
       shape = 21 ## hollow circle; migh help see overlapping points.
     )
 
