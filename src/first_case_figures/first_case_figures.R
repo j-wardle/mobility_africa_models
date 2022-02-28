@@ -156,15 +156,16 @@ first_cases_plot <- first_cases %>%
 
 first_cases_scatter <-
     ggplot(first_cases_plot) +
+    geom_point(aes_string(x = model2, y = model1), colour = "white", size = 0.8) +
     geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
     scale_colour_viridis_c(name = "Scaled distance") +
     geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to first case using\nobserved mobility (days)") +
-    ylab("Time to first case using predicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
+    xlab("Invasion time using\nobserved mobility (days)") +
+    ylab("Invasion time using mobility proxy (days)") +
+    # scale_x_continuous(limits = c(0, 115),
+    #                    breaks = seq(0, 125, 25)) +
+    # scale_y_continuous(limits = c(0, 115),
+    #                    breaks = seq(0, 125, 25)) +
     coord_fixed() +
     theme_classic() +
     # facet_grid(pathogen ~ seed) +
@@ -176,7 +177,8 @@ first_cases_scatter <-
           plot.title = element_text(hjust = 0.5),
           legend.position = "none") +
     stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
-             color = "red", geom = "text", label.x = 75, label.y = 10, size = 3)
+             color = "red", geom = "text", #label.x = 75, label.y = 10,
+             size = 3)
 
 # ggsave("figures/first_cases_scatter.png", first_cases_scatter,
 #        height = 7.4, units = "in")

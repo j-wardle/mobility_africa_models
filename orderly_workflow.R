@@ -11,8 +11,8 @@ a <- orderly::orderly_run("fit_mobility_models")
 orderly_commit(a)
 
 # folder <- "~/cluster/mobility_africa_210903_rad/" # this is where simulation results are saved
-# folder <- "~/cluster/mobility_africa_211029/" # Simulations for smallest spatial scale. Pathogen 1.
-folder <- "~/cluster/mobility_africa_220222_aggr/" # Simulations for aggregate spatial scale. Pathogen 1.
+folder <- "~/cluster/mobility_africa_211029/" # Simulations for smallest spatial scale. Pathogen 1.
+# folder <- "~/cluster/mobility_africa_220222_aggr/" # Simulations for aggregate spatial scale. Pathogen 1.
 files <- list.files(folder)
 
 commit <- TRUE # set this to define if task output should be committed to archive

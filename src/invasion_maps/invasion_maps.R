@@ -257,10 +257,27 @@ both_scen_map$seed <- factor(both_scen_map$seed,
                               labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa"))
 
 
+
+both_scen_map <- both_scen_map %>% 
+  mutate(seed_long = case_when(
+    seed == "Brest" ~ -4.48,
+    seed == "Paris" ~ 2.34,
+    seed == "Lisboa" ~ -9.15,
+    seed == "Miranda do Douro" ~ -6.27),
+    seed_lat = case_when(
+      seed == "Brest" ~ 48.41,
+      seed == "Paris" ~ 48.86,
+      seed == "Lisboa" ~ 38.75,
+      seed == "Miranda do Douro" ~ 41.49
+    ))
+
+
 plot_france_same_scale <- both_scen_map %>%
   filter(seed == "Brest" | seed == "Paris") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
+  geom_point(aes(x = seed_long, y = seed_lat), color = "red", fill = "red",
+             shape = 24) +
   scale_fill_brewer(palette = "RdBu", drop = "FALSE",
                     direction = -1,
                     name = "Relative difference (d)") +
@@ -388,6 +405,8 @@ plot_portugal_same_scale <- both_scen_map %>%
   filter(seed == "Miranda do Douro" | seed == "Lisboa") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
+  geom_point(aes(x = seed_long, y = seed_lat), color = "red", fill = "red",
+             shape = 24) +
   scale_fill_brewer(palette = "RdBu", drop = "FALSE",
                     direction = -1,
                     name = "Relative difference (d)") +
