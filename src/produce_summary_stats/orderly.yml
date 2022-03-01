@@ -5,12 +5,13 @@ packages:
 - readr
 - rmarkdown
 
+resources:
+- summary.Rmd
+
 artefacts:
-  staticgraph:
-    description: Maps of data availability
-    filenames:
-      - empirical.png
-      - estimated.png
+  report:
+    description: Pulls together all key stats
+    filenames: summary.html
 
 depends:
   - get_shapefiles:
