@@ -131,15 +131,28 @@ locations <- map_dfr(
   indirs,
   function(indir) {
     centroids <- sf::st_read(indir)
-    out <- data.frame(
-      location = "",
-      country = centroids$ISO,
-      long = centroids$POINT_X,
-      lat = centroids$POINT_Y
-    )
+    message("READING ", indir)
+    message("ISO = ", centroids$ISO[1])
+    ## Note that when SSD us read in, ISO is
+    ## not SSD but STP ("São Tomé & Príncipe")
+    ## But for STP, it is actually STP.
+    ## therefore ignoring SSD.
+    if (str_detect(indir, "SSD")) {
+      message("Not adding SSD as it has files for STP")
+      out <- NULL
+    } else {
+      out <- data.frame(
+        location = "",
+        country = centroids$ISO,
+        long = centroids$POINT_X,
+        lat = centroids$POINT_Y
+      )
+    }
     out
   }
 )
+
+
 ## > count(locations, country) %>% print(n = Inf)
 ## # A tibble: 45 x 2
 ##    country     n

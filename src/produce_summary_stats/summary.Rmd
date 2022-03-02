@@ -85,6 +85,7 @@ surveys (n = `r length(zpr)`).
 
 ```{r}
 est <- ds_types[ds_types$data_category != "empirical", ]
+not_adm0 <- est[est$data_spatial_resolution != "adm0", ]
 est <- est[est$bibkey != "huang2013open", ]
 ## Exclude huang as they are based on non-African data
 x <- length(unique(est$country))
