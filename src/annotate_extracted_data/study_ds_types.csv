@@ -265,8 +265,8 @@ silal2015,MOZ,estimated,2002,2008,province,no,NA,incidence
 wesolowski2013,KEN,empirical,june 2008,june 2009,county,no,12000000000,cdr
 wesolowski2013,KEN,empirical,2009,2009,county,no,NA,census
 mari2017big,SEN,empirical,january 2013,december 2013,arrondissement,no,15000000000,cdr
-kraemer2017spread,AGO,estimated,NA,NA,district,no,NA,estimates_other
-kraemer2017spread,COD,estimated,NA,NA,district,no,NA,estimates_other
+kraemer2017spread,AGO,estimated,NA,NA,district,no,NA,data_other_countries
+kraemer2017spread,COD,estimated,NA,NA,district,no,NA,data_other_countries
 matamalas2016assessing,SEN,empirical,NA,NA,arrondissement,no,NA,cdr
 finger2016mobile,SEN,empirical,january 2013,december 2013,arrondissement,yes_in_principle,NA,cdr
 collinson2014migration,ZAF,empirical,2000,2011,province,yes_in_principle,NA,hdss

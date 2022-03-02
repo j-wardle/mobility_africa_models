@@ -75,7 +75,7 @@ est <- filter(ds_types, data_category != "empirical")
 group1 <- c("data_other_countries")
 est_data_features_grp1 <- est_data_features_grp[est_data_features_grp$datasource_type %in% group1, ]
 est1 <- est[est$datasource_type %in% group1, ]
-p2 <- map_data_availability(est_data_features_grp1, est1) +
+p2 <- map_data_availability(est_data_features_grp1, est1, FALSE) +
   ggtitle("Mobility Proxies",
           "based on empirical data from other African countries")
 ggsave("estimated.png", p2)

@@ -16,7 +16,7 @@ datasource_palette <- c(
   flight_capacity = "#E69F00",
   data_other_countries = "#56B4E9",
   estimates_other = "#56e9d5",
-  incidence = "#CC79A7",
+  incidence = "#0b5394",
   estimates_other = "#0072B2",
   flowminder = "#0072B2",
   social_media = "#F0E442"
@@ -33,10 +33,10 @@ datasource_labels <- c(
   hdss = "DHS",
   ## low utility
   GBMD = "Global bi-lateral migration data",
-  unhcr = "Long-term or refugee migration",
+  unhcr = "Long-term/refugee",
   ## Estimated data sources
   genomic = "Genomes",
-  flight_capacity = "Airline passenger volume",
+  flight_capacity = "Flight data",
   data_other_countries = "Empirical data (other countries)",
   incidence = "Incidence/genomic data",
   estimates_other = "Mobility proxies",

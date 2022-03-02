@@ -5,7 +5,7 @@
 ## We can't directly use data_features to make the barplot because
 ## data_features has multiple rows for each study, data_category, datasource_type
 ## and each country - one row for each adm unit modelled.
-map_data_availability <- function(data_features, datasources) {
+map_data_availability <- function(data_features, datasources, legend = TRUE) {
   fname <- ("shapefiles/afr_g2014_2013_0")
   africa <- st_read(fname)
 
@@ -25,14 +25,14 @@ map_data_availability <- function(data_features, datasources) {
     ) +
     geom_text(
       aes(total/10, datasource_grped, label = label),
-      hjust = 0, vjust = 0.5, size = 3
+      hjust = 0, vjust = 0.5, size = 5
     ) +
     scale_fill_manual(
       values = datasource_palette,
       labels = datasource_labels,
       guide = "none"
     ) + theme_void() +
-    theme(aspect.ratio = 1/3) +
+    theme(text = element_text(size = 16), aspect.ratio = 1/3) +
     coord_cartesian(clip = "off")
 
 
@@ -74,12 +74,17 @@ map_data_availability <- function(data_features, datasources) {
 
 
   df <- tibble(
-    x = 0.01, y = 0.25,
+    x = 0.01, y = 0.05,
     plot = list(bar)
   )
-  p2 <- p +
+  if (legend) {
+      p2 <- p +
     geom_plot_npc(
       data = df, aes(npcx = x, npcy = y, label = plot)
     )
+  } else {
+    p2 <- p
+  }
+
   p2
 }

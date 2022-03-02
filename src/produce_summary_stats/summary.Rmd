@@ -115,7 +115,7 @@ x <- count(emp, data_available)
 yes <- x$n[x$data_available == "yes"]
 est <- ds_types[ds_types$data_category != "empirical", ]
 y <- count(est, data_available)
-est_yes <- y$n[y$data_available == "yes"] + nrow(air_vol) ## include huang, which is open-acess
+est_yes <- y$n[y$data_available == "yes"] 
 ```
 In studies that used empirical data sources to calibrate mobility
 models, the underlying data were rarely shared with the publication,
