@@ -140,6 +140,9 @@ locations <- map_dfr(
     if (str_detect(indir, "SSD")) {
       message("Not adding SSD as it has files for STP")
       out <- NULL
+    } else if (str_detect(indir, "MYT")) {
+      message("Excluding MYT as French department")
+      out <- NULL
     } else {
       out <- data.frame(
         location = "",
@@ -338,7 +341,7 @@ centroids <- map2_dfr(
     x
   }
 )
-
+centroids <- centroids[, colnames(out)]
 out <- rbind(out, centroids)
 
 write_csv(
@@ -412,7 +415,41 @@ write_csv(
 ## "kramer2016spatial"
 ## https://datadryad.org/stash/dataset/doi:10.5061/dryad.k95j3
 ## Use data from flowminder
+countries <- c("GIN", "MLI", "SEN", "LBR", "SLE",
+               "BEN", "BFA", "GMB", "GHA", "GNB", "NER", "NGA", "TGO", "CIV")
+res <- c("2", "2", "2",
+         "1", "1", "1", "1", "1", "1", "1", "1",
+         "1", "1", "1")
 
+centroids <- map2_dfr(
+  countries,
+  res,
+  function(cntry, level) {
+    df <- readRDS(glue("shapefiles/gadm36_{cntry}_{level}_sf.rds"))
+    centroids <- st_centroid(df$geometry)
+    centroids <- st_coordinates(centroids)
+    locations <- df[[glue::glue("NAME_{level}")]]
+    country <- df$GID_0
+    message("Doing ", country[1], " ", level)
+    x <- data.frame(
+      location = locations,
+      country = country,
+      long = centroids[, 1],
+      lat = centroids[, 2]
+    )
+    x$bibkey <- "kramer2016spatial"
+    x$scale <- glue("ADM{level}")
+    x
+  }
+)
+
+centroids <- centroids[, c("bibkey", "location", "country", "long", "lat", "scale")]
+
+write_csv(
+  x = centroids,
+  path = "estimated_data_locations_scale.csv",
+  append = TRUE
+)
 
 #######################################################################
 ## "tatem2012spatial"

@@ -84,12 +84,19 @@ social media records (n = `r length(z)`, CHECK?) [49] or dedicated
 surveys (n = `r length(zpr)`).
 
 ```{r}
-est <- ds_types[ds_types$data_category != "empirical", ]
-not_adm0 <- est[est$data_spatial_resolution != "adm0", ]
-est <- est[est$bibkey != "huang2013open", ]
+est <- readr::read_csv("estimated_data_locations_scale.csv")
+not_adm0 <- est[est$scale != "ADM0", ]
+x <- length(unique(not_adm0$country))
+```
+Overall, we have subnational mobility proxies for `r x` countries. We
+will now exclude those derived from non-African countries.
+
+```{r}
 ## Exclude huang as they are based on non-African data
-x <- length(unique(est$country))
-y <- length(unique(africa[! africa %in% not_adm0$country]))
+not_adm0 <- not_adm0[not_adm0$bibkey != "huang2013open", ]
+x <- length(unique(not_adm0$country))
+emp_not_adm0 <- emp[emp$data_spatial_resolution != "adm0", ]
+y <- length(unique(africa[! africa %in% emp_not_adm0$country]))
 ```
 The empirical data described above was used to derive subnational
 mobility proxies for `r x` countries in Africa, `r y` of which had no
@@ -106,7 +113,7 @@ Canada to inform mobility proxies in `r length(unique(air_vol$location))` cities
 ```{r}
 x <- count(emp, data_available)
 yes <- x$n[x$data_available == "yes"]
-
+est <- ds_types[ds_types$data_category != "empirical", ]
 y <- count(est, data_available)
 est_yes <- y$n[y$data_available == "yes"] + nrow(air_vol) ## include huang, which is open-acess
 ```

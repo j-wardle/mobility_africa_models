@@ -1,7 +1,7 @@
 ## orderly::orderly_develop_start(use_draft = "newer")
 ## ISO3 codes for all countries in Africa.
 ## List of all countries in Africa
-unzip("africa_shapefiles.zip")
+
 africa <- readRDS("africa_iso3c.rds")
 ## Africa shape file from http://geoportal.icpac.net/layers/geonode%3Aafr_g2014_2013_0
 ## Open Data Commons Open Database License / OSM (ODbL/OSM)
@@ -56,7 +56,6 @@ est_data_features_grp <- mutate_at(
        x %in% c("genomic", "incidence") ~ "incidence",
        x %in% c("data_other_countries") ~ "data_other_countries",
        x %in% c("flowminder", "estimates_other") ~ "estimates_other",
-       x == "social_media" ~ "social_media",
        x == "flight_capacity" ~ "flight_capacity",
        x == "census" ~ "census"
      )

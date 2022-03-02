@@ -27,7 +27,6 @@ depends:
   - get_shapefiles:
       id: latest
       use:
-        africa_shapefiles.zip: africa_shapefiles.zip
         africa_iso3c.rds: africa_iso3c.rds
   - annotate_extracted_data:
       id: latest
