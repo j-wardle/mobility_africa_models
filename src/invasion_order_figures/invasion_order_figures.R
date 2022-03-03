@@ -240,12 +240,35 @@ prefix <- country
 ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot,
        width = 3, height = 3, units = "in", dpi = 300)
 
-knitr::plot_crop(glue("figures/{prefix}_invasion_order.png"))
+# knitr::plot_crop(glue("figures/{prefix}_invasion_order.png"))
 
 # Save ggplot object for use in creating panel
 saveRDS(order_success_plot, file = glue("figures/{prefix}_invasion_order.rds"))
 
 saveRDS(order_success, file = "figures/order_success.rds")
+
+
+# Create and save plot with legend
+
+legend_details <-
+  order_success %>% 
+  ggplot() +
+  geom_line(aes(x = prop_infected, y = match_prop, linetype = seed)) +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+  xlab("Proportion infected\n  ") +
+  ylab("Proportion correctly\nidentified") +
+  # coord_fixed() +
+  labs(linetype = "Seed location") +
+  theme_classic() +
+  theme(legend.position = "right",
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
+
+prefix <- country
+ggsave(glue("figures/{prefix}_legend.png"), legend_details,
+       width = 3, height = 3, units = "in", dpi = 300)
 
 
 # Create a combined figure with the mobility predictions

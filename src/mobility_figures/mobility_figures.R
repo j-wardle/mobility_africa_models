@@ -222,7 +222,7 @@ france_plot_with_bins <-
         axis.title = element_text(size = 16),
         strip.text = element_blank()) +
   stat_cor(aes_string(label = "..rr.label.."),
-           color = "red", geom = "text", size = 3)
+           color = "red", geom = "text", size = 5)
 
 france_plot_with_bins
 
@@ -263,7 +263,7 @@ portugal_plot_with_bins <-
         axis.title = element_text(size = 16),
         strip.text = element_blank()) +
   stat_cor(aes_string(label = "..rr.label.."),
-           color = "red", geom = "text", size = 3)
+           color = "red", geom = "text", size = 5)
 
   portugal_plot_with_bins
 

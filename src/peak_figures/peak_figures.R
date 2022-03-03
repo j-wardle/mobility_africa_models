@@ -149,17 +149,6 @@ peak$standardised_variation <- peak$`95%CrI` / peak$median
 ###x-axis : time to first case with observed mobility data
 ### y-axis : time to first case with predicted mobility data
 
-# plot_data <- peak %>% 
-#   pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
-#               names_from = model,
-#               values_from = median) %>% 
-#   filter(pathogen == 1)
-# 
-# minx <- min(plot_data[,model1])
-# maxx <- max(plot_data[,model1])
-# miny <- min(plot_data[,model2])
-# maxy <- max(plot_data[,model2])
-
 peak_scatter <-
   peak %>% 
   pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
@@ -173,33 +162,22 @@ peak_scatter <-
   geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
   xlab("Time to peak using\nobserved mobility (days)") +
   ylab("Time to peak using mobility proxy (days)") +
-  # scale_x_continuous(limits = c(120, 220),
-  #                    breaks = seq(120, 220, 20)) +
-  # scale_y_continuous(limits = c(120, 220),
-  #                    breaks = seq(120, 220, 20)) +
   coord_fixed() +
   theme_classic() +
-  # facet_grid(pathogen ~ seed) +
   facet_wrap(~ seed, nrow = 2) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
         # axis.text = element_text(size = 7),
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
         plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
+        legend.position = "none",
+        strip.text = element_text(size = 16)) +
   stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
            color = "red", geom = "text", #label.x = 180, label.y = 130,
-           size = 3)
-
-
-# ggsave("figures/peak_scatter.png", peak_scatter,
-       # height = 7.4, units = "in")
-
+           size = 5)
 
 ggsave("figures/peak_scatter.png", peak_scatter,
        width = 6, height = 6, units = "in", dpi = 150)
-
-# knitr::plot_crop("figures/peak_scatter.png")
 
 ## Create a continuous legend to be extracted
 
@@ -216,26 +194,25 @@ continuous_legend <-
   geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
   xlab("Time to peak using\nmobility proxy (days)") +
   ylab("Time to peak using predicted mobility (days)") +
-  # scale_x_continuous(limits = c(120, 220),
-  #                    breaks = seq(120, 220, 20)) +
-  # scale_y_continuous(limits = c(120, 220),
-  #                    breaks = seq(120, 220, 20)) +
   coord_fixed() +
   theme_classic() +
-  # facet_grid(pathogen ~ seed) +
   facet_wrap(~ seed, nrow = 2) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
-        # axis.text = element_text(size = 7),
         axis.text = element_text(size = 14),
         axis.title = element_text(size = 16),
         plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom") +
+        legend.position = "bottom",
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.key.width = unit(1, "cm")) +
   stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
            color = "red", geom = "text", #label.x = 180, label.y = 130,
-           size = 3) +
+           size = 5) +
   guides(colour = guide_colourbar(title.position="top", title.hjust = 0.5))
+
 
 ggsave("figures/continuous_legend.png", continuous_legend,
        width = 6, height = 6, units = "in", dpi = 150)
+
 
 if (! is.null(dev.list())) dev.off()

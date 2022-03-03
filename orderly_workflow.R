@@ -133,7 +133,7 @@ orderly_commit(a)
 a <- orderly::orderly_run("invasion_maps",
                      parameters = list(spatial_res = "high",
                                        scenario_number = 4,
-                                       pathogen1_folder = folder #,
+                                       pathogen1_folder = "~/cluster/mobility_africa_211029/" #,
                                        # pathogen2_folder  = "~/cluster/mobility_africa_210728/"
                      ) #,
                      # use_draft = "newer"
@@ -234,15 +234,15 @@ files <- list.files(folder)
 
 make_figures()
 
-a <- orderly::orderly_run("invasion_maps",
-                          parameters = list(spatial_res = "high",
-                                            scenario_number = scenario_number,
-                                            pathogen1_folder = folder #,
-                                            # pathogen2_folder  = "~/cluster/mobility_africa_210728/"
-                          ) #,
-                          # use_draft = "newer"
-)
-orderly_commit(a)
+# a <- orderly::orderly_run("invasion_maps",
+#                           parameters = list(spatial_res = "high",
+#                                             scenario_number = scenario_number,
+#                                             pathogen1_folder = folder #,
+#                                             # pathogen2_folder  = "~/cluster/mobility_africa_210728/"
+#                           ) #,
+#                           # use_draft = "newer"
+# )
+# orderly_commit(a)
 
 
 spatial_res <- "high"
@@ -252,15 +252,15 @@ files <- list.files(folder)
 
 make_figures()
 
-a <- orderly::orderly_run("invasion_maps",
-                          parameters = list(spatial_res = "high",
-                                            scenario_number = scenario_number,
-                                            pathogen1_folder = folder #,
-                                            # pathogen2_folder  = "~/cluster/mobility_africa_210728/"
-                          ) #,
-                          # use_draft = "newer"
-)
-orderly_commit(a)
+# a <- orderly::orderly_run("invasion_maps",
+#                           parameters = list(spatial_res = "high",
+#                                             scenario_number = scenario_number,
+#                                             pathogen1_folder = folder #,
+#                                             # pathogen2_folder  = "~/cluster/mobility_africa_210728/"
+#                           ) #,
+#                           # use_draft = "newer"
+# )
+# orderly_commit(a)
 
 
 

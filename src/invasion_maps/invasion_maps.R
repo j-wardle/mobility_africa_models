@@ -285,8 +285,6 @@ plot_france_same_scale <- both_scen_map %>%
   ylab("Time to first case using predicted mobility (days)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
-  # ggtitle("Relative difference of first case (gravity model - raw data model)") +
-  # theme_void() +
   theme_classic() +
   theme(
     panel.border = element_rect(colour = "black", fill = NA),
@@ -297,6 +295,7 @@ plot_france_same_scale <- both_scen_map %>%
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     plot.title = element_text(hjust = 0.5),
+    strip.text = element_text(size = 16),
     legend.title = element_text(face = "bold", size = 10),
     legend.text = element_text(size = 10),
     legend.key.size = unit(0.4, "cm"),
@@ -387,11 +386,11 @@ continuous_legend <- cont_legend %>%
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     plot.title = element_text(hjust = 0.5),
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 8),
-    # legend.key.size = unit(0.4, "cm"),
     legend.position = "bottom" ,
-    legend.direction = "horizontal"
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 14),
+    legend.key.width = unit(1, "cm")
   ) +
   guides(fill = guide_colourbar(title.position="top", title.hjust = 0.5))
   
@@ -401,12 +400,16 @@ ggsave("figures/continuous_legend.png", continuous_legend,
 
 # knitr::plot_crop("figures/fra_map_rel_diff.png")
 
-plot_portugal_same_scale <- both_scen_map %>%
+plot_portugal_same_scale <-
+  both_scen_map %>%
   filter(seed == "Miranda do Douro" | seed == "Lisboa") %>% 
   ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group, fill = rel_diff_bins), color = "white", size = 0.1) +
   geom_point(aes(x = seed_long, y = seed_lat), color = "red", fill = "red",
              shape = 24) +
+  # add dummy points to control plot dimensions
+  geom_point(aes(x = -11.15, y = seed_lat), color = "white") +
+  geom_point(aes(x = -4.19, y = seed_lat), color = "white") +
   scale_fill_brewer(palette = "RdBu", drop = "FALSE",
                     direction = -1,
                     name = "Relative difference (d)") +
@@ -414,8 +417,6 @@ plot_portugal_same_scale <- both_scen_map %>%
   ylab("Time to first case using predicted mobility (days)") +
   coord_quickmap() +
   facet_wrap(~seed, nrow = 2) +
-  # ggtitle("Relative difference of first case (gravity model - raw data model)") +
-  # theme_void() +
   theme_classic() +
   theme(
     panel.border = element_rect(colour = "black", fill = NA),
@@ -426,6 +427,7 @@ plot_portugal_same_scale <- both_scen_map %>%
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     plot.title = element_text(hjust = 0.5),
+    strip.text = element_text(size = 16),
     legend.title = element_text(face = "bold", size = 10),
     legend.text = element_text(size = 10),
     legend.key.size = unit(0.4, "cm"),
@@ -437,7 +439,6 @@ plot_portugal_same_scale <- both_scen_map %>%
 ggsave("figures/prt_map_rel_diff.png", plot_portugal_same_scale,
        width = 6, height = 6, units = "in", dpi = 150)
 
-# knitr::plot_crop("figures/prt_map_rel_diff.png")
 
 p <- plot_france_same_scale + plot_portugal_same_scale +
   plot_layout(guides = 'collect')
