@@ -1,17 +1,17 @@
-script: invasion_order_figures.R
+script: invasion_maps.R
 
 artefacts:
   - staticgraph:
-      description: Figures of success in predicting invasion order
+      description: Map of success in predicting invasion times
       filenames:
-        - figures/order_success.rds
+        - figures/fra_prt_joint_map_rel_diff.png
         
 parameters:
-  - country
+  # - country
   - spatial_res
   - scenario_number
   - pathogen1_folder
-  - pathogen2_folder
+  # - pathogen2_folder
 
 packages:
 - SpatialEpi
@@ -22,19 +22,31 @@ packages:
 - RColorBrewer
 - patchwork
 - forcats
+- knitr
+- magick
+- stringr
   
-sources:
-  - R/utils.R
+resources:
+  - task_data/gadm36_FRA_3.cpg
+  - task_data/gadm36_FRA_3.dbf
+  - task_data/gadm36_FRA_3.prj
+  - task_data/gadm36_FRA_3.shp
+  - task_data/gadm36_FRA_3.shx
+  - task_data/gadm36_PRT_2.cpg
+  - task_data/gadm36_PRT_2.dbf
+  - task_data/gadm36_PRT_2.prj
+  - task_data/gadm36_PRT_2.shp
+  - task_data/gadm36_PRT_2.shx
   
 depends:
   - collate_outputs:
       id: latest(parameter:folder == pathogen1_folder)
       use:
         collated_time_to_first_case_path1.rds: collated_time_to_first_case.rds
-  - collate_outputs:
-      id: latest(parameter:folder == pathogen2_folder)
-      use:
-        collated_time_to_first_case_path2.rds: collated_time_to_first_case.rds
+  # - collate_outputs:
+  #     id: latest(parameter:folder == pathogen2_folder)
+  #     use:
+  #       collated_time_to_first_case_path2.rds: collated_time_to_first_case.rds
   - process_location_data:
       id: latest
       use:
