@@ -1,0 +1,45 @@
+script: mobility_figures.R
+
+artefacts:
+  - staticgraph:
+      description: Figures of predicted vs observed mobility
+      filenames:
+        - figures/comb_mob_predictions.png
+        - figures/comb_mob_predictions_errorbar.png
+        - figures/france_mob_predictions_errorbar.png
+        - figures/portugal_mob_predictions_errorbar.png
+  - data:
+      description: ggplot objects
+      filenames:
+        - figures/portugal_plot_with_bins.rds
+        - figures/france_plot_with_bins.rds
+        
+parameters:
+  - spatial_res
+  - scenario_number
+
+packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - purrr
+  - stringr
+  - patchwork
+  - scales
+  - ggpubr
+  - knitr
+  
+depends:
+  process_movement_data:
+    id: latest
+    use:
+      scaled_matrix.rds: scaled_matrix.rds
+      aggregated_scaled_matrix.rds: aggregated_scaled_matrix.rds
+  fit_mobility_models:
+    id: latest
+    use:
+      gravity_matrix1_numbers.rds: gravity_matrix1_numbers.rds
+      gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+      lo_res_gravity_matrix1_numbers.rds: lo_res_gravity_matrix1_numbers.rds
+      lo_res_gravity_matrix2_numbers.rds: lo_res_gravity_matrix2_numbers.rds
+      radiation_matrix2_numbers.rds: radiation_matrix2_numbers.rds

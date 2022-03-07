@@ -1,0 +1,26 @@
+script: script.R
+
+packages:
+- dplyr
+- readr
+- rmarkdown
+
+resources:
+- summary.Rmd
+
+artefacts:
+  report:
+    description: Pulls together all key stats
+    filenames: summary.html
+
+depends:
+  - get_shapefiles:
+      id: latest
+      use:
+        africa_iso3c.rds: africa_iso3c.rds
+  - annotate_extracted_data:
+      id: latest
+      use:
+        empirical_data_locations_scale.csv: empirical_data_locations_scale.csv
+        estimated_data_locations_scale.csv: estimated_data_locations_scale.csv
+        study_ds_types.csv: study_ds_types.csv

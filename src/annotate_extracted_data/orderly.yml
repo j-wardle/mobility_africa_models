@@ -1,0 +1,40 @@
+script: script.R
+
+packages:
+- countrycode
+- dplyr
+- glue
+- httr
+- maps
+- purrr
+- readr
+- sf
+- stringr
+- zip
+
+resources:
+- adm0_centroids.csv
+- city_not_known.csv
+- drc_moritz
+- empirical_data_locations_scale.R
+- estimates_data
+- estimated_data_locations_scale.R
+- study_ds_types.csv
+
+artefacts:
+  data:
+    description: Empirical data location and scale
+    filenames:
+      - empirical_data_locations_scale.csv
+      - estimated_data_locations_scale.csv
+      - num_admin_units_africa.csv
+      - africa_shapefiles2.zip
+      - study_ds_types.csv
+
+depends:
+  get_shapefiles:
+    id: latest
+    use:
+      africa_shapefiles.zip: africa_shapefiles.zip
+      num_admin_units_africa.csv: num_admin_units_africa.csv
+      africa_iso3c.rds: africa_iso3c.rds

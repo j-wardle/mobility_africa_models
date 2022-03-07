@@ -1,0 +1,25 @@
+script: produce_sim_metrics.R
+
+parameters:
+  - folder
+  - filename
+
+artefacts:
+  - data:
+      description: Simulation metrics
+      filenames:
+        - time_to_peak.rds
+        - first_case.rds
+        - firstcase_allsims.rds
+
+packages:
+  - dplyr
+  
+depends:
+  process_sim_outputs:
+    id: latest(parameter:filename == filename && parameter:folder == folder)
+    use:
+      results_prcsd.rds: results_prcsd.rds
+      
+sources:
+  - R/utils.R

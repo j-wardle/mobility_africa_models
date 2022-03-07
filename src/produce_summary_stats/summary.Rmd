@@ -1,0 +1,125 @@
+---
+output: 
+pdf_document:
+citation_package: natbib
+keep_tex: false
+fig_caption: true
+latex_engine: pdflatex
+title: scoping review summary
+author:
+- name: Sangeeta Bhatia
+affiliation: Imperial College London
+abstract: 
+keywords: 
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
+fontfamily: mathpazo
+fontsize: 11pt
+spacing: double
+bibliography: 
+biblio-style: apsr
+endnote: no
+---
+
+```{r setup, eval = TRUE}
+africa <- readRDS("africa_iso3c.rds")
+ds_types <- read_csv("study_ds_types.csv")
+x <- count(ds_types, data_category)
+emp <- x$n[x$data_category == "empirical"]
+est <- x$n[x$data_category != "empirical"]
+empc <- unique(ds_types$country[ds_types$data_category == "empirical"])
+missing <- paste(africa[! africa %in% empc], collapse = " ")
+```
+
+Across
+the 30 studies, we identified `r emp` empirical human mobility data sets
+and `r est` mobility proxies. 
+
+Empirical data were available for `r length(empc)` countries on the African
+mainland.
+
+Empirical data were not available for `r missing`.
+
+```{r}
+gbmd <- ds_types[ds_types$datasource_type == "GBMD", ]
+gbmd <- unique(gbmd$country)
+
+unhcr <- ds_types[ds_types$datasource_type == "unhcr", ]
+unhcr <- unique(unhcr$country)
+
+x <- unique(c(gbmd, unhcr))
+missing <- paste(africa[! africa %in% x], collapse = " ")
+```
+
+Data on long-term
+migration patterns between countries was available, from GBMD (n = `r length(gbmd)`
+countries) or data on refugee movement from UNHCR (n = `r length(unhcr)`)
+
+```{r}
+emp <- ds_types[ds_types$data_category == "empirical", ]
+not_adm0 <- emp[emp$data_spatial_resolution != "adm0", ]
+x <- length(unique(not_adm0$country))
+```
+
+Out of 54 countries, we found only `r x` with subnational mobility data.
+
+```{r}
+census <- not_adm0[not_adm0$datasource_type %in% c("census", "ipums", "hdss"), ]
+x <- length(unique(census$country))
+
+cdr <- not_adm0[not_adm0$datasource_type %in% "cdr", ]
+y <- unique(cdr$country)
+
+sm <- not_adm0[not_adm0$datasource_type %in% "social_media", ]
+z <- unique(sm$country)
+
+intv <- not_adm0[not_adm0$datasource_type %in% "interview", ]
+zpr <- unique(intv$country)
+
+
+```
+These were informed by census (n = `r x` countries), mobile phone records
+(CDR, n = `r length(y)`, `r paste(y, collapse = " ")`), 
+social media records (n = `r length(z)`, CHECK?) [49] or dedicated
+surveys (n = `r length(zpr)`).
+
+```{r}
+est <- readr::read_csv("estimated_data_locations_scale.csv")
+not_adm0 <- est[est$scale != "ADM0", ]
+x <- length(unique(not_adm0$country))
+```
+Overall, we have subnational mobility proxies for `r x` countries. We
+will now exclude those derived from non-African countries.
+
+```{r}
+## Exclude huang as they are based on non-African data
+not_adm0 <- not_adm0[not_adm0$bibkey != "huang2013open", ]
+x <- length(unique(not_adm0$country))
+emp_not_adm0 <- emp[emp$data_spatial_resolution != "adm0", ]
+y <- length(unique(africa[! africa %in% emp_not_adm0$country]))
+```
+The empirical data described above was used to derive subnational
+mobility proxies for `r x` countries in Africa, `r y` of which had no
+empirical data informing subnational mobility.
+
+```{r}
+x <- read_csv("estimated_data_locations_scale.csv")
+air_vol <- x[x$bibkey == "huang2013open", ]
+```
+Some used airline passenger volume from Europe, United States, and
+Canada to inform mobility proxies in `r length(unique(air_vol$location))` cities across 
+`r length(unique(air_vol$country))` countries in Africa.
+
+```{r}
+x <- count(emp, data_available)
+yes <- x$n[x$data_available == "yes"]
+est <- ds_types[ds_types$data_category != "empirical", ]
+y <- count(est, data_available)
+est_yes <- y$n[y$data_available == "yes"] 
+```
+In studies that used empirical data sources to calibrate mobility
+models, the underlying data were rarely shared with the publication,
+even when commercial re- strictions did not prevent data sharing
+(`r yes` empirical data sets readily available). Mobility proxies were
+more often available `r est_yes`.
+

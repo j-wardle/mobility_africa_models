@@ -1,0 +1,60 @@
+script: produce_figures.R
+
+artefacts:
+  - staticgraph:
+      description: Figures of times to peak and first cases
+      filenames:
+        - figures/peak_scatter_small.png
+        - figures/peak_scatter_small_cri.png
+        - figures/first_case_scatter_small.png
+        - figures/first_case_scatter_small_cri.png
+        - figures/predicted_mob.png
+        - figures/predicted_mob_aggr.png
+        - figures/predicted_mob_comb_box.png
+        - figures/predicted_mob_comb_box_aggr.png
+  - data:
+      description: Spearman rank test output
+      filenames:
+        - figures/spearman_first_case_small.csv
+        - figures/spearman_peak_small.csv
+        - figures/spearman_first_case_big.csv
+        - figures/spearman_peak_big.csv
+        
+parameters:
+  - folder
+  - spatial_res
+
+packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - purrr
+  - stringr
+  - patchwork
+  - scales
+  
+depends:
+  collate_outputs:
+    id: latest(parameter:folder == folder)
+    use:
+      collated_time_to_peak.rds: collated_time_to_peak.rds
+      collated_time_to_first_case.rds: collated_time_to_first_case.rds
+  process_location_data:
+    id: latest
+    use:
+      portugal_location_data.rds: portugal_location_data.rds
+      portugal_aggr_location_data.rds: portugal_adm1_location_data.rds
+      france_location_data.rds: france_location_data.rds
+      france_aggr_location_data.rds: france_adm2_location_data.rds
+  process_movement_data:
+    id: latest
+    use:
+      scaled_matrix.rds: scaled_matrix.rds
+      aggregated_scaled_matrix.rds: aggregated_scaled_matrix.rds
+  fit_mobility_models:
+    id: latest
+    use:
+      gravity_matrix1_numbers.rds: gravity_matrix1_numbers.rds
+      gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+      lo_res_gravity_matrix1_numbers.rds: lo_res_gravity_matrix1_numbers.rds
+      lo_res_gravity_matrix2_numbers.rds: lo_res_gravity_matrix2_numbers.rds

@@ -1,0 +1,62 @@
+script: invasion_maps.R
+
+artefacts:
+  - staticgraph:
+      description: Map of success in predicting invasion times
+      filenames:
+        - figures/fra_prt_joint_map_rel_diff.png
+        
+parameters:
+  # - country
+  - spatial_res
+  - scenario_number
+  - pathogen1_folder
+  # - pathogen2_folder
+
+packages:
+- SpatialEpi
+- rgdal
+- broom
+- ggplot2
+- dplyr
+- RColorBrewer
+- patchwork
+- forcats
+- knitr
+- magick
+- stringr
+  
+resources:
+  - task_data/gadm36_FRA_3.cpg
+  - task_data/gadm36_FRA_3.dbf
+  - task_data/gadm36_FRA_3.prj
+  - task_data/gadm36_FRA_3.shp
+  - task_data/gadm36_FRA_3.shx
+  - task_data/gadm36_PRT_2.cpg
+  - task_data/gadm36_PRT_2.dbf
+  - task_data/gadm36_PRT_2.prj
+  - task_data/gadm36_PRT_2.shp
+  - task_data/gadm36_PRT_2.shx
+  
+depends:
+  - collate_outputs:
+      id: latest(parameter:folder == pathogen1_folder)
+      use:
+        collated_time_to_first_case_path1.rds: collated_time_to_first_case.rds
+  # - collate_outputs:
+  #     id: latest(parameter:folder == pathogen2_folder)
+  #     use:
+  #       collated_time_to_first_case_path2.rds: collated_time_to_first_case.rds
+  - process_location_data:
+      id: latest
+      use:
+        portugal_location_data.rds: portugal_location_data.rds
+        france_location_data.rds: france_location_data.rds
+  - fit_mobility_models:
+      id: latest
+      use:
+        gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
+  - process_movement_data:
+      id: latest
+      use:
+        scaled_matrix.rds: scaled_matrix.rds

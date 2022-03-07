@@ -1,0 +1,41 @@
+script: first_case_figures.R
+
+artefacts:
+  - staticgraph:
+      description: Figures of times to first cases
+      filenames:
+        - figures/first_cases_scatter.png
+        
+parameters:
+  - country
+  - spatial_res
+  - scenario_number
+  - pathogen1_folder
+  - pathogen2_folder
+
+packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - purrr
+  - stringr
+  - patchwork
+  - scales
+  - ggpubr
+  - knitr
+  - cowplot
+  
+depends:
+  - collate_outputs:
+      id: latest(parameter:folder == pathogen1_folder)
+      use:
+        collated_time_to_first_case_path1.rds: collated_time_to_first_case.rds
+  - collate_outputs:
+      id: latest(parameter:folder == pathogen2_folder)
+      use:
+        collated_time_to_first_case_path2.rds: collated_time_to_first_case.rds
+  - process_location_data:
+      id: latest
+      use:
+        portugal_location_data.rds: portugal_location_data.rds
+        france_location_data.rds: france_location_data.rds

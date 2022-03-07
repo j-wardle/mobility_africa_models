@@ -1,0 +1,48 @@
+script: fit_mobility_models.R
+
+artefacts:
+  - data:
+      description: Predicted movement data for models
+      filenames:
+        - gravity_matrix1_normalised.rds
+        - gravity_matrix2_normalised.rds
+        - gravity_matrix1_numbers.rds
+        - gravity_matrix2_numbers.rds
+        - lo_res_gravity_matrix1_normalised.rds
+        - lo_res_gravity_matrix2_normalised.rds
+        - lo_res_gravity_matrix1_numbers.rds
+        - lo_res_gravity_matrix2_numbers.rds
+        - radiation_matrix2_normalised.rds
+        - radiation_matrix2_numbers.rds
+        
+      
+  - data:
+      description: Movement model coefficients
+      filenames:
+        - gravity_coefficients.rds
+        - radiation_coefficients.rds
+
+packages:
+  - dplyr
+  - ggplot2
+  - scales
+  - ggmuller
+  - purrr
+
+sources:
+  - R/fit_functions.R
+  - R/utilities.R
+
+depends:
+  process_location_data:
+    id: latest
+    use:
+      portugal_location_data.rds: portugal_location_data.rds
+      portugal_adm1_location_data.rds: portugal_adm1_location_data.rds
+      france_location_data.rds: france_location_data.rds
+      france_adm2_location_data.rds: france_adm2_location_data.rds
+  process_movement_data:
+    id: latest
+    use:
+      scaled_matrix.rds: scaled_matrix.rds
+      aggregated_scaled_matrix.rds: aggregated_scaled_matrix.rds
