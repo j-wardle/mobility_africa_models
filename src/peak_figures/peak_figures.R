@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -57,6 +59,20 @@ if (scenario_number == 3) {
   
   model1 <- "raw"
   model2 <- "g2"
+  
+}
+
+if (scenario_number == 2) {
+  
+  model1 <- "raw"
+  model2 <- "g1_alt"
+  
+}
+
+if (scenario_number == 5) {
+  
+  model1 <- "raw"
+  model2 <- "r2"
   
 }
 
@@ -122,7 +138,9 @@ peak <- peak %>%
 
 peak <- rename(peak, median = `0.5`)
 peak$model <- as.factor(peak$model)
-peak$seed <- factor(peak$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+peak$seed <- factor(peak$seed,
+                    levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                    labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa"))
 peak$`95%CrI` <- peak$`0.975` - peak$`0.025`
 peak$standardised_variation <- peak$`95%CrI` / peak$median
 
@@ -138,22 +156,63 @@ peak_scatter <-
               values_from = median) %>% 
   filter(pathogen == 1) %>% 
   ggplot() +
+  geom_point(aes_string(x = model2, y = model1), colour = "white", size = 0.8) +
   geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
-  scale_colour_viridis_c(name = "Scaled\ndistance") +
+  scale_colour_viridis_c(name = "Scaled distance") +
   geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-  xlab("Time to peak using observed mobility (days)") +
-  ylab("Time to peak using\npredicted mobility (days)") +
-  scale_x_continuous(limits = c(120, 220),
-                     breaks = seq(120, 220, 20)) +
-  scale_y_continuous(limits = c(120, 220),
-                     breaks = seq(120, 220, 20)) +
+  xlab("Time to peak using\nobserved mobility (days)") +
+  ylab("Time to peak using mobility proxy (days)") +
   coord_fixed() +
   theme_classic() +
-  # facet_grid(pathogen ~ seed) +
-  facet_wrap(~ seed) +
+  facet_wrap(~ seed, nrow = 2) +
   theme(panel.border = element_rect(colour = "black", fill = NA),
-        axis.text = element_text(size = 7),
-        plot.title = element_text(hjust = 0.5))
+        # axis.text = element_text(size = 7),
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        strip.text = element_text(size = 16)) +
+  stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
+           color = "red", geom = "text", #label.x = 180, label.y = 130,
+           size = 5)
 
-ggsave("figures/france_peak_scatter.png", peak_scatter)#,
-       # width = 10, height = 8.65, units = "in")
+ggsave("figures/peak_scatter.png", peak_scatter,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+## Create a continuous legend to be extracted
+
+continuous_legend <-
+  peak %>% 
+  pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
+              names_from = model,
+              values_from = median) %>% 
+  filter(pathogen == 1) %>% 
+  ggplot() +
+  geom_point(aes_string(x = model2, y = model1), colour = "white", size = 0.8) +
+  geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
+  scale_colour_viridis_c(name = "Scaled distance") +
+  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+  xlab("Time to peak using\nmobility proxy (days)") +
+  ylab("Time to peak using predicted mobility (days)") +
+  coord_fixed() +
+  theme_classic() +
+  facet_wrap(~ seed, nrow = 2) +
+  theme(panel.border = element_rect(colour = "black", fill = NA),
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.key.width = unit(1, "cm")) +
+  stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
+           color = "red", geom = "text", #label.x = 180, label.y = 130,
+           size = 5) +
+  guides(colour = guide_colourbar(title.position="top", title.hjust = 0.5))
+
+
+ggsave("figures/continuous_legend.png", continuous_legend,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+
+if (! is.null(dev.list())) dev.off()

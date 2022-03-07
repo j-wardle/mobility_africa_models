@@ -8,6 +8,11 @@ artefacts:
         - figures/comb_mob_predictions_errorbar.png
         - figures/france_mob_predictions_errorbar.png
         - figures/portugal_mob_predictions_errorbar.png
+  - data:
+      description: ggplot objects
+      filenames:
+        - figures/portugal_plot_with_bins.rds
+        - figures/france_plot_with_bins.rds
         
 parameters:
   - spatial_res
@@ -21,6 +26,8 @@ packages:
   - stringr
   - patchwork
   - scales
+  - ggpubr
+  - knitr
   
 depends:
   process_movement_data:
@@ -35,3 +42,4 @@ depends:
       gravity_matrix2_numbers.rds: gravity_matrix2_numbers.rds
       lo_res_gravity_matrix1_numbers.rds: lo_res_gravity_matrix1_numbers.rds
       lo_res_gravity_matrix2_numbers.rds: lo_res_gravity_matrix2_numbers.rds
+      radiation_matrix2_numbers.rds: radiation_matrix2_numbers.rds

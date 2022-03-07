@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -57,6 +59,20 @@ if (scenario_number == 3) {
   
   model1 <- "raw"
   model2 <- "g2"
+  
+}
+
+if (scenario_number == 2) {
+  
+  model1 <- "raw"
+  model2 <- "g1_alt"
+  
+}
+
+if (scenario_number == 5) {
+  
+  model1 <- "raw"
+  model2 <- "r2"
   
 }
 
@@ -120,7 +136,9 @@ first_cases <- first_cases %>%
 
 first_cases <- rename(first_cases, median = `0.5`)
 first_cases$model <- as.factor(first_cases$model)
-first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+first_cases$seed <- factor(first_cases$seed,
+                           levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                           labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa"))
 first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
 first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 
@@ -129,29 +147,37 @@ first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 ###x-axis : time to first case with observed mobility data
 ### y-axis : time to first case with predicted mobility data
 
-first_cases_scatter <-
-  first_cases %>% 
-    pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
-                names_from = model,
-                values_from = median) %>% 
-    filter(pathogen == 1) %>% 
-    ggplot() +
-    geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
-    scale_colour_viridis_c(name = "Scaled\ndistance") +
-    geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
-    xlab("Time to first case using observed mobility (days)") +
-    ylab("Time to first case using\npredicted mobility (days)") +
-    scale_x_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    scale_y_continuous(limits = c(0, 115),
-                       breaks = seq(0, 125, 25)) +
-    coord_fixed() +
-    theme_classic() +
-    # facet_grid(pathogen ~ seed) +
-    facet_wrap(~ seed) +
-    theme(panel.border = element_rect(colour = "black", fill = NA),
-          # axis.text = element_text(size = 7),
-          plot.title = element_text(hjust = 0.5))
+first_cases_plot <- first_cases %>% 
+  pivot_wider(id_cols = c(patch, seed, model, pathogen, scaled_distance),
+              names_from = model,
+              values_from = median) %>% 
+  filter(pathogen == 1)
 
-ggsave("figures/france_first_cases_scatter.png", first_cases_scatter)#,
-       # width = 10, height = 8.65, units = "in")
+
+first_cases_scatter <-
+  ggplot(first_cases_plot) +
+  geom_point(aes_string(x = model2, y = model1), colour = "white", size = 0.8) +
+  geom_point(aes_string(x = model1, y = model2, colour = "scaled_distance"), size = 0.8) +
+  scale_colour_viridis_c(name = "Scaled distance") +
+  geom_abline(slope = 1, intercept = 0, colour = "red", linetype = 2) +
+  xlab("Invasion time using\nobserved mobility (days)") +
+  ylab("Invasion time using mobility proxy (days)") +
+  coord_fixed() +
+  theme_classic() +
+  facet_wrap(~ seed, nrow = 2) +
+  theme(panel.border = element_rect(colour = "black", fill = NA),
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        strip.text = element_text(size = 16)) +
+  stat_cor(aes_string(x = model1, y = model2, label = "..rr.label.."),
+           color = "red", geom = "text", #label.x = 75, label.y = 10,
+           size = 5)
+
+ggsave("figures/first_cases_scatter.png", first_cases_scatter,
+       width = 6, height = 6, units = "in", dpi = 150)
+
+# knitr::plot_crop("figures/first_cases_scatter.png")
+
+if (! is.null(dev.list())) dev.off()

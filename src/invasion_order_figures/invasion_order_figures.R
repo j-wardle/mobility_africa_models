@@ -1,3 +1,5 @@
+if (! is.null(dev.list())) dev.off()
+
 ## Create folder to save figures
 dir.create("figures")
 
@@ -63,6 +65,20 @@ if (scenario_number == 3) {
   
 }
 
+if (scenario_number == 2) {
+  
+  model1 <- "raw"
+  model2 <- "g1_alt"
+  
+}
+
+if (scenario_number == 5) {
+  
+  model1 <- "raw"
+  model2 <- "r2"
+  
+}
+
 time_to_first_case <- time_to_first_case %>% 
   filter(model == model1 | model == model2)
 
@@ -101,7 +117,8 @@ first_cases <- time_to_first_case
 
 first_cases <- rename(first_cases, median = `0.5`)
 first_cases$model <- as.factor(first_cases$model)
-first_cases$seed <- factor(first_cases$seed, levels = c("BREST", "PARIS", "LISBOA", "MIRANDA_DO_DOURO"))
+first_cases$seed <- factor(first_cases$seed,
+                           levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"))
 first_cases$`95%CrI` <- first_cases$`0.975` - first_cases$`0.025`
 first_cases$standardised_variation <- first_cases$`95%CrI` / first_cases$median
 
@@ -192,31 +209,99 @@ order_success <- bind_rows(path1_order_capital,
 
 order_success$pathogen <- as.factor(order_success$pathogen)
 
+order_success <- order_success %>% 
+  group_by(seed, pathogen) %>% 
+  mutate(prop_infected = n / max(n))
+
+order_success$seed <- factor(order_success$seed,
+                             levels = c("BREST", "PARIS", "MIRANDA_DO_DOURO", "LISBOA"),
+                             labels = c("Brest", "Paris", "Miranda do Douro", "Lisboa")
+)
+
 # Plot the order prediction success data
-
-
 
 order_success_plot <-
   order_success %>% 
-  filter(n < 151) %>% 
   ggplot() +
-  # geom_line(aes(x = n, y = match_prop, colour = seed, linetype = pathogen)) + # use this line if multiple pathogens
-  geom_line(aes(x = n, y = match_prop, colour = seed)) + 
-  xlab("Number of patches infected") +
-  ylab("Proportion") +
-  labs(colour = "Seed location",
-       linetype = "Pathogen") +
-  theme_minimal()
+  geom_line(aes(x = prop_infected, y = match_prop, linetype = seed)) +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+  xlab("Proportion infected\n  ") +
+  ylab("Proportion correctly\nidentified") +
+  # coord_fixed() +
+  labs(linetype = "Seed location") +
+  theme_classic() +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
 
 # Save plot image file
 prefix <- country
-ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot) #, scale = 0.5)
+ggsave(glue("figures/{prefix}_invasion_order.png"), order_success_plot,
+       width = 3, height = 3, units = "in", dpi = 300)
+
+# knitr::plot_crop(glue("figures/{prefix}_invasion_order.png"))
 
 # Save ggplot object for use in creating panel
 saveRDS(order_success_plot, file = glue("figures/{prefix}_invasion_order.rds"))
 
 saveRDS(order_success, file = "figures/order_success.rds")
 
+
+# Create and save plot with legend
+
+legend_details <-
+  order_success %>% 
+  ggplot() +
+  geom_line(aes(x = prop_infected, y = match_prop, linetype = seed)) +
+  geom_abline(intercept = 0, slope = 1, colour = "red", linetype = 2) +
+  xlab("Proportion infected\n  ") +
+  ylab("Proportion correctly\nidentified") +
+  # coord_fixed() +
+  labs(linetype = "Seed location") +
+  theme_classic() +
+  theme(legend.position = "right",
+        legend.text = element_text(size = 12),
+        axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 16))
+
+prefix <- country
+ggsave(glue("figures/{prefix}_legend.png"), legend_details,
+       width = 3, height = 3, units = "in", dpi = 300)
+
+
+# Create a combined figure with the mobility predictions
+
+if(country == "france") {
+  movement_preds <- readRDS("france_plot_with_bins.rds")
+}
+if(country == "portugal") {
+  movement_preds <- readRDS("portugal_plot_with_bins.rds")
+}
+
+
+column_plot_for_panel <-
+  plot_grid(movement_preds, order_success_plot,
+                        ncol = 1, align = 'v', axis = 'l')
+  
+save_plot("figures/column_plot_for_panel.png", column_plot_for_panel,
+          base_aspect_ratio = 1, nrow = 2)
+
+
+  
+
+# Estimate AUC
+
+auc_values <- order_success %>% 
+  group_by(seed) %>% 
+  mutate(auc = DescTools::AUC(prop_infected, match_prop)) %>% 
+  summarise(auc = mean(auc))
+
+auc_values$model <- model2
+auc_values <- select(auc_values, model, seed, auc)
+
+saveRDS(auc_values, file = "figures/order_success_auc.rds")
 
 
 ###############################################################
@@ -391,3 +476,5 @@ saveRDS(order_success, file = "figures/order_success.rds")
 # 
 # # Save ggplot object for use in creating panel
 # saveRDS(order_success_plot, file = "figures/france_invasion_order.rds")
+
+if (! is.null(dev.list())) dev.off()
