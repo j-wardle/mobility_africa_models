@@ -1,0 +1,36 @@
+script: script.R
+
+packages:
+- dplyr
+- ggplot2
+- ggpmisc
+- ggthemes
+- readr
+- sf
+
+artefacts:
+  staticgraph:
+    description: Maps of data availability
+    filenames:
+      - empirical.png
+      - estimated.png
+
+resources:
+- shapefiles
+
+sources:
+- R/common_plot_properties.R
+- R/map_data_availability.R
+- R/utils.R
+
+depends:
+  - get_shapefiles:
+      id: latest
+      use:
+        africa_iso3c.rds: africa_iso3c.rds
+  - annotate_extracted_data:
+      id: latest
+      use:
+        empirical_data_locations_scale.csv: empirical_data_locations_scale.csv
+        estimated_data_locations_scale.csv: estimated_data_locations_scale.csv
+        study_ds_types.csv: study_ds_types.csv
